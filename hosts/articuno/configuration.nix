@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../common/profiles/base.nix
-    ../../common/profiles/kubernetes.nix
+    ../../common/profiles/kubernetes/server.nix
   ];
 
   networking.hostName = "articuno";
