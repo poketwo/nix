@@ -2,7 +2,7 @@
   description = "NixOS Configuration for Pokétwo";
 
   inputs = {
-    nixpkgs.url = github:nixos/nixpkgs/22.05;
+    nixpkgs.url = github:nixos/nixpkgs/22.11;
     flake-utils-plus.url = github:gytis-ivaskevicius/flake-utils-plus/v1.3.1;
     agenix.url = "github:ryantm/agenix/0.13.0";
   };
