@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../../common/hardware/hetzner-cloud.nix
+    ../common/hardware/hetzner-cloud.nix
   ];
 
   networking.hostName = "zapdos";
