@@ -2,8 +2,7 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
-    ../../common/profiles/base.nix
+    ../../common/hardware/hetzner-cloud.nix
   ];
 
   networking.hostName = "moltres";
