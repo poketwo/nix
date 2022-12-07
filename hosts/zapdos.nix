@@ -3,6 +3,7 @@
 {
   imports = [
     ../hardware/hetzner-cloud.nix
+    ../profiles/kubernetes/server.nix
   ];
 
   networking.hostName = "zapdos";
