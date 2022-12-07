@@ -21,7 +21,7 @@
     vim
     git
     tmux
-
+    htop
     tailscale
   ];
 
