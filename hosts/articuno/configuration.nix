@@ -7,4 +7,5 @@
   ];
 
   networking.hostName = "articuno";
+  system.stateVersion = "22.05";
 }
