@@ -1,0 +1,13 @@
+keys:
+  - &admin_oliver age19v5mdwjnkhzcx67v0wlkdwc5thfsl0kk750s5sahfy0aqen2r4lqg09628
+  - &host_articuno age102fumjwmq09pqup4j32ulr8q4uk73m073lupkaurqq58plgv0ayqqavr4t
+  - &host_moltres age1huj8vaqhd6k5nays3mxazlz3mc3vqut3rx9l2m7uj59mcv7a9v5ssmta7z
+  - &host_zapdos age1ysz44wv5dz9kvj2fckd2euzp085gz8r8d60mufh579070eh3dqks8l6l6u
+creation_rules:
+  - path_regex: secrets/[^/]+\.yaml$
+    key_groups:
+      - age:
+          - *admin_oliver
+          - *host_articuno
+          - *host_moltres
+          - *host_zapdos
