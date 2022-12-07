@@ -26,9 +26,14 @@
   ];
 
   services = {
-    openssh.enable = true;
     tailscale.enable = true;
   };
 
-  networking.firewall.checkReversePath = "loose";
+  networking.firewall = {
+    enable = true;
+    allowPing = false;
+    trustedInterfaces = [ "tailscale0" ];
+    allowedUDPPorts = [ config.services.tailscale.port ];
+    checkReversePath = "loose";
+  };
 }
