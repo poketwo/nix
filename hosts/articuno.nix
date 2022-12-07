@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ../common/hardware/hetzner-cloud.nix
-    ../common/profiles/kubernetes/server.nix
+    ../hardware/hetzner-cloud.nix
+    ../profiles/kubernetes/server.nix
   ];
 
   networking.hostName = "articuno";
