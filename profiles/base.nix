@@ -7,6 +7,8 @@
   time.timeZone = "America/Los_Angeles";
   i18n.defaultLocale = "en_US.UTF-8";
 
+  age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
   security.sudo.wheelNeedsPassword = false;
   users.users.oliver = {
     isNormalUser = true;
