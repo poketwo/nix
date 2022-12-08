@@ -30,6 +30,7 @@ in
         "--disable=traefik"
         "--disable=local-storage"
         "--flannel-backend=none"
+        "--disable-kube-proxy"
         "--disable-network-policy"
         "--secrets-encryption"
       ];
