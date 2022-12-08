@@ -12,6 +12,12 @@ in
       default = null;
       type = types.str;
     };
+
+    apiserver-only = mkOption {
+      description = "k8s apiserver only";
+      default = false;
+      type = types.bool;
+    };
   };
 
   config = {
@@ -23,7 +29,6 @@ in
       role = "server";
       tokenFile = config.age.secrets.k3s-server-token.path;
       extraFlags = toString [
-        (optionalString (cfg.node-ip != null) "--node-ip=${cfg.node-ip}")
         "--tls-san=control-plane.poketwo.io"
         "--node-taint=CriticalAddonsOnly=true:NoExecute"
         "--disable=servicelb"
@@ -33,6 +38,10 @@ in
         "--disable-kube-proxy"
         "--disable-network-policy"
         "--secrets-encryption"
+        (optionalString (cfg.node-ip != null) "--node-ip=${cfg.node-ip}")
+        (optionalString apiserver-only "--disable-etcd")
+        (optionalString apiserver-only "--disable-controller-manager")
+        (optionalString apiserver-only "--disable-scheduler")
       ];
     };
   };
