@@ -40,9 +40,9 @@ in
         "--disable-network-policy"
         "--secrets-encryption"
         (optionalString (cfg.node-ip != null) "--node-ip=${cfg.node-ip}")
-        (optionalString apiserver-only "--disable-etcd")
-        (optionalString apiserver-only "--disable-controller-manager")
-        (optionalString apiserver-only "--disable-scheduler")
+        (optionalString cfg.apiserver-only "--disable-etcd")
+        (optionalString cfg.apiserver-only "--disable-controller-manager")
+        (optionalString cfg.apiserver-only "--disable-scheduler")
       ];
     };
   };
