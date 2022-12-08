@@ -1,6 +1,6 @@
 let
   users = {
-    oliver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL0idNvgGiucWgup/mP78zyC23uFjYq0evcWdjGQUaBH";
+    oliver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGlViRB5HH1bTaS1S7TcqVBSuxKdrbdhL2CmhDqc/t6A";
   };
   hosts = {
     articuno = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJVOQ2837abtVB5VFebugFpPZrlRgnaa6oZ/CyoKWF5A";
