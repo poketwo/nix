@@ -20,5 +20,7 @@
       hosts.articuno.modules = [ ./hosts/articuno ];
       hosts.moltres.modules = [ ./hosts/moltres ];
       hosts.zapdos.modules = [ ./hosts/zapdos ];
+
+      hosts.deino.modules = [ ./hosts/deino ];
     };
 }
