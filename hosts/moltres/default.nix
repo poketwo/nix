@@ -3,7 +3,7 @@
 {
   imports = [
     ./hardware.nix
-    ../profiles/kubernetes/server.nix
+    ../../profiles/kubernetes/server.nix
   ];
 
   networking.hostName = "moltres";
