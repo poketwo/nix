@@ -15,7 +15,7 @@ in
   };
 
   config = {
-    age.secrets.k3s-agent-token.file = ../../secrets/k3s-server-token.age;
+    age.secrets.k3s-agent-token.file = ../../secrets/k3s-agent-token.age;
 
     swapDevices = lib.mkForce [ ];
     environment.systemPackages = [ pkgs.k3s ];
