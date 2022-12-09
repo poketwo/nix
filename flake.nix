@@ -17,8 +17,8 @@
         agenix.nixosModule
       ];
 
-      hosts.articuno.modules = [ ./hosts/articuno.nix ];
-      hosts.moltres.modules = [ ./hosts/moltres.nix ];
-      hosts.zapdos.modules = [ ./hosts/zapdos.nix ];
+      hosts.articuno.modules = [ ./hosts/articuno ];
+      hosts.moltres.modules = [ ./hosts/moltres ];
+      hosts.zapdos.modules = [ ./hosts/zapdos ];
     };
 }

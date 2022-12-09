@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../hardware/hetzner-cloud.nix
+    ./hardware.nix
     ../profiles/kubernetes/server.nix
   ];
 
