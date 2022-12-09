@@ -2,13 +2,19 @@ let
   users = {
     oliver = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGlViRB5HH1bTaS1S7TcqVBSuxKdrbdhL2CmhDqc/t6A";
   };
+
   hosts = {
     articuno = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJVOQ2837abtVB5VFebugFpPZrlRgnaa6oZ/CyoKWF5A";
     moltres = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH8Nhbguio4LnvLqlun91+pKBZZOXFn8HPOB1oxhbXqy";
     zapdos = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICEudPs8SqsTGL2HQM5lp7YFPPQ/YVfe0/4TuVLJ6Xtu";
+    deino = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF4jL3YVR2qAhWTQ9RRu2w6NYlc0/RsiWJ9FRiuB0CiW";
   };
-  allKeys = [ users.oliver hosts.articuno hosts.moltres hosts.zapdos ];
+
+  admins = with users; [ oliver ];
+  k3s-servers = with hosts; [ articuno moltres zapdos ];
+  k3s-workers = with hosts; [ deino ];
 in
 {
-  "k3s-server-token.age".publicKeys = allKeys;
+  "k3s-server-token.age".publicKeys = admins ++ k3s-servers;
+  "k3s-agent-token.age".publicKeys = admins ++ k3s-servers ++ k3s-workers;
 }

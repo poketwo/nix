@@ -21,15 +21,18 @@ in
   };
 
   config = {
+    age.secrets.k3s-server-token.file = ../../secrets/k3s-server-token.age;
+    age.secrets.k3s-agent-token.file = ../../secrets/k3s-agent-token.age;
+
     swapDevices = lib.mkForce [ ];
     environment.systemPackages = [ pkgs.k3s ];
-    age.secrets.k3s-server-token.file = ../../secrets/k3s-server-token.age;
 
     services.k3s = {
       enable = true;
       role = "server";
-      tokenFile = config.age.secrets.k3s-server-token.path;
       extraFlags = toString [
+        "--token-file=${config.age.secrets.k3s-server-token.path}"
+        "--agent-token-file=${config.age.secrets.k3s-agent-token.path}"
         "--tls-san=control-plane.poketwo.io"
         "--node-taint=CriticalAddonsOnly=true:NoExecute"
         "--disable=servicelb"

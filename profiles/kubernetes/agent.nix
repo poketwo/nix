@@ -15,16 +15,19 @@ in
   };
 
   config = {
+    age.secrets.k3s-agent-token.file = ../../secrets/k3s-server-token.age;
+
     swapDevices = lib.mkForce [ ];
     environment.systemPackages = [ pkgs.k3s ];
-    age.secrets.k3s-server-token.file = ../../secrets/k3s-server-token.age;
 
     services.k3s = {
       enable = true;
       role = "agent";
-      tokenFile = config.age.secrets.k3s-server-token.path;
-      serverAddr = "https://control-plane.poketwo.io:6443";
-      extraFlags = (optionalString (cfg.node-ip != null) "--node-ip=${cfg.node-ip}");
+      extraFlags = toString [
+        (optionalString (cfg.node-ip != null) "--node-ip=${cfg.node-ip}")
+        "--server=https://control-plane.poketwo.io:6443"
+        "--token-file=${config.age.secrets.k3s-agent-token.path}"
+      ];
     };
   };
 }
