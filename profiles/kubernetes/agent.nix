@@ -23,11 +23,9 @@ in
     services.k3s = {
       enable = true;
       role = "agent";
-      extraFlags = toString [
-        (optionalString (cfg.node-ip != null) "--node-ip=${cfg.node-ip}")
-        "--server=https://control-plane.poketwo.io:6443"
-        "--token-file=${config.age.secrets.k3s-agent-token.path}"
-      ];
+      serverAddr = "https://control-plane.poketwo.io:6443";
+      tokenFile = config.age.secrets.k3s-agent-token.path;
+      extraFlags = (optionalString (cfg.node-ip != null) "--node-ip=${cfg.node-ip}");
     };
   };
 }
