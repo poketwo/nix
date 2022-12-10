@@ -31,9 +31,12 @@
     tailscale.enable = true;
   };
 
+  networking.nftables.enable = false;
+
   networking.firewall = {
     enable = true;
     allowPing = false;
+    package = pkgs.iptables-legacy;
     trustedInterfaces = [ "tailscale0" ];
     allowedUDPPorts = [ config.services.tailscale.port ];
     checkReversePath = "loose";
