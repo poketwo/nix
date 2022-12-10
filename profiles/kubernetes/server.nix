@@ -21,6 +21,10 @@ in
     swapDevices = lib.mkForce [ ];
     environment.systemPackages = [ pkgs.k3s ];
 
+    boot.kernel.sysctl = {
+      "fs.inotify.max_user_instances" = 1048576;
+    };
+
     services.k3s = {
       enable = true;
       role = "server";
