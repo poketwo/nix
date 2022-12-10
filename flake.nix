@@ -22,5 +22,6 @@
       hosts.zapdos.modules = [ ./hosts/zapdos ];
 
       hosts.deino.modules = [ ./hosts/deino ];
+      hosts.eevee.modules = [ ./hosts/eevee ];
     };
 }
