@@ -34,8 +34,7 @@
 
   networking.firewall = {
     enable = true;
-    allowPing = false;
-    trustedInterfaces = [ "tailscale0" "cilium_net" "cilium_host" "cilium_vxlan" ];
+    trustedInterfaces = [ "tailscale0" ];
     allowedUDPPorts = [ config.services.tailscale.port ];
     checkReversePath = "loose";
   };
