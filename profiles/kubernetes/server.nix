@@ -20,10 +20,10 @@ in
     enable = true;
     role = "server";
     extraFlags = toString [
-      "--https-listen-port=8443"
+      "--https-listen-port=6443"
       "--token-file=${config.age.secrets.k3s-server-token.path}"
       "--agent-token-file=${config.age.secrets.k3s-agent-token.path}"
-      "--tls-san=control-plane.poketwo.io"
+      "--tls-san=birds.poketwo.io"
       "--node-taint=CriticalAddonsOnly=true:NoExecute"
       "--disable=servicelb"
       "--disable=traefik"
@@ -39,7 +39,7 @@ in
     # https://docs.k3s.io/installation/requirements#networking
     # https://docs.cilium.io/en/v1.11/operations/system_requirements/#firewall-rules
 
-    allowedTCPPorts = [ 8443 2379 2380 10250 4240 ];
+    allowedTCPPorts = [ 6443 2379 2380 10250 4240 ];
     allowedUDPPorts = [ 8472 ];
   };
 }

@@ -18,7 +18,7 @@ in
   services.k3s = {
     enable = true;
     role = "agent";
-    serverAddr = "https://control-plane.poketwo.io:8443";
+    serverAddr = "https://birds.poketwo.io:6443";
     tokenFile = config.age.secrets.k3s-agent-token.path;
   };
 
