@@ -12,6 +12,7 @@ in
   swapDevices = lib.mkForce [ ];
   environment.systemPackages = [ pkgs.k3s ];
 
+  boot.kernelModules = [ "ceph" ];
   boot.kernel.sysctl = {
     "fs.inotify.max_user_instances" = 1048576;
   };
