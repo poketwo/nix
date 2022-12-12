@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware.nix
+    ../../profiles/zfs.nix
     ../../profiles/kubernetes/agent.nix
   ];
 
