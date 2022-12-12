@@ -33,4 +33,11 @@
     device = "/dev/nvme0n1p4";
     fsType = "vfat";
   };
+
+  boot.zfs.extraPools = [ "mongo" ];
+
+  fileSystems."/mongo" = {
+    device = "/dev/zvol/mongo/mongo";
+    fsType = "xfs";
+  };
 }
