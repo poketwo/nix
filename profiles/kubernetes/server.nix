@@ -40,7 +40,7 @@ in
     # https://docs.k3s.io/installation/requirements#networking
     # https://docs.cilium.io/en/v1.11/operations/system_requirements/#firewall-rules
 
-    allowedTCPPorts = [ 6443 2379 2380 10250 4240 ];
+    allowedTCPPorts = [ 6443 2379 2380 10250 4240 4244 ];
     allowedUDPPorts = [ 8472 ];
   };
 }
