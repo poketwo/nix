@@ -8,6 +8,7 @@
   ];
 
   networking.hostName = "eevee";
+  networking.hostId = "061bd7ea";
   system.stateVersion = "22.05";
 
   fileSystems."/" = {

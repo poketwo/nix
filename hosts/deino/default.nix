@@ -8,6 +8,7 @@
   ];
 
   networking.hostName = "deino";
+  networking.hostId = "0cc07474";
   system.stateVersion = "22.05";
 
   fileSystems."/" = {
