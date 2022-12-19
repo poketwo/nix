@@ -21,6 +21,8 @@
       hosts.moltres.modules = [ ./hosts/moltres ];
       hosts.zapdos.modules = [ ./hosts/zapdos ];
 
+      hosts.blissey.modules = [ ./hosts/blissey ];
+      hosts.corsola.modules = [ ./hosts/corsola ];
       hosts.deino.modules = [ ./hosts/deino ];
       hosts.eevee.modules = [ ./hosts/eevee ];
     };
