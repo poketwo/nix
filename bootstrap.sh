@@ -1,4 +1,4 @@
-#!/usr/bin/env nix-shell
+#! /usr/bin/env nix-shell
 #! nix-shell -i bash -p git
 
 set -e
@@ -32,7 +32,7 @@ read -p "Upload configs, then press enter to continue..."
 echo "Downloading new configs..."
 
 rm -rf *
-git clone https://github.com/oliver-ni/nix.git .
+git clone https://github.com/poketwo/nix.git .
 
 echo "Building configs..."
 
