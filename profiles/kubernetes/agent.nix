@@ -21,6 +21,10 @@ in
     role = "agent";
     serverAddr = "https://birds.poketwo.io:6443";
     tokenFile = config.age.secrets.k3s-agent-token.path;
+    extraFlags = toString [
+      "--kubelet-arg=cpu-manager-policy=static"
+      "--kubelet-arg=kube-reserved=cpu=1"
+    ];
   };
 
   networking.firewall = {

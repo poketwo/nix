@@ -33,6 +33,8 @@ in
       "--disable-kube-proxy"
       "--disable-network-policy"
       "--secrets-encryption"
+      "--kubelet-arg=cpu-manager-policy=static"
+      "--kubelet-arg=kube-reserved=cpu=1"
     ];
   };
 
