@@ -26,5 +26,7 @@
       hosts.corsola.modules = [ ./hosts/corsola ];
       hosts.deino.modules = [ ./hosts/deino ];
       hosts.eevee.modules = [ ./hosts/eevee ];
+
+      hosts.pichu.modules = [ ./hosts/pichu ];
     };
 }
