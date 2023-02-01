@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware.nix
+    ../../profiles/exit-nide.nix
   ];
 
   networking.hostName = "pichu";
