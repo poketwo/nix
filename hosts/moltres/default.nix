@@ -4,6 +4,7 @@
   imports = [
     ./hardware.nix
     ../../profiles/kubernetes/server.nix
+    ../../profiles/exit-node.nix
   ];
 
   networking.hostName = "moltres";
