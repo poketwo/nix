@@ -35,6 +35,10 @@ in
       "--disable-network-policy"
       "--secrets-encryption"
       "--kubelet-arg=cpu-manager-policy=static"
+      "--kubelet-arg=eviction-hard=memory.available<2Gi,nodefs.available<10%"
+      "--kubelet-arg=kube-reserved=cpu=500m,memory=2Gi,ephemeral-storage=8Gi,pid=1000"
+      "--kubelet-arg=system-reserved=cpu=500m,memory=2Gi,ephemeral-storage=8Gi,pid=1000"
+      "--kubelet-arg=reserved-cpus=0"
     ];
   };
 
