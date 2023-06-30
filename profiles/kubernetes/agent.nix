@@ -34,7 +34,7 @@ in
   networking.firewall = {
     # https://docs.k3s.io/installation/requirements#networking
     # https://docs.cilium.io/en/v1.11/operations/system_requirements/#firewall-rules
-    # https://metallb.universe.tf
+    # https://metallb.universe.tf/#requirements
 
     allowedTCPPorts = [ 10250 4240 4244 7946 ];
     allowedUDPPorts = [ 8472 7946 ];
