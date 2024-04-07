@@ -5,7 +5,7 @@
     ../hardware/gigabyte-r163-z30-2.nix
   ];
 
-  networking.hostName = "turtwig";
+  networking.hostName = "chimchar";
 
   fileSystems = {
     "/".options = [ "compress=zstd" ];
