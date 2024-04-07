@@ -2,22 +2,19 @@
 
 with lib;
 let
-  cfg = config.poketwo.environment;
+  cfg = config.poketwo.shell;
 in
 {
-  options.poketwo.environment = {
-    enable = mkEnableOption "Enable environment configuration";
+  options.poketwo.shell = {
+    enable = mkEnableOption "Enable shell configuration";
   };
 
   config = mkIf (cfg.enable) {
     environment = {
       enableAllTerminfo = true;
-      etc."p10k.zsh".source = ./environment/p10k.zsh;
+      etc."p10k.zsh".source = ./shell/p10k.zsh;
       systemPackages = with pkgs; [
-        bash
         zsh
-        fish
-        xonsh
         zsh-powerlevel10k
       ];
     };
@@ -35,19 +32,6 @@ in
           zsh-newuser-install() { :; }
         '';
       };
-      fish.enable = true;
-      xonsh.enable = true;
-      nix-ld.enable = true;
-    };
-
-    services.envfs = {
-      enable = true;
-      extraFallbackPathCommands = ''
-        ln -s ${pkgs.bash}/bin/bash $out/bash
-        ln -s ${pkgs.zsh}/bin/zsh $out/zsh
-        ln -s ${pkgs.fish}/bin/fish $out/fish
-        ln -s ${pkgs.xonsh}/bin/xonsh $out/xonsh
-      '';
     };
   };
 }

@@ -18,9 +18,9 @@
       commonModules = [
         agenix.nixosModules.default
         ./modules/poketwo/auth.nix
-        ./modules/poketwo/environment.nix
         ./modules/poketwo/locale.nix
         ./modules/poketwo/network.nix
+        ./modules/poketwo/shell.nix
         ./modules/poketwo/tailscale.nix
         ./profiles/base.nix
       ];
