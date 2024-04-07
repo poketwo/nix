@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, pkgs, ... }:
 
 with lib;
 let
@@ -12,10 +12,7 @@ in
   config = mkIf (cfg.enable) {
     environment = {
       enableAllTerminfo = true;
-      etc = {
-        "p10k.zsh".source = ./base/p10k.zsh;
-        "nixos/configuration.nix".source = ./base/nixos/configuration.nix;
-      };
+      etc."p10k.zsh".source = ./environment/p10k.zsh;
       systemPackages = with pkgs; [
         bash
         zsh

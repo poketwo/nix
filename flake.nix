@@ -14,6 +14,9 @@
 
       # Put modules common to all hosts here.
       commonModules = [
+        ./modules/poketwo/auth.nix
+        ./modules/poketwo/environment.nix
+        ./modules/poketwo/locale.nix
         ./modules/poketwo/network.nix
         ./profiles/base.nix
       ];
