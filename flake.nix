@@ -4,9 +4,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, agenix }:
     let
       # ========================
       # NixOS Host Configuration
@@ -14,10 +16,12 @@
 
       # Put modules common to all hosts here.
       commonModules = [
+        agenix.nixosModules.default
         ./modules/poketwo/auth.nix
         ./modules/poketwo/environment.nix
         ./modules/poketwo/locale.nix
         ./modules/poketwo/network.nix
+        ./modules/poketwo/tailscale.nix
         ./profiles/base.nix
       ];
 
@@ -29,10 +33,20 @@
       };
 
       # =====================
+      # nixpkgs Configuration
+      # =====================
+
+      overlays = [
+        agenix.overlays.default
+      ];
+
+      # =====================
       # Colmena Configuration
       # =====================
 
+
       pkgs-x86_64-linux = import nixpkgs {
+        inherit overlays;
         system = "x86_64-linux";
         config = { allowUnfree = true; };
       };
@@ -56,14 +70,16 @@
       # Dev Shell Configuration
       # =======================
 
-      devShellOutputs = flake-utils.lib.eachDefaultSystem
-        (system:
-          let pkgs = import nixpkgs { inherit system; }; in {
-            devShells.default = pkgs.mkShell {
-              packages = [ pkgs.colmena ];
-            };
-          }
-        );
+      devShellOutputs = flake-utils.lib.eachDefaultSystem (system:
+        let pkgs = import nixpkgs { inherit system overlays; }; in {
+          devShells.default = pkgs.mkShell {
+            packages = [
+              pkgs.colmena
+              pkgs.agenix
+            ];
+          };
+        }
+      );
     in
     colmenaOutputs // devShellOutputs;
 }

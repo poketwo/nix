@@ -7,6 +7,8 @@
     auth.enable = lib.mkDefault true;
     environment.enable = lib.mkDefault true;
     locale.enable = lib.mkDefault true;
+    network.enable = lib.mkDefault false;
+    tailscale.enable = lib.mkDefault true;
   };
 
   boot.loader = {
