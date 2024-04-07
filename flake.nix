@@ -41,7 +41,7 @@
         (host: modules: {
           imports = commonModules ++ modules;
           deployment.buildOnTarget = true;
-          deployment.targetUser = "root";
+          deployment.targetUser = "oliver";
           deployment.allowLocalDeployment = true;
         })
         hosts;
