@@ -17,7 +17,10 @@ in
     };
 
     security.sudo.extraRules = [
-      { groups = [ "wheel" ]; options = [ "NOPASSWD" ]; }
+      {
+        groups = [ "wheel" ];
+        commands = [{ command = "ALL"; options = [ "NOPASSWD" ]; }];
+      }
     ];
   };
 }
