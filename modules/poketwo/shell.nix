@@ -16,22 +16,23 @@ in
       systemPackages = with pkgs; [
         zsh
         zsh-powerlevel10k
+        atuin
       ];
     };
 
-    users.defaultUserShell = pkgs.zsh;
-
-    programs = {
-      zsh = {
-        enable = true;
-        shellInit = ''
-          if [[ ! -f ~/.zshrc ]]; then
-            source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-            source /etc/p10k.zsh
-          fi
-          zsh-newuser-install() { :; }
-        '';
-      };
+    programs.zsh = {
+      enable = true;
+      shellInit = ''
+        zsh-newuser-install() { :; }
+      '';
+      interactiveShellInit = ''
+        source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+        source /etc/p10k.zsh
+        eval "$(atuin init zsh --disable-up-arrow)"
+      '';
     };
+
+    users.defaultUserShell = pkgs.zsh;
+    services.atuin.enable = true;
   };
 }
