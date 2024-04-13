@@ -9,7 +9,7 @@ in
     enable = mkEnableOption "Enable auth configuration";
   };
 
-  config = mkIf (cfg.enable) {
+  config = mkIf cfg.enable {
     users.users.oliver = {
       isNormalUser = true;
       extraGroups = [ "wheel" ];

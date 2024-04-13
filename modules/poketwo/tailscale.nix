@@ -9,7 +9,7 @@ in
     enable = mkEnableOption "Enable Tailscale configuration";
   };
 
-  config = mkIf (cfg.enable) {
+  config = mkIf cfg.enable {
     age.secrets.tailscale-auth-key.file = ../../secrets/tailscale-auth-key.age;
 
     boot.kernel.sysctl = {

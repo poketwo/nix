@@ -17,7 +17,7 @@ in
     };
   };
 
-  config = mkIf (cfg.enable) {
+  config = mkIf cfg.enable {
     networking = {
       useDHCP = false;
       useNetworkd = true;

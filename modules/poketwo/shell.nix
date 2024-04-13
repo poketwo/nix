@@ -9,7 +9,7 @@ in
     enable = mkEnableOption "Enable shell configuration";
   };
 
-  config = mkIf (cfg.enable) {
+  config = mkIf cfg.enable {
     environment = {
       enableAllTerminfo = true;
       etc."p10k.zsh".source = ./shell/p10k.zsh;
