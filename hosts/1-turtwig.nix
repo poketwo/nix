@@ -15,7 +15,8 @@
 
   poketwo.network = {
     enable = true;
-    interfaces = [ "enp193s0f0np0" "enp193s0f1np1" ];
+    # interfaces = [ "enp193s0f0np0" "enp193s0f1np1" ];
+    interfaces = [ "enp193s0f1np1" ];
     lastOctet = 128;
   };
 
