@@ -5,7 +5,10 @@
     ../hardware/gigabyte-r163-z30-2.nix
   ];
 
-  networking.hostName = "chimchar";
+  networking = {
+    hostName = "chimchar";
+    hostId = "c105356b";
+  };
 
   fileSystems = {
     "/".options = [ "compress=zstd" ];

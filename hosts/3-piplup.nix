@@ -5,7 +5,10 @@
     ../hardware/gigabyte-r163-z30-3.nix
   ];
 
-  networking.hostName = "piplup";
+  networking = {
+    hostName = "piplup";
+    hostId = "fb1cdee0";
+  };
 
   fileSystems = {
     "/".options = [ "compress=zstd" ];

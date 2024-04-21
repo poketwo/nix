@@ -5,7 +5,10 @@
     ../hardware/gigabyte-r163-z30-1.nix
   ];
 
-  networking.hostName = "turtwig";
+  networking = {
+    hostName = "turtwig";
+    hostId = "af85f3ae";
+  };
 
   fileSystems = {
     "/".options = [ "compress=zstd" ];
