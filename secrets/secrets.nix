@@ -14,4 +14,5 @@ let
 in
 {
   "tailscale-auth-key.age".publicKeys = all-users ++ all-hosts;
+  "cloudflare-warp-mdm.xml.age".publicKeys = all-users ++ all-hosts;
 }

@@ -18,6 +18,7 @@
       commonModules = [
         agenix.nixosModules.default
         ./modules/poketwo/auth.nix
+        ./modules/poketwo/cloudflare-warp.nix
         ./modules/poketwo/locale.nix
         ./modules/poketwo/network.nix
         ./modules/poketwo/shell.nix
