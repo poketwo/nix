@@ -6,7 +6,7 @@
   ];
 
   networking = {
-    hostName = "piplup";
+    hostName = "flareon";
     hostId = "fb1cdee0";
   };
 

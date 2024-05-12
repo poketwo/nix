@@ -28,9 +28,9 @@
 
       # Put modules for specific hosts here.
       hosts = {
-        turtwig = [ ./hosts/1-turtwig.nix ];
-        chimchar = [ ./hosts/2-chimchar.nix ];
-        piplup = [ ./hosts/3-piplup.nix ];
+        vaporeon = [ ./hosts/1-vaporeon.nix ];
+        jolteon = [ ./hosts/2-jolteon.nix ];
+        flareon = [ ./hosts/3-flareon.nix ];
       };
 
       # =====================

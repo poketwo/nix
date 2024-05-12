@@ -2,12 +2,12 @@
 
 {
   imports = [
-    ../hardware/gigabyte-r163-z30-2.nix
+    ../hardware/gigabyte-r163-z30-1.nix
   ];
 
   networking = {
-    hostName = "chimchar";
-    hostId = "c105356b";
+    hostName = "vaporeon";
+    hostId = "af85f3ae";
   };
 
   fileSystems = {
@@ -19,7 +19,7 @@
   poketwo.network = {
     enable = true;
     interfaces = [ "enp193s0f0np0" "enp193s0f1np1" ];
-    lastOctet = 129;
+    lastOctet = 128;
   };
 
   # This value determines the NixOS release from which the default
