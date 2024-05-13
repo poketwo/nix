@@ -28,9 +28,9 @@
 
       # Put modules for specific hosts here.
       hosts = {
-        vaporeon = [ ./hosts/1-vaporeon.nix ];
-        jolteon = [ ./hosts/2-jolteon.nix ];
-        flareon = [ ./hosts/3-flareon.nix ];
+        vaporeon = [ ./hosts/vaporeon.nix ];
+        jolteon = [ ./hosts/jolteon.nix ];
+        flareon = [ ./hosts/flareon.nix ];
       };
 
       # =====================

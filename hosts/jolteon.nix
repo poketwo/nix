@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../hardware/gigabyte-r163-z30-2.nix
+    ../hardware/jolteon.nix
   ];
 
   networking = {
