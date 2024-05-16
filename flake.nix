@@ -27,11 +27,13 @@
       ];
 
       # Put modules for specific hosts here.
-      hosts = {
-        vaporeon = [ ./hosts/vaporeon.nix ];
-        jolteon = [ ./hosts/jolteon.nix ];
-        flareon = [ ./hosts/flareon.nix ];
-      };
+      hosts = nixpkgs.lib.concatMapAttrs
+        (filename: _: {
+          ${nixpkgs.lib.nameFromURL filename "."} = [
+            ./hosts/${filename}
+          ];
+        })
+        (builtins.readDir ./hosts);
 
       # =====================
       # nixpkgs Configuration
