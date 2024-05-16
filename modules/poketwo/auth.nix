@@ -1,15 +1,14 @@
 { lib, config, ... }:
 
-with lib;
 let
   cfg = config.poketwo.auth;
 in
 {
   options.poketwo.auth = {
-    enable = mkEnableOption "Enable auth configuration";
+    enable = lib.mkEnableOption "Enable auth configuration";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     users.users.oliver = {
       isNormalUser = true;
       extraGroups = [ "wheel" ];

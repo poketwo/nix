@@ -1,10 +1,9 @@
 { lib, config, ... }:
 
-with lib;
 let
   cfg = config.poketwo.network;
 
-  bondNetworks = listToAttrs (map
+  bondNetworks = lib.listToAttrs (map
     (interface: {
       name = "30-${interface}";
       value = {
@@ -15,7 +14,7 @@ let
     cfg.interfaces);
 in
 {
-  options.poketwo.network = {
+  options.poketwo.network = with lib; {
     enable = mkEnableOption "Enable network configuration";
     interfaces = mkOption {
       type = types.nonEmptyListOf types.str;
@@ -27,7 +26,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     networking = {
       useDHCP = false;
       useNetworkd = true;

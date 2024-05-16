@@ -1,15 +1,14 @@
 { lib, config, ... }:
 
-with lib;
 let
   cfg = config.poketwo.tailscale;
 in
 {
   options.poketwo.tailscale = {
-    enable = mkEnableOption "Enable Tailscale configuration";
+    enable = lib.mkEnableOption "Enable Tailscale configuration";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     age.secrets.tailscale-auth-key.file = ../../secrets/tailscale-auth-key.age;
 
     boot.kernel.sysctl = {

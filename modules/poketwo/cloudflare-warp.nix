@@ -1,6 +1,5 @@
 { lib, config, pkgs, ... }:
 
-with lib;
 let
   cfg = config.poketwo.cloudflare-warp;
 
@@ -11,10 +10,10 @@ let
 in
 {
   options.poketwo.cloudflare-warp = {
-    enable = mkEnableOption "Enable Cloudflare WARP configuration";
+    enable = lib.mkEnableOption "Enable Cloudflare WARP configuration";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     age.secrets."cloudflare-warp-mdm.xml" = {
       file = ../../secrets/cloudflare-warp-mdm.xml.age;
       path = "/var/lib/cloudflare-warp/mdm.xml";
