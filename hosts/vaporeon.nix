@@ -5,6 +5,8 @@
     ../hardware/vaporeon.nix
   ];
 
+  boot.loader.systemd-boot.enable = true;
+
   networking = {
     hostName = "vaporeon";
     hostId = "af85f3ae";

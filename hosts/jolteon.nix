@@ -5,6 +5,8 @@
     ../hardware/jolteon.nix
   ];
 
+  boot.loader.systemd-boot.enable = true;
+
   networking = {
     hostName = "jolteon";
     hostId = "c105356b";

@@ -5,6 +5,8 @@
     ../hardware/flareon.nix
   ];
 
+  boot.loader.systemd-boot.enable = true;
+
   networking = {
     hostName = "flareon";
     hostId = "fb1cdee0";

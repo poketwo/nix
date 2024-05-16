@@ -13,10 +13,7 @@
 
   boot = {
     supportedFilesystems.zfs = true;
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
+    loader.efi.canTouchEfiVariables = true;
   };
 
   services = {
