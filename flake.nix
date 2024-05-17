@@ -19,6 +19,7 @@
         agenix.nixosModules.default
         ./modules/poketwo/auth.nix
         ./modules/poketwo/cloudflare-warp.nix
+        ./modules/poketwo/kubernetes.nix
         ./modules/poketwo/locale.nix
         ./modules/poketwo/network.nix
         ./modules/poketwo/shell.nix
@@ -46,7 +47,6 @@
       # =====================
       # Colmena Configuration
       # =====================
-
 
       pkgs-x86_64-linux = import nixpkgs {
         inherit overlays;
