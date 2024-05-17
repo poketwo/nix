@@ -1,5 +1,5 @@
 {
-  description = "NixOS desktop configuration for the Open Computing Facility";
+  description = "NixOS configuration for Pokétwo";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
