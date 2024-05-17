@@ -13,7 +13,9 @@
   networking = {
     hostName = "piplup";
     hostId = "a4df40e7";
-    nameservers = [ "1.1.1.1" "1.0.0.1" ];
+    useNetworkd = true;
+    nameservers = [ "1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001" ];
+    tempAddresses = "disabled";
   };
 
   # This value determines the NixOS release from which the default

@@ -30,7 +30,6 @@ in
     networking = {
       useDHCP = false;
       useNetworkd = true;
-      firewall.enable = false;
       nameservers = [ "1.1.1.1" "1.0.0.1" ];
     };
 
@@ -55,7 +54,7 @@ in
           matchConfig.Name = "bond0";
           address = [
             "23.135.200.${toString cfg.lastOctet}/24"
-            "2606:c2c0:0005::1:${toString cfg.lastOctet}/32"
+            "2606:c2c0:5::1:${toString cfg.lastOctet}/32"
           ];
           routes = [
             { routeConfig.Gateway = "23.135.200.1"; }

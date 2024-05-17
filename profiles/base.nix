@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, ... }:
 
 {
   nix.settings.extra-experimental-features = [ "nix-command" "flakes" ];
@@ -6,7 +6,6 @@
   poketwo = {
     auth.enable = lib.mkDefault true;
     locale.enable = lib.mkDefault true;
-    network.enable = lib.mkDefault false;
     shell.enable = lib.mkDefault true;
     tailscale.enable = lib.mkDefault true;
   };
