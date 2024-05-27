@@ -9,13 +9,7 @@
 
   networking = {
     hostName = "jolteon";
-    hostId = "c105356b";
-  };
-
-  fileSystems = {
-    "/".options = [ "compress=zstd" ];
-    "/home".options = [ "compress=zstd" ];
-    "/nix".options = [ "compress=zstd" "noatime" ];
+    hostId = "b113ba8f";
   };
 
   poketwo.network = {

@@ -9,13 +9,7 @@
 
   networking = {
     hostName = "flareon";
-    hostId = "fb1cdee0";
-  };
-
-  fileSystems = {
-    "/".options = [ "compress=zstd" ];
-    "/home".options = [ "compress=zstd" ];
-    "/nix".options = [ "compress=zstd" "noatime" ];
+    hostId = "98d7be85";
   };
 
   poketwo.network = {

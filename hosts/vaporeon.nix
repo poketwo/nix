@@ -9,13 +9,7 @@
 
   networking = {
     hostName = "vaporeon";
-    hostId = "af85f3ae";
-  };
-
-  fileSystems = {
-    "/".options = [ "compress=zstd" ];
-    "/home".options = [ "compress=zstd" ];
-    "/nix".options = [ "compress=zstd" "noatime" ];
+    hostId = "d0f0d6b2";
   };
 
   poketwo.network = {
