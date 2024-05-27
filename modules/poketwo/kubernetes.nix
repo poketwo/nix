@@ -22,7 +22,7 @@ let
     kubernetesVersion = "v1.30.0";
     clusterName = "hfym-ds";
     controlPlaneEndpoint = "ds.hfym.co";
-    networking.serviceSubnet = "2606:c2c0:5:1:2::/108";
+    networking.serviceSubnet = "2606:c2c0:5:1:2::/112";
   };
 
   kubeadmYaml = pkgs.concatText "kubeadm.yaml" [
@@ -37,7 +37,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    boot.kernelModules = [ "br_netfilter" ];
+    boot.kernelModules = [ "br_netfilter" "ip6_tables" "ip6table_mangle" "ip6table_raw" "ip6table_filter" ];
 
     environment = {
       systemPackages = with pkgs; [ kubernetes conntrack-tools ethtool iptables socat ];
@@ -70,9 +70,6 @@ in
       ];
 
       allowedUDPPorts = [
-        # # Cilium: https://docs.cilium.io/en/v1.15/operations/system_requirements/
-        # 8472 # VXLAN overlay
-
         # MetalLB: https://metallb.universe.tf/#requirements
         7946 # L2 mode
       ];
@@ -90,6 +87,9 @@ in
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
 
+      # For some reason kubelet can't find mount and other basic utilities
+      path = [ pkgs.util-linux ];
+
       serviceConfig = {
         Restart = "always";
         StartLimitInterval = 0;
@@ -103,7 +103,6 @@ in
             --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf \
             --kubeconfig=/etc/kubernetes/kubelet.conf \
             --config=/var/lib/kubelet/config.yaml \
-            --resolv-conf=/etc/resolv.conf \
             --node-ip=:: \
             $KUBELET_KUBEADM_ARGS
         '';
@@ -114,5 +113,10 @@ in
 
     # Kubernetes is incompatible with swap
     swapDevices = lib.mkForce [ ];
+
+    # NixOS cri-o config does weird stuff... reverting these
+    environment.etc."cni/net.d/10-crio-bridge.conflist".enable = false;
+    environment.etc."cni/net.d/99-loopback.conflist".enable = false;
+    virtualisation.cri-o.settings.crio.network = lib.mkForce { };
   };
 }
