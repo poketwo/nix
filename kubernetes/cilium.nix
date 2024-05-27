@@ -60,5 +60,15 @@
         routingMode = "native";
       };
     };
+
+    resources."cilium.io/v2".CiliumClusterwideNetworkPolicy.deny-external.spec = {
+      endpointSelector = { };
+      ingress = [{ fromEntities = [ "cluster" ]; }];
+    };
+
+    resources.v1.Service.hedgedoc.spec = {
+      ports = [{ port = 80; targetPort = 3000; }];
+      selector.app = "hedgedoc";
+    };
   };
 }
