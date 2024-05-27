@@ -3,12 +3,15 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    systems.url = "github:nix-systems/default";
     agenix.url = "github:ryantm/agenix";
+    transpire.url = "github:oliver-ni/transpire";
+
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+    transpire.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, flake-utils, agenix }:
+  outputs = { self, nixpkgs, systems, agenix, transpire }:
     let
       # ========================
       # NixOS Host Configuration
@@ -28,11 +31,10 @@
       ];
 
       # Put modules for specific hosts here.
-      hosts = nixpkgs.lib.concatMapAttrs
+      hosts = nixpkgs.lib.mapAttrs'
         (filename: _: {
-          ${nixpkgs.lib.nameFromURL filename "."} = [
-            ./hosts/${filename}
-          ];
+          name = nixpkgs.lib.nameFromURL filename ".";
+          value = [ ./hosts/${filename} ];
         })
         (builtins.readDir ./hosts);
 
@@ -44,17 +46,16 @@
         agenix.overlays.default
       ];
 
+      pkgsFor = system: import nixpkgs {
+        inherit overlays system;
+        config = { allowUnfree = true; };
+      };
+
       # =====================
       # Colmena Configuration
       # =====================
 
-      pkgs-x86_64-linux = import nixpkgs {
-        inherit overlays;
-        system = "x86_64-linux";
-        config = { allowUnfree = true; };
-      };
-
-      colmena = builtins.mapAttrs
+      colmenaHosts = builtins.mapAttrs
         (host: modules: {
           imports = commonModules ++ modules;
           deployment.buildOnTarget = true;
@@ -63,26 +64,27 @@
         })
         hosts;
 
-      colmenaOutputs = {
-        colmena = colmena // {
-          meta = { nixpkgs = pkgs-x86_64-linux; };
-        };
+      forAllSystems = fn: nixpkgs.lib.genAttrs
+        (import systems)
+        (system: fn system (pkgsFor system));
+    in
+    {
+      colmena = colmenaHosts // {
+        meta = { nixpkgs = pkgsFor "x86_64-linux"; };
       };
 
-      # =======================
-      # Dev Shell Configuration
-      # =======================
+      devShells = forAllSystems (system: pkgs: {
+        default = pkgs.mkShell {
+          packages = [ pkgs.colmena pkgs.agenix ];
+        };
+      });
 
-      devShellOutputs = flake-utils.lib.eachDefaultSystem (system:
-        let pkgs = import nixpkgs { inherit system overlays; }; in {
-          devShells.default = pkgs.mkShell {
-            packages = [
-              pkgs.colmena
-              pkgs.agenix
-            ];
-          };
-        }
-      );
-    in
-    colmenaOutputs // devShellOutputs;
+      packages = forAllSystems (system: pkgs: {
+        kubernetes = transpire.lib.${system}.build.cluster {
+          modules = pkgs.lib.mapAttrsToList
+            (filename: _: ./kubernetes/${filename})
+            (builtins.readDir ./kubernetes);
+        };
+      });
+    };
 }
