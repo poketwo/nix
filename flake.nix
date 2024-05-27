@@ -84,6 +84,7 @@
           modules = pkgs.lib.mapAttrsToList
             (filename: _: ./kubernetes/${filename})
             (builtins.readDir ./kubernetes);
+          openApiSpec = ./kube-openapi.json;
         };
       });
     };
