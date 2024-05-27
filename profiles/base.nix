@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ pkgs, lib, ... }:
 
 {
   nix.settings.extra-experimental-features = [ "nix-command" "flakes" ];
@@ -20,7 +20,11 @@
     fwupd.enable = true;
   };
 
-  environment.etc."nixos/configuration.nix".text = ''
-    {}: builtins.abort "This machine is not managed by /etc/nixos. Please use colmena instead."
-  '';
+  environment = {
+    systemPackages = with pkgs; [ vim htop dig wget curl ];
+
+    etc."nixos/configuration.nix".text = ''
+      {}: builtins.abort "This machine is not managed by /etc/nixos. Please use colmena instead."
+    '';
+  };
 }
