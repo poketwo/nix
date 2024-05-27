@@ -8,9 +8,9 @@ let
     chimchar = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOgv5vkde1wAagmFl1cRlhPzC4uWb1orLKstEk//3r2i";
     piplup = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnlP7RudQkxHUglGO+zxa/Owi2gW0JeILF59ksvgRpC";
 
-    vaporeon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGdnKsViSDqVa/taC7CGX7cSohCcw6RQEhj5AwLlwT2S";
-    jolteon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAb/DNVpAqzP4xxVK/lOlhvMp1PpVaWs7CataJnSDCbz";
-    flareon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM9oJSfZOjijy1OVODHnx+e9BrKZdhGz8qIUoq14HO9f";
+    vaporeon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIlJzVVwoQc1sPYr1fEWumBrIPKjKYvYORmarx0ofDV";
+    jolteon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILwnAVJa18Nvwpx8L1r4qG3jpRr1aAJN/4HjHHUCnkun";
+    flareon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHXAcViD+JS3KHgz2KYG6Q7g11UMyRh0IypAfvW5MYqN";
   };
 
   all-users = with users; [ oliver ];
