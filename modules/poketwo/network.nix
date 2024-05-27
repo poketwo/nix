@@ -30,7 +30,7 @@ in
     networking = {
       useDHCP = false;
       useNetworkd = true;
-      nameservers = [ "1.1.1.1" "1.0.0.1" ];
+      nameservers = [ "2606:4700:4700::1111" "2606:4700:4700::1001" "1.1.1.1" "1.0.0.1" ];
     };
 
     systemd.network = {
@@ -60,7 +60,7 @@ in
             { routeConfig.Gateway = "23.135.200.1"; }
             { routeConfig.Gateway = "2606:c2c0::1"; }
           ];
-          domains = [ "poketwo.io" ];
+          domains = [ ];
           linkConfig.RequiredForOnline = "routable";
         };
       };
