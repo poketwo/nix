@@ -87,5 +87,14 @@
           openApiSpec = ./kube-openapi.json;
         };
       });
+
+      apps = forAllSystems (system: pkgs: {
+        update-kube-openapi = {
+          type = "app";
+          program = toString (pkgs.writers.writeBash "update-kube-openapi" ''
+            ${pkgs.kubectl}/bin/kubectl get --raw /openapi/v2 > kube-openapi.json
+          '');
+        };
+      });
     };
 }
