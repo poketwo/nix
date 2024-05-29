@@ -16,11 +16,11 @@ let
 
   commonStorageClassOptions = {
     parameters = {
-      clusterID = "rook-ceph";
-      "csi.storage.k8s.io/provisioner-secret-namespace" = "rook-ceph";
-      "csi.storage.k8s.io/controller-expand-secret-namespace" = "rook-ceph";
-      "csi.storage.k8s.io/node-stage-secret-namespace" = "rook-ceph";
-    };
+    clusterID = "rook-ceph";
+    "csi.storage.k8s.io/provisioner-secret-namespace" = "rook-ceph";
+    "csi.storage.k8s.io/controller-expand-secret-namespace" = "rook-ceph";
+    "csi.storage.k8s.io/node-stage-secret-namespace" = "rook-ceph";
+  };
     allowVolumeExpansion = true;
     reclaimPolicy = "Delete";
   };
@@ -67,15 +67,13 @@ in
     # ==========================
 
     resources."ceph.rook.io/v1".CephCluster.rook-ceph.spec = {
-      cephVersion.image = "quay.io/ceph/ceph:v18.2.2";
+      cephVersion.image = "quay.io/ceph/ceph:v18.2.2-20240521";
       dataDirHostPath = "/var/lib/rook";
       mon = { count = 3; allowMultiplePerNode = false; };
-      mgr = {
-        count = 2;
-        allowMultiplePerNode = false;
-        modules = [{ name = "rook"; enabled = true; }];
-      };
-      dashboard = { enabled = true; ssl = true; };
+      mgr = { count = 2; allowMultiplePerNode = false; };
+      mgr.modules = [{ name = "rook"; enabled = true; }];
+      dashboard.enabled = true;
+      network.ipFamily = "IPv6";
       storage = {
         useAllNodes = false;
         useAllDevices = false;
