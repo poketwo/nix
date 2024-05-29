@@ -14,18 +14,12 @@ let
     deviceClass = "nvme";
   };
 
-  commonStorageClassOptions = {
-    parameters = {
+  commonStorageClassParamters = {
     clusterID = "rook-ceph";
     "csi.storage.k8s.io/provisioner-secret-namespace" = "rook-ceph";
     "csi.storage.k8s.io/controller-expand-secret-namespace" = "rook-ceph";
     "csi.storage.k8s.io/node-stage-secret-namespace" = "rook-ceph";
   };
-    allowVolumeExpansion = true;
-    reclaimPolicy = "Delete";
-  };
-
-  withCommonStorageClassOptions = attrs: lib.mkMerge [ commonStorageClassOptions attrs ];
 in
 {
   namespaces.rook-ceph = {
@@ -107,11 +101,10 @@ in
     # StorageClass Configuration
     # ==========================
 
-    resources."storage.k8s.io/v1".StorageClass = {
-      rbd-nvme = withCommonStorageClassOptions {
-        metadata.annotations."storageclass.kubernetes.io/is-default-class" = "true";
+    resources."storage.k8s.io/v1".StorageClass = rec {
+      rbd-nvme-retain = {
         provisioner = "rook-ceph.rbd.csi.ceph.com";
-        parameters = {
+        parameters = commonStorageClassParamters // {
           pool = "rbd-nvme";
           imageFormat = "2";
           "csi.storage.k8s.io/provisioner-secret-name" = "rook-csi-rbd-provisioner";
@@ -121,17 +114,27 @@ in
           # https://rook.io/docs/rook/latest-release/Getting-Started/Prerequisites/prerequisites/#rbd
           imageFeatures = "layering,fast-diff,object-map,deep-flatten,exclusive-lock";
         };
+        allowVolumeExpansion = true;
+        reclaimPolicy = "Retain";
       };
 
-      cephfs-nvme = withCommonStorageClassOptions {
+      rbd-nvme = rbd-nvme-retain // {
+        metadata.annotations."storageclass.kubernetes.io/is-default-class" = "true";
+        allowVolumeExpansion = true;
+        reclaimPolicy = "Delete";
+      };
+
+      cephfs-nvme = {
         provisioner = "rook-ceph.cephfs.csi.ceph.com";
-        parameters = {
+        parameters = commonStorageClassParamters // {
           fsName = "cephfs-nvme";
           pool = "cephfs-nvme";
           "csi.storage.k8s.io/provisioner-secret-name" = "rook-csi-cephfs-provisioner";
           "csi.storage.k8s.io/controller-expand-secret-name" = "rook-csi-cephfs-provisioner";
           "csi.storage.k8s.io/node-stage-secret-name" = "rook-csi-cephfs-node";
         };
+        allowVolumeExpansion = true;
+        reclaimPolicy = "Delete";
       };
 
       rgw-nvme = {
