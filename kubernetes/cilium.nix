@@ -58,6 +58,12 @@
         # Native mode delegates routing to node's networking stack
         # We can do this because IPV6, hopefully
         routingMode = "native";
+
+        hubble = {
+          tls.auto.method = "cronJob";
+          relay.enabled = true;
+          ui.enabled = true;
+        };
       };
     };
 
