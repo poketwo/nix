@@ -16,7 +16,11 @@
   };
 
   services = {
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      settings.X11Forwarding = true;
+    };
+
     fwupd.enable = true;
   };
 
