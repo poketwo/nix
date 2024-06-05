@@ -26,6 +26,7 @@ in
         "--advertise-connector"
         "--advertise-exit-node"
         "--ssh"
+        "--stateful-filtering"
       ];
     };
   };
