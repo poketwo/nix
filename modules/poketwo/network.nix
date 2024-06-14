@@ -8,7 +8,7 @@ let
       name = "30-${interface}";
       value = {
         matchConfig.Name = interface;
-        networkConfig.Bond = "bond0";
+        networkConfig.Bond = "inet0";
       };
     })
     cfg.interfaces);
@@ -36,9 +36,9 @@ in
     systemd.network = {
       enable = true;
 
-      netdevs."10-bond0" = {
+      netdevs."10-inet0" = {
         netdevConfig = {
-          Name = "bond0";
+          Name = "inet0";
           Kind = "bond";
         };
         bondConfig = {
@@ -50,8 +50,8 @@ in
       };
 
       networks = bondNetworks // {
-        "40-bond0" = {
-          matchConfig.Name = "bond0";
+        "40-inet0" = {
+          matchConfig.Name = "inet0";
           address = [
             "23.135.200.${toString cfg.lastOctet}/24"
             "2606:c2c0:5::1:${toString cfg.lastOctet}/32"
