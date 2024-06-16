@@ -15,6 +15,12 @@
           name = "CF_API_TOKEN";
           valueFrom.secretKeyRef = { name = "cloudflare-api-token"; key = "token"; };
         }];
+        extraArgs = [
+          "--domain-filter=hfym.co"
+          "--domain-filter=poketwo.io"
+          "--domain-filter=poketwo.net"
+          "--cloudflare-proxied"
+        ];
       };
     };
 
