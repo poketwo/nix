@@ -6,7 +6,12 @@ let
       inherit server;
       email = "oliver@poketwo.net";
       privateKeySecretRef = { inherit name; };
-      solvers = [{ http01.ingress.ingressClassName = "cilium"; }];
+      solvers = [{
+        dns01.cloudflare.apiTokenSecretRef = {
+          name = "cloudflare-api-token";
+          key = "token";
+        };
+      }];
     };
   };
 in
@@ -30,6 +35,11 @@ in
     resources."cert-manager.io/v1".ClusterIssuer = {
       letsencrypt = leIssuer "letsencrypt" "https://acme-v02.api.letsencrypt.org/directory";
       letsencrypt-staging = leIssuer "letsencrypt-staging" "https://acme-staging-v02.api.letsencrypt.org/directory";
+    };
+
+    resources.v1.Secret."cloudflare-api-token" = {
+      type = "Opaque";
+      stringData.token = "";
     };
   };
 }
