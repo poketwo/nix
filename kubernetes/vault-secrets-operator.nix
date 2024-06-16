@@ -5,7 +5,7 @@
     chart = transpire.fetchFromHelm {
       repo = "https://helm.releases.hashicorp.com";
       name = "vault-secrets-operator";
-      version = "0.7.0";
+      version = "0.7.1";
       sha256 = "eUZTE+tuag3qwIpozu9Fd72F7kpDVOdEydsEe+Z4v4Y=";
     };
 
