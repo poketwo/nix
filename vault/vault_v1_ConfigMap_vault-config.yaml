@@ -1,0 +1,18 @@
+apiVersion: v1
+data:
+  extraconfig-from-values.hcl: "\ndisable_mlock = true\nui = true\n\nlistener \"tcp\"\
+    \ {\n  tls_disable = 1\n  address = \"[::]:8200\"\n  cluster_address = \"[::]:8201\"\
+    \n  telemetry { unauthenticated_metrics_access = \"true\" }\n}\n\nstorage \"raft\"\
+    \ {\n  path = \"/vault/data\"\n  retry_join { leader_api_addr = \"http://vault-0.vault-internal:8200\"\
+    \ }\n  retry_join { leader_api_addr = \"http://vault-1.vault-internal:8200\" }\n\
+    \  retry_join { leader_api_addr = \"http://vault-2.vault-internal:8200\" }\n}\n\
+    \nservice_registration \"kubernetes\" {}"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: vault
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vault
+    helm.sh/chart: vault-0.28.0
+  name: vault-config
+  namespace: vault

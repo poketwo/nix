@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: rgw-nvme-ingress
+  namespace: rook-ceph
+spec:
+  rules:
+  - host: rgw.hfym.co
+    http:
+      paths:
+      - backend:
+          service:
+            name: rook-ceph-rgw-rgw-nvme
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - rgw.hfym.co
+    secretName: rgw-nvme-ingress-tls

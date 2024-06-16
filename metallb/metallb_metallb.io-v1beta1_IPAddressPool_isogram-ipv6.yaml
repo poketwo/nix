@@ -1,0 +1,8 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: isogram-ipv6
+  namespace: metallb
+spec:
+  addresses:
+  - 2606:c2c0:5:1:3::/112

@@ -1,0 +1,13 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: deny-external
+  namespace: cilium
+spec:
+  egress:
+  - toEntities:
+    - all
+  endpointSelector: {}
+  ingress:
+  - fromEntities:
+    - cluster

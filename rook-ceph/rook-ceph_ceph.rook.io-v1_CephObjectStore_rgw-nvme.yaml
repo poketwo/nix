@@ -1,0 +1,21 @@
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStore
+metadata:
+  name: rgw-nvme
+  namespace: rook-ceph
+spec:
+  dataPool:
+    deviceClass: nvme
+    failureDomain: host
+    replicated:
+      size: 3
+  gateway:
+    instances: 1
+    port: 80
+    securePort: 443
+    sslCertificateRef: rgw-nvme-tls
+  metadataPool:
+    deviceClass: nvme
+    failureDomain: host
+    replicated:
+      size: 3

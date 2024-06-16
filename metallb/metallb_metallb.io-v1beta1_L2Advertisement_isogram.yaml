@@ -1,0 +1,15 @@
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: isogram
+  namespace: metallb
+spec:
+  ipAddressPools:
+  - isogram-ipv6
+  nodeSelectors:
+  - matchLabels:
+      kubernetes.io/hostname: vaporeon
+  - matchLabels:
+      kubernetes.io/hostname: jolteon
+  - matchLabels:
+      kubernetes.io/hostname: flareon
