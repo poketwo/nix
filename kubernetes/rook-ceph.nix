@@ -94,7 +94,34 @@ in
     resources."ceph.rook.io/v1".CephObjectStore.rgw-nvme.spec = {
       metadataPool = defaultPool;
       dataPool = defaultPool;
-      gateway = { port = 80; securePort = 443; instances = 1; };
+      gateway = {
+        sslCertificateRef = "rgw-nvme-tls";
+        port = 80;
+        securePort = 443;
+        instances = 1;
+      };
+    };
+
+    # Ingress for Object Storage
+    resources."networking.k8s.io/v1".Ingress.rgw-nvme-ingress = {
+      metadata.annotations."cert-manager.io/cluster-issuer" = "letsencrypt";
+      spec = {
+        rules = [{
+          host = "rgw.hfym.co";
+          http.paths = [{
+            path = "/";
+            pathType = "Prefix";
+            backend.service = {
+              name = "rook-ceph-rgw-rgw-nvme";
+              port.number = 80;
+            };
+          }];
+        }];
+        tls = [{
+          hosts = [ "rgw.hfym.co" ];
+          secretName = "rgw-nvme-ingress-tls";
+        }];
+      };
     };
 
     # ==========================
