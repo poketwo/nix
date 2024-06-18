@@ -6,6 +6,7 @@
   poketwo = {
     auth.enable = lib.mkDefault true;
     locale.enable = lib.mkDefault true;
+    nat64.enable = lib.mkDefault true;
     shell.enable = lib.mkDefault true;
     tailscale.enable = lib.mkDefault true;
   };
