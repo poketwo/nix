@@ -25,8 +25,9 @@ let
     ${ip} netns exec ${cfg.netNsName} ${ip} -4 address add dev to_world 10.100.64.2/30
     ${ip} netns exec ${cfg.netNsName} ${ip} -6 address add dev to_world fd64:cac4:1daa::2/64
 
-    # Route Jool's IPv4 traffic to the world (this requires NAT)
+    # Route Jool's traffic to the world (this requires NAT for IPv4)
     ${ip} netns exec ${cfg.netNsName} ${ip} -4 route add default via 10.100.64.1
+    ${ip} netns exec ${cfg.netNsName} ${ip} -6 route add default via fd64:cac4:1daa::1
 
     # Route the NAT64 prefix to Jool
     ${ip} -6 route add 64:ff9b::/96 dev to_jool via fd64:cac4:1daa::2
