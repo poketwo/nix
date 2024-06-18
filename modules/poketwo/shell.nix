@@ -15,7 +15,7 @@ in
       systemPackages = with pkgs; [
         zsh
         zsh-powerlevel10k
-        atuin
+        # atuin
       ];
     };
 
@@ -27,11 +27,11 @@ in
       interactiveShellInit = ''
         source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
         source /etc/p10k.zsh
-        eval "$(atuin init zsh --disable-up-arrow)"
+        # eval "$(atuin init zsh --disable-up-arrow)"
       '';
     };
 
     users.defaultUserShell = pkgs.zsh;
-    services.atuin.enable = true;
+    # services.atuin.enable = true;
   };
 }
