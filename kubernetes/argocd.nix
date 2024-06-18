@@ -47,7 +47,7 @@
 
       template = {
         metadata = {
-          name = "{{.path.basename}}";
+          name = "{{path.basename}}";
           namespace = "argocd";
         };
         spec = {
@@ -55,11 +55,11 @@
           source = {
             repoURL = "https://github.com/poketwo/nix.git";
             targetRevision = "cluster";
-            path = "{{.path.path}}";
+            path = "{{path}}";
           };
           destination = {
             server = "https://kubernetes.default.svc";
-            namespace = "{{.path.basename}}";
+            namespace = "{{path.basename}}";
           };
           syncPolicy = {
             automated = { };
