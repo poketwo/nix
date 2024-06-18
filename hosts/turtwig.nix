@@ -13,8 +13,6 @@
   networking = {
     hostName = "turtwig";
     hostId = "0a29d5d3";
-    useNetworkd = true;
-    nameservers = [ "2606:4700:4700::1111" "2606:4700:4700::1001" "1.1.1.1" "1.0.0.1" ];
     usePredictableInterfaceNames = false;
   };
 
