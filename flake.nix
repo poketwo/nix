@@ -25,6 +25,7 @@
         ./modules/poketwo/cloudflare-warp.nix
         ./modules/poketwo/kubernetes.nix
         ./modules/poketwo/locale.nix
+        ./modules/poketwo/nat64.nix
         ./modules/poketwo/network.nix
         ./modules/poketwo/shell.nix
         ./modules/poketwo/tailscale.nix
