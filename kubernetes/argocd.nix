@@ -29,6 +29,16 @@
         };
 
         configs = {
+          cm = {
+            "resource.customizations.ignoreDifferences.admissionregistration.k8s.io_MutatingWebhookConfiguration" = ''
+              jqPathExpressions:
+              - .webhooks[]?.clientConfig.caBundle
+            '';
+            "resource.customizations.ignoreDifferences.apiextensions.k8s.io_CustomResourceDefinition" = ''
+              jqPathExpressions:
+              - .spec.conversion.webhook.clientConfig.caBundle
+            '';
+          };
           params = {
             "server.insecure" = true;
           };
