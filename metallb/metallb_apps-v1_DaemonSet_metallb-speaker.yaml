@@ -99,9 +99,14 @@ spec:
       - command:
         - /bin/sh
         - -c
-        - "/sbin/tini -- /usr/lib/frr/docker-start &\nattempts=0\nuntil [[ -f /etc/frr/frr.log\
-          \ || $attempts -eq 60 ]]; do\n  sleep 1\n  attempts=$(( $attempts + 1 ))\n\
-          done\ntail -f /etc/frr/frr.log\n"
+        - |
+          /sbin/tini -- /usr/lib/frr/docker-start &
+          attempts=0
+          until [[ -f /etc/frr/frr.log || $attempts -eq 60 ]]; do
+            sleep 1
+            attempts=$(( $attempts + 1 ))
+          done
+          tail -f /etc/frr/frr.log
         env:
         - name: TINI_SUBREAPER
           value: 'true'

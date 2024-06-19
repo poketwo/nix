@@ -1,8 +1,7 @@
 apiVersion: v1
 data:
-  context: 'argocdUrl: https://argocd.hfym.co
-
-    '
+  context: |
+    argocdUrl: https://argocd.hfym.co
 kind: ConfigMap
 metadata:
   labels:
