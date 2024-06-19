@@ -143,11 +143,11 @@
         "systems": "systems_3"
       },
       "locked": {
-        "lastModified": 1718757999,
-        "narHash": "sha256-22BXo/4PRrcnl9cL9LY+oHazTsxyqkqowzzSSAFQ1FE=",
+        "lastModified": 1718758872,
+        "narHash": "sha256-KG73GPAGGM9bD0n42yASxgMfHvEPcWupHDIQkRE66nE=",
         "owner": "oliver-ni",
         "repo": "transpire",
-        "rev": "2a3dbe3b077422bf6a90d053524b1e6f102e5f01",
+        "rev": "a0b12468fbb750c7c5e3a7fb9f0894db04e06798",
         "type": "github"
       },
       "original": {
