@@ -1,0 +1,12 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-external-ingress-to-mongodb
+  namespace: guiduck
+spec:
+  endpointSelector:
+    matchLabels:
+      app: guiduck-mongodb-svc
+  ingress:
+  - fromEntities:
+    - all

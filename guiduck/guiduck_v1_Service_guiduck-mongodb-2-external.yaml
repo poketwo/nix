@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'false'
+    external-dns.alpha.kubernetes.io/hostname: mongodb-2.guiduck-mongodb.svc.poketwo.io
+  name: guiduck-mongodb-2-external
+  namespace: guiduck
+spec:
+  ports:
+  - port: 27017
+  selector:
+    app: guiduck-mongodb-svc
+    statefulset.kubernetes.io/pod-name: guiduck-mongodb-2
+  type: LoadBalancer

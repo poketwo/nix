@@ -1,0 +1,43 @@
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: guiduck-mongodb
+  namespace: guiduck
+spec:
+  additionalMongodConfig:
+    net.ipv6: true
+  members: 3
+  replicaSetHorizons:
+  - external: mongodb-0.guiduck-mongodb.svc.poketwo.io:27017
+  - external: mongodb-1.guiduck-mongodb.svc.poketwo.io:27017
+  - external: mongodb-2.guiduck-mongodb.svc.poketwo.io:27017
+  security:
+    tls:
+      caCertificateSecretRef:
+        name: cluster-ca
+      certificateKeySecretRef:
+        name: guiduck-mongodb-tls
+      enabled: true
+  statefulSet:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mongod
+            resources:
+              limits:
+                cpu: 1
+                memory: 20Gi
+              requests:
+                cpu: 100m
+                memory: 1Gi
+  type: ReplicaSet
+  users:
+  - name: guiduck
+    passwordSecretRef:
+      name: guiduck-mongodb-user
+    roles:
+    - db: admin
+      name: root
+    scramCredentialsSecretName: guiduck
+  version: 7.0.11
