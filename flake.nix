@@ -32,7 +32,6 @@
         ./profiles/base.nix
       ];
 
-      # Put modules for specific hosts here.
       hosts = nixpkgs.lib.mapAttrs'
         (filename: _: {
           name = nixpkgs.lib.nameFromURL filename ".";
@@ -40,11 +39,16 @@
         })
         (builtins.readDir ./hosts);
 
-      kubernetesModules = builtins.filter
-        (path: nixpkgs.lib.hasSuffix ".nix" path)
-        (nixpkgs.lib.mapAttrsToList
-          (filename: _: ./kubernetes/${filename})
-          (builtins.readDir ./kubernetes));
+      fs = nixpkgs.lib.fileset;
+      allNixFiles = fs.fileFilter (file: file.hasExt "nix") ./.;
+
+      kubernetesExtraModules = fs.toList
+        (fs.intersection allNixFiles ./kubernetes/extras);
+
+      kubernetesModules = fs.toList
+        (fs.intersection
+          (fs.fileFilter (file: file.hasExt "nix") ./.)
+          (fs.difference ./kubernetes ./kubernetes/extras));
 
       openApiSpec = ./kube-openapi.json;
 
@@ -92,7 +96,7 @@
       packages = forAllSystems (system: pkgs: {
         kubernetes = transpire.lib.${system}.build.cluster {
           inherit openApiSpec;
-          modules = kubernetesModules ++ [ ./kubernetes/extras/vault-secrets.nix ];
+          modules = kubernetesModules ++ kubernetesExtraModules;
         };
 
         # This is used for the `push-vault-secrets` app
