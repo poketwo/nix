@@ -71,10 +71,7 @@
             server = "https://kubernetes.default.svc";
             namespace = "{{path.basename}}";
           };
-          syncPolicy = {
-            automated = { };
-            syncOptions = [ "CreateNamespace=true" ];
-          };
+          syncPolicy.automated = { };
         };
       };
     };
