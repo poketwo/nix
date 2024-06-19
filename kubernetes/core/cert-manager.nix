@@ -35,9 +35,26 @@ in
     resources."cert-manager.io/v1".ClusterIssuer = {
       letsencrypt = leIssuer "letsencrypt" "https://acme-v02.api.letsencrypt.org/directory";
       letsencrypt-staging = leIssuer "letsencrypt-staging" "https://acme-staging-v02.api.letsencrypt.org/directory";
+      selfsigned.spec.selfSigned = { };
+      cluster-ca.spec.ca.secretName = "cluster-ca-secret";
     };
 
-    resources.v1.Secret."cloudflare-api-token" = {
+    resources."cert-manager.io/v1".Certificate.cluster-ca.spec = {
+      isCA = true;
+      commonName = "HFYM CA";
+      secretName = "cluster-ca-secret";
+      privateKey = {
+        algorithm = "ECDSA";
+        size = 256;
+      };
+      issuerRef = {
+        name = "selfsigned";
+        kind = "ClusterIssuer";
+        group = "cert-manager.io";
+      };
+    };
+
+    resources.v1.Secret.cloudflare-api-token = {
       type = "Opaque";
       stringData.token = "";
     };
