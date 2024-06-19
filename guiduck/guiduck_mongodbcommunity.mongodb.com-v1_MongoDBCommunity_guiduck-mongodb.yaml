@@ -31,6 +31,13 @@ spec:
               requests:
                 cpu: 100m
                 memory: 1Gi
+          volumeClaimTemplates:
+          - metadata:
+              name: data-volume
+            spec:
+              resouces:
+                requests:
+                  storage: 256Gi
   type: ReplicaSet
   users:
   - name: guiduck
