@@ -3,6 +3,12 @@ data:
   admin.enabled: 'true'
   application.instanceLabelKey: argocd.argoproj.io/instance
   exec.enabled: 'false'
+  resource.customizations.ignoreDifferences.admissionregistration.k8s.io_MutatingWebhookConfiguration: |
+    jqPathExpressions:
+    - .webhooks[]?.clientConfig.caBundle
+  resource.customizations.ignoreDifferences.apiextensions.k8s.io_CustomResourceDefinition: |
+    jqPathExpressions:
+    - .spec.conversion.webhook.clientConfig.caBundle
   server.rbac.log.enforce.enable: 'false'
   statusbadge.enabled: 'false'
   timeout.hard.reconciliation: 0s
