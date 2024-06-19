@@ -32,6 +32,22 @@ in
       };
     };
 
+    helmReleases.trust-manager = {
+      chart = transpire.fetchFromHelm {
+        repo = "https://charts.jetstack.io";
+        name = "trust-manager";
+        version = "0.11.0";
+        sha256 = "GdHwODmpDmk5osNzQ+v/OCXdvMEuyPsftHvOfgv3tfU=";
+      };
+
+      values = {
+        secretTargets = {
+          enabled = true;
+          authorizedSecretsAll = true;
+        };
+      };
+    };
+
     resources."cert-manager.io/v1".ClusterIssuer = {
       letsencrypt = leIssuer "letsencrypt" "https://acme-v02.api.letsencrypt.org/directory";
       letsencrypt-staging = leIssuer "letsencrypt-staging" "https://acme-staging-v02.api.letsencrypt.org/directory";
@@ -52,6 +68,16 @@ in
         kind = "ClusterIssuer";
         group = "cert-manager.io";
       };
+    };
+
+    resources."trust.cert-manager.io/v1alpha1".Bundle.cluster-ca.spec = {
+      sources = [{
+        secret = {
+          name = "cluster-ca-secret";
+          key = "ca.crt";
+        };
+      }];
+      target.secret.key = "ca.crt";
     };
 
     resources.v1.Secret.cloudflare-api-token = {
