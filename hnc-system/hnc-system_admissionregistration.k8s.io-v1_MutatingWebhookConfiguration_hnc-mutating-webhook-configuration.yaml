@@ -1,0 +1,28 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: hnc-system/hnc-serving-cert
+  name: hnc-mutating-webhook-configuration
+  namespace: hnc-system
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: hnc-webhook-service
+      namespace: hnc-system
+      path: /mutate-namespace
+  failurePolicy: Ignore
+  name: namespacelabel.hnc.x-k8s.io
+  rules:
+  - apiGroups:
+    - ''
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - namespaces
+  sideEffects: None

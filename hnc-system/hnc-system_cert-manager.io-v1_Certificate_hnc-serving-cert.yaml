@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: hnc-serving-cert
+  namespace: hnc-system
+spec:
+  commonName: hnc-webhook-service.hnc-system.svc
+  dnsNames:
+  - hnc-webhook-service.hnc-system.svc.cluster.local
+  - hnc-webhook-service.hnc-system.svc
+  issuerRef:
+    kind: Issuer
+    name: hnc-selfsigned-issuer
+  secretName: webhook-server-cert

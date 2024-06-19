@@ -25,5 +25,3 @@ spec:
         targetRevision: cluster
       syncPolicy:
         automated: {}
-        syncOptions:
-        - CreateNamespace=true
