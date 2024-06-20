@@ -170,5 +170,31 @@ in
         parameters = { objectStoreName = "rgw-nvme"; objectStoreNamespace = "rook-ceph"; };
       };
     };
+
+    # =================================
+    # VolumeSnapshotClass Configuration
+    # =================================
+
+    resources."snapshot.storage.k8s.io/v1".VolumeSnapshotClass = {
+      csi-rbdplugin-snapclass = {
+        driver = "rook-ceph.rbd.csi.ceph.com";
+        parameters = {
+          clusterID = "rook-ceph";
+          "csi.storage.k8s.io/snapshotter-secret-name" = "rook-csi-rbd-provisioner";
+          "csi.storage.k8s.io/snapshotter-secret-namespace" = "rook-ceph";
+        };
+        deletionPolicy = "Delete";
+      };
+
+      csi-cephfsplugin-snapclass = {
+        driver = "rook-ceph.cephfs.csi.ceph.com";
+        parameters = {
+          clusterID = "rook-ceph";
+          "csi.storage.k8s.io/snapshotter-secret-name" = "rook-csi-cephfs-provisioner";
+          "csi.storage.k8s.io/snapshotter-secret-namespace" = "rook-ceph";
+        };
+        deletionPolicy = "Delete";
+      };
+    };
   };
 }
