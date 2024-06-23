@@ -1,0 +1,156 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations:
+    rollout-max-unavailable: '50'
+  labels:
+    app.kubernetes.io/component: store-gateway
+    app.kubernetes.io/instance: mimir
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mimir
+    app.kubernetes.io/part-of: memberlist
+    app.kubernetes.io/version: 2.12.0
+    helm.sh/chart: mimir-distributed-5.3.0
+    name: store-gateway-zone-b
+    rollout-group: store-gateway
+    zone: zone-b
+  name: mimir-store-gateway-zone-b
+  namespace: mimir
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: store-gateway
+      app.kubernetes.io/instance: mimir
+      app.kubernetes.io/name: mimir
+      rollout-group: store-gateway
+      zone: zone-b
+  serviceName: mimir-store-gateway-headless
+  template:
+    metadata:
+      annotations:
+        checksum/config: b6078317eea771b693a6162d4f2c7270f40688eb42833b3714c634fa5395d618
+      labels:
+        app.kubernetes.io/component: store-gateway
+        app.kubernetes.io/instance: mimir
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: mimir
+        app.kubernetes.io/part-of: memberlist
+        app.kubernetes.io/version: 2.12.0
+        helm.sh/chart: mimir-distributed-5.3.0
+        name: store-gateway-zone-b
+        rollout-group: store-gateway
+        zone: zone-b
+      namespace: mimir
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: rollout-group
+                operator: In
+                values:
+                - store-gateway
+              - key: zone
+                operator: NotIn
+                values:
+                - zone-b
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - args:
+        - -target=store-gateway
+        - -config.expand-env=true
+        - -config.file=/etc/mimir/mimir.yaml
+        - -store-gateway.sharding-ring.instance-availability-zone=zone-b
+        env:
+        - name: GOMAXPROCS
+          value: '5'
+        - name: GOMEMLIMIT
+          value: '1073741824'
+        - name: JAEGER_REPORTER_MAX_QUEUE_SIZE
+          value: '1000'
+        envFrom:
+        - secretRef:
+            name: backblaze-b2-credentials
+        image: grafana/mimir:2.12.0
+        imagePullPolicy: IfNotPresent
+        name: store-gateway
+        ports:
+        - containerPort: 8080
+          name: http-metrics
+          protocol: TCP
+        - containerPort: 9095
+          name: grpc
+          protocol: TCP
+        - containerPort: 7946
+          name: memberlist
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http-metrics
+          initialDelaySeconds: 60
+        resources:
+          limits:
+            memory: 2.1Gi
+          requests:
+            cpu: '1'
+            memory: 1.5Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/mimir
+          name: config
+        - mountPath: /var/mimir
+          name: runtime-config
+        - mountPath: /data
+          name: storage
+        - mountPath: /active-query-tracker
+          name: active-queries
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccountName: mimir
+      terminationGracePeriodSeconds: 240
+      topologySpreadConstraints:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/component: store-gateway
+            app.kubernetes.io/instance: mimir
+            app.kubernetes.io/name: mimir
+        maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+      volumes:
+      - configMap:
+          items:
+          - key: mimir.yaml
+            path: mimir.yaml
+          name: mimir-config
+        name: config
+      - configMap:
+          name: mimir-runtime
+        name: runtime-config
+      - emptyDir: {}
+        name: active-queries
+  updateStrategy:
+    type: OnDelete
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi

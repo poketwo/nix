@@ -1,0 +1,156 @@
+apiVersion: v1
+data:
+  mimir.yaml: |2
+
+    activity_tracker:
+      filepath: /active-query-tracker/activity.log
+    alertmanager:
+      data_dir: /data
+      enable_api: true
+      external_url: /alertmanager
+      fallback_config_file: /configs/alertmanager_fallback_config.yaml
+      sharding_ring:
+        instance_enable_ipv6: true
+    alertmanager_storage:
+      s3:
+        bucket_name: hfym-mimir-alertmanager
+    blocks_storage:
+      backend: s3
+      bucket_store:
+        chunks_cache:
+          backend: memcached
+          memcached:
+            addresses: dns+mimir-chunks-cache.mimir.svc:11211
+            max_idle_connections: 150
+            max_item_size: 1048576
+            timeout: 750ms
+        index_cache:
+          backend: memcached
+          memcached:
+            addresses: dns+mimir-index-cache.mimir.svc:11211
+            max_idle_connections: 150
+            max_item_size: 5242880
+            timeout: 750ms
+        metadata_cache:
+          backend: memcached
+          memcached:
+            addresses: dns+mimir-metadata-cache.mimir.svc:11211
+            max_idle_connections: 150
+            max_item_size: 1048576
+        sync_dir: /data/tsdb-sync
+      s3:
+        bucket_name: hfym-mimir-blocks
+      tsdb:
+        dir: /data/tsdb
+        head_compaction_interval: 15m
+        wal_replay_concurrency: 3
+    common:
+      storage:
+        backend: s3
+        s3:
+          access_key_id: ${AWS_ACCESS_KEY_ID}
+          endpoint: ${BUCKET_ENDPOINT}
+          secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+    compactor:
+      compaction_interval: 30m
+      data_dir: /data
+      deletion_delay: 2h
+      first_level_compaction_wait_period: 25m
+      max_closing_blocks_concurrency: 2
+      max_opening_blocks_concurrency: 4
+      sharding_ring:
+        heartbeat_period: 1m
+        heartbeat_timeout: 4m
+        instance_enable_ipv6: true
+        wait_stability_min_duration: 1m
+      symbols_flushers_concurrency: 4
+    distributor:
+      ring:
+        heartbeat_period: 1m
+        heartbeat_timeout: 4m
+        instance_enable_ipv6: true
+    frontend:
+      cache_results: true
+      instance_enable_ipv6: true
+      parallelize_shardable_queries: true
+      query_sharding_target_series_per_shard: 2500
+      results_cache:
+        backend: memcached
+        memcached:
+          addresses: dns+mimir-results-cache.mimir.svc:11211
+          max_item_size: 5242880
+          timeout: 500ms
+      scheduler_address: mimir-query-scheduler-headless.mimir.svc:9095
+    frontend_worker:
+      grpc_client_config:
+        max_send_msg_size: 419430400
+      scheduler_address: mimir-query-scheduler-headless.mimir.svc:9095
+    ingester:
+      ring:
+        final_sleep: 0s
+        heartbeat_period: 2m
+        heartbeat_timeout: 10m
+        instance_enable_ipv6: true
+        num_tokens: 512
+        tokens_file_path: /data/tokens
+        unregister_on_shutdown: false
+        zone_awareness_enabled: true
+    ingester_client:
+      grpc_client_config:
+        max_recv_msg_size: 104857600
+        max_send_msg_size: 104857600
+    limits:
+      max_cache_freshness: 10m
+      max_query_parallelism: 240
+      max_total_query_length: 12000h
+    memberlist:
+      abort_if_cluster_join_fails: false
+      bind_addr:
+      - '::'
+      compression_enabled: false
+      join_members:
+      - dns+mimir-gossip-ring.mimir.svc.cluster.local.:7946
+    querier:
+      max_concurrent: 16
+    query_scheduler:
+      max_outstanding_requests_per_tenant: 800
+    ruler:
+      alertmanager_url: dnssrvnoa+http://_http-metrics._tcp.mimir-alertmanager-headless.mimir.svc.cluster.local./alertmanager
+      enable_api: true
+      ring:
+        instance_enable_ipv6: true
+      rule_path: /data
+    ruler_storage:
+      cache:
+        backend: memcached
+        memcached:
+          addresses: dns+mimir-metadata-cache.mimir.svc:11211
+          max_item_size: 1048576
+      s3:
+        bucket_name: hfym-mimir-ruler
+    runtime_config:
+      file: /var/mimir/runtime.yaml
+    store_gateway:
+      sharding_ring:
+        heartbeat_period: 1m
+        heartbeat_timeout: 4m
+        instance_enable_ipv6: true
+        kvstore:
+          prefix: multi-zone/
+        tokens_file_path: /data/tokens
+        unregister_on_shutdown: false
+        wait_stability_min_duration: 1m
+        zone_awareness_enabled: true
+    usage_stats:
+      enabled: false
+      installation_mode: helm
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: mimir
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mimir
+    app.kubernetes.io/version: 2.12.0
+    helm.sh/chart: mimir-distributed-5.3.0
+  name: mimir-config
+  namespace: mimir
