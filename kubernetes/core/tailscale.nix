@@ -11,7 +11,8 @@
       };
 
       values = {
-        operatorConfig.defaultTags = [ "tag:hfym-ds" ];
+        operatorConfig.defaultTags = [ "tag:hfym-ds-operator" ];
+        proxyConfig.defaultTags = "tag:hfym-ds";
       };
     };
 
