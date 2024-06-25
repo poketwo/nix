@@ -14,6 +14,7 @@ let
           destination = {
             inherit (metadata) name;
             create = true;
+            type = obj.type or "Opaque";
           };
         };
       }
