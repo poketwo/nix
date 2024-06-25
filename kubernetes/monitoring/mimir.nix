@@ -16,8 +16,6 @@ let
 in
 {
   namespaces.mimir = {
-    createNamespace = false;
-
     helmReleases.mimir = {
       chart = transpire.fetchFromHelm {
         repo = "https://grafana.github.io/helm-charts";

@@ -16,8 +16,6 @@ let
 in
 {
   namespaces.guiduck = {
-    createNamespace = false;
-
     resources."cert-manager.io/v1".Certificate.mongodb-tls.spec = {
       commonName = "*.mongodb-svc.guiduck.svc.cluster.local";
       dnsNames = [ "*.mongodb-svc.guiduck.svc.cluster.local" ];

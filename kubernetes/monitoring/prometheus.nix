@@ -2,8 +2,6 @@
 
 {
   namespaces.prometheus = {
-    createNamespace = false;
-
     helmReleases = {
       prometheus-operator-crds = {
         chart = transpire.fetchFromHelm {

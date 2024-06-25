@@ -11,8 +11,6 @@ let
 in
 {
   namespaces.loki = {
-    createNamespace = false;
-
     helmReleases.loki = {
       chart = transpire.fetchFromHelm {
         repo = "https://grafana.github.io/helm-charts";
