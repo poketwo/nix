@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: guiduck
+  namespace: guiduck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guiduck
+  serviceName: guiduck
+  template:
+    metadata:
+      labels:
+        app: guiduck
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_HOST
+          value: mongodb-public-0.svc-legacy.poketwo.io,mongodb-public-1.svc-legacy.poketwo.io
+        - name: DATABASE_NAME
+          value: support
+        - name: DATABASE_USERNAME
+          value: root
+        - name: OUTLINE_BASE_URL
+          value: https://outline.poketwo.io
+        - name: POKETWO_DATABASE_HOST
+          value: mongodb-0.svc-legacy.poketwo.io,monogdb-1.svc-legacy.poketwo.io
+        - name: POKETWO_DATABASE_NAME
+          value: pokemon
+        - name: POKETWO_DATABASE_USERNAME
+          value: root
+        - name: POKETWO_REDIS_URI
+          value: redis://[64:ff9b::204.16.243.197]/0
+        - name: PREFIX
+          value: '? >'
+        - name: REDIS_URI
+          value: redis://[64:ff9b::204.16.243.197]/1
+        - name: BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: guiduck
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-password
+              name: guiduck
+        - name: OUTLINE_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: outline-api-token
+              name: guiduck
+        - name: POKETWO_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: poketwo-mongodb-password
+              name: guiduck
+        - name: POKETWO_REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: poketwo-redis-password
+              name: guiduck
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: guiduck
+        image: ghcr.io/poketwo/guiduck:master
+        imagePullPolicy: Always
+        name: guiduck
+        resources:
+          limits:
+            cpu: 500m
+            memory: 4Gi
+          requests:
+            cpu: 500m
+            memory: 4Gi
+      imagePullSecrets:
+      - name: ghcr-auth
