@@ -11,8 +11,15 @@
       };
 
       values = {
-        operatorConfig.defaultTags = [ "tag:hfym-ds-operator" ];
-        proxyConfig.defaultTags = "tag:hfym-ds";
+        operatorConfig = {
+          image.repository = "ghcr.io/tailscale/k8s-operator";
+          defaultTags = [ "tag:hfym-ds-operator" ];
+          hostname = "hfym-ds-operator";
+        };
+        proxyConfig = {
+          image.repository = "ghcr.io/tailscale/tailscale";
+          defaultTags = "tag:hfym-ds";
+        };
       };
     };
 
@@ -22,6 +29,10 @@
         client_id = "";
         client_secret = "";
       };
+    };
+
+    resources."tailscale.com/v1alpha1".ProxyClass.prod.spec = {
+      statefulSet.pod.tailscaleContainer.securityContext.privileged = true;
     };
   };
 }
