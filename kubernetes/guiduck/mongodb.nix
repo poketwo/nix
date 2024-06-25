@@ -42,21 +42,23 @@ in
         roles = [{ name = "root"; db = "admin"; }];
       }];
       additionalMongodConfig."net.ipv6" = true;
-      statefulSet.spec.template.spec = {
+      statefulSet.spec = {
         volumeClaimTemplates = [{
           metadata.name = "data-volume";
           spec = {
-            resouces.requests.storage = "256Gi";
+            resources.requests.storage = "256Gi";
             storageClassName = "rbd-nvme-retain";
           };
         }];
-        containers = [{
-          name = "mongod";
-          resources = {
-            limits = { cpu = 1; memory = "20Gi"; };
-            requests = { cpu = "100m"; memory = "1Gi"; };
-          };
-        }];
+        template.spec = {
+          containers = [{
+            name = "mongod";
+            resources = {
+              limits = { cpu = 1; memory = "20Gi"; };
+              requests = { cpu = "100m"; memory = "1Gi"; };
+            };
+          }];
+        };
       };
       replicaSetHorizons = [
         { external = "guiduck-mongodb-0-external.royal-pinecone.ts.net:27017"; }
