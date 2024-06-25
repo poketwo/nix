@@ -43,6 +43,9 @@ jobs:
         with:
           ref: cluster
 
+      - name: Remove old files
+        run: git rm -r .
+
       - name: Download cluster artifact
         uses: actions/download-artifact@v4
         with:
