@@ -20,7 +20,7 @@ spec:
         - name: OPERATOR_INITIAL_TAGS
           value: tag:hfym-ds-operator
         - name: OPERATOR_HOSTNAME
-          value: tailscale-operator
+          value: hfym-ds-operator
         - name: OPERATOR_SECRET
           value: operator
         - name: OPERATOR_LOGGING
@@ -34,14 +34,14 @@ spec:
         - name: CLIENT_SECRET_FILE
           value: /oauth/client_secret
         - name: PROXY_IMAGE
-          value: tailscale/tailscale:v1.68.1
+          value: ghcr.io/tailscale/tailscale:v1.68.1
         - name: PROXY_TAGS
           value: tag:hfym-ds
         - name: APISERVER_PROXY
           value: 'false'
         - name: PROXY_FIREWALL_MODE
           value: auto
-        image: tailscale/k8s-operator:v1.68.1
+        image: ghcr.io/tailscale/k8s-operator:v1.68.1
         imagePullPolicy: Always
         name: operator
         volumeMounts:

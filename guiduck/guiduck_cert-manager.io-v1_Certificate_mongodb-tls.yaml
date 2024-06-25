@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mongodb-tls
+  namespace: guiduck
+spec:
+  commonName: '*.mongodb-svc.guiduck.svc.cluster.local'
+  dnsNames:
+  - '*.mongodb-svc.guiduck.svc.cluster.local'
+  issuerRef:
+    kind: ClusterIssuer
+    name: cluster-ca
+  secretName: mongodb-tls

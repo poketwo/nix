@@ -1,0 +1,51 @@
+apiVersion: mongodbcommunity.mongodb.com/v1
+kind: MongoDBCommunity
+metadata:
+  name: mongodb
+  namespace: guiduck
+spec:
+  additionalMongodConfig:
+    net.ipv6: true
+  members: 3
+  replicaSetHorizons:
+  - external: guiduck-mongodb-0-external.royal-pinecone.ts.net:27017
+  - external: guiduck-mongodb-1-external.royal-pinecone.ts.net:27017
+  - external: guiduck-mongodb-2-external.royal-pinecone.ts.net:27017
+  security:
+    tls:
+      caCertificateSecretRef:
+        name: cluster-ca
+      certificateKeySecretRef:
+        name: mongodb-tls
+      enabled: true
+  statefulSet:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mongod
+            resources:
+              limits:
+                cpu: 1
+                memory: 20Gi
+              requests:
+                cpu: 100m
+                memory: 1Gi
+          volumeClaimTemplates:
+          - metadata:
+              name: data-volume
+            spec:
+              resouces:
+                requests:
+                  storage: 256Gi
+              storageClassName: rbd-nvme-retain
+  type: ReplicaSet
+  users:
+  - name: guiduck
+    passwordSecretRef:
+      name: mongodb-user
+    roles:
+    - db: admin
+      name: root
+    scramCredentialsSecretName: guiduck
+  version: 7.0.11
