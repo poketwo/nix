@@ -1,11 +1,5 @@
 { ... }:
 
-let
-  envFromSecretKeyRef = name: secretKeyRef: {
-    inherit name;
-    valueFrom = { inherit secretKeyRef; };
-  };
-in
 {
   namespaces.guiduck = {
     resources."apps/v1".StatefulSet.guiduck.spec = {
