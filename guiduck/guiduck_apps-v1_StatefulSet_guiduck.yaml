@@ -27,13 +27,13 @@ spec:
           value: mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc
         - name: DATABASE_USERNAME
           value: guiduck
-        - name: DATABASE_NAME
-          value: support
         - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
               name: mongodb-user
+        - name: DATABASE_NAME
+          value: support
         - name: DATABASE_URI
           value: mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&authMechanism=SCRAM-SHA-256&tls=true&tlsAllowInvalidCertificates=true
         - name: POKETWO_DATABASE_HOST
@@ -49,20 +49,20 @@ spec:
           value: pokemon
         - name: REDIS_URI
           value: redis://[64:ff9b::204.16.243.197]/1
-        - name: POKETWO_REDIS_URI
-          value: redis://[64:ff9b::204.16.243.197]/0
-        - name: OUTLINE_BASE_URL
-          value: https://outline.poketwo.io
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               key: redis-password
               name: guiduck
+        - name: POKETWO_REDIS_URI
+          value: redis://[64:ff9b::204.16.243.197]/0
         - name: POKETWO_REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               key: poketwo-redis-password
               name: guiduck
+        - name: OUTLINE_BASE_URL
+          value: https://outline.poketwo.io
         - name: OUTLINE_API_TOKEN
           valueFrom:
             secretKeyRef:
