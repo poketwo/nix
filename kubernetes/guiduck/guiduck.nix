@@ -1,8 +1,6 @@
 { ... }:
 
 let
-  env = name: value: { inherit name value; };
-
   envFromSecretKeyRef = name: secretKeyRef: {
     inherit name;
     valueFrom = { inherit secretKeyRef; };
@@ -26,27 +24,26 @@ in
               requests = { memory = "4Gi"; cpu = "500m"; };
             };
             env = [
-              (envFromSecretKeyRef "BOT_TOKEN" { name = "guiduck"; key = "token"; })
-              (env "PREFIX" "? >")
+              { name = "BOT_TOKEN"; valueFrom.secretKeyRef = { name = "guiduck"; key = "token"; }; }
+              { name = "PREFIX"; value = "? >"; }
 
-              (env "DATABASE_HOST" "mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc")
-              (env "DATABASE_USERNAME" "guiduck")
-              (env "DATABASE_NAME" "support")
-              (envFromSecretKeyRef "DATABASE_PASSWORD" { name = "mongodb-user"; key = "password"; })
-              (env "DATABASE_URI" "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&authMechanism=SCRAM-SHA-256&tls=true&tlsAllowInvalidCertificates=true")
+              { name = "DATABASE_HOST"; value = "mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc"; }
+              { name = "DATABASE_USERNAME"; value = "guiduck"; }
+              { name = "DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "mongodb-user"; key = "password"; }; }
+              { name = "DATABASE_NAME"; value = "support"; }
+              { name = "DATABASE_URI"; value = "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&authMechanism=SCRAM-SHA-256&tls=true&tlsAllowInvalidCertificates=true"; }
 
-              (env "POKETWO_DATABASE_HOST" "mongodb-0.svc-legacy.poketwo.io,monogdb-1.svc-legacy.poketwo.io")
-              (env "POKETWO_DATABASE_USERNAME" "root")
-              (envFromSecretKeyRef "POKETWO_DATABASE_PASSWORD" { name = "guiduck"; key = "poketwo-mongodb-password"; })
-              (env "POKETWO_DATABASE_NAME" "pokemon")
+              { name = "POKETWO_DATABASE_HOST"; value = "mongodb-0.svc-legacy.poketwo.io,monogdb-1.svc-legacy.poketwo.io"; }
+              { name = "POKETWO_DATABASE_USERNAME"; value = "root"; }
+              { name = "POKETWO_DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-mongodb-password"; }; }
+              { name = "POKETWO_DATABASE_NAME"; value = "pokemon"; }
 
-              (env "REDIS_URI" "redis://[64:ff9b::204.16.243.197]/1")
-              (env "POKETWO_REDIS_URI" "redis://[64:ff9b::204.16.243.197]/0")
-              (env "OUTLINE_BASE_URL" "https://outline.poketwo.io")
-
-              (envFromSecretKeyRef "REDIS_PASSWORD" { name = "guiduck"; key = "redis-password"; })
-              (envFromSecretKeyRef "POKETWO_REDIS_PASSWORD" { name = "guiduck"; key = "poketwo-redis-password"; })
-              (envFromSecretKeyRef "OUTLINE_API_TOKEN" { name = "guiduck"; key = "outline-api-token"; })
+              { name = "REDIS_URI"; value = "redis://[64:ff9b::204.16.243.197]/1"; }
+              { name = "REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "redis-password"; }; }
+              { name = "POKETWO_REDIS_URI"; value = "redis://[64:ff9b::204.16.243.197]/0"; }
+              { name = "POKETWO_REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-redis-password"; }; }
+              { name = "OUTLINE_BASE_URL"; value = "https://outline.poketwo.io"; }
+              { name = "OUTLINE_API_TOKEN"; valueFrom.secretKeyRef = { name = "guiduck"; key = "outline-api-token"; }; }
             ];
           }];
           imagePullSecrets = [{ name = "ghcr-auth"; }];
