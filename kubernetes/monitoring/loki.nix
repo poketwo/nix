@@ -78,7 +78,7 @@ in
         };
 
         read = withEnv {
-          replicas = 3;
+          replicas = 1;
           # resources = {
           #   limits = { memory = "4Gi"; };
           #   requests = { cpu = "100m"; memory = "128Mi"; };
