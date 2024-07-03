@@ -45,11 +45,6 @@
       };
     };
 
-    resources.v1.Secret.ghcr-auth = {
-      type = "kubernetes.io/dockerconfigjson";
-      stringData.".dockerconfigjson" = "";
-    };
-
     resources.v1.Secret.guiduck = {
       type = "Opaque";
       stringData = {
