@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: poketwo-admin-ingress
+  namespace: guiduck
+spec:
+  rules:
+  - host: admin.poketwo.net
+    http:
+      paths:
+      - backend:
+          service:
+            name: poketwo-admin
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - admin.poketwo.net
+    secretName: poketwo-admin-ingress-tls

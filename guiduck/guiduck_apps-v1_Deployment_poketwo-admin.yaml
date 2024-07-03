@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poketwo-admin
+  namespace: guiduck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poketwo-admin
+  template:
+    metadata:
+      labels:
+        app: poketwo-admin
+    spec:
+      containers:
+      - env:
+        - name: NEXT_PUBLIC_BASE_URL
+          value: https://admin.poketwo.net
+        - name: DATABASE_HOST
+          value: mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc
+        - name: DATABASE_USERNAME
+          value: guiduck
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: mongodb-user
+        - name: DATABASE_NAME
+          value: support
+        - name: DATABASE_URI
+          value: mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secret-key
+              name: poketwo-admin
+        - name: DISCORD_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: discord-client-id
+              name: poketwo-admin
+        - name: DISCORD_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: discord-client-secret
+              name: poketwo-admin
+        image: ghcr.io/poketwo/admin.poketwo.net:latest
+        imagePullPolicy: Always
+        name: poketwo-admin
+      imagePullSecrets:
+      - name: ghcr-auth
