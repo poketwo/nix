@@ -25,10 +25,18 @@ let
     networking.serviceSubnet = "2606:c2c0:5:1:2::/112";
   };
 
+  kubeletConfiguration = yaml.generate "kubeadm-kubelet.yaml" {
+    apiVersion = "kubeadm.k8s.io/v1beta1";
+    kind = "KubeletConfiguration";
+    serverTLSBootstrap = true;
+  };
+
   kubeadmYaml = pkgs.concatText "kubeadm.yaml" [
     initConfiguration
     separator
     clusterConfiguration
+    separator
+    kubeletConfiguration
   ];
 in
 {
