@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poketwo-forms
+  namespace: guiduck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poketwo-forms
+  template:
+    metadata:
+      labels:
+        app: poketwo-forms
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_HOST
+          value: mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc
+        - name: DATABASE_USERNAME
+          value: guiduck
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: mongodb-user
+        - name: DATABASE_NAME
+          value: support
+        - name: DATABASE_URI
+          value: mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secret-key
+              name: poketwo-forms
+        - name: SENDGRID_KEY
+          valueFrom:
+            secretKeyRef:
+              key: sendgrid-key
+              name: poketwo-forms
+        - name: NEXT_PUBLIC_FORMIUM_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              key: formium-project-id
+              name: poketwo-forms
+        - name: FORMIUM_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: formium-token
+              name: poketwo-forms
+        - name: DISCORD_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: discord-client-id
+              name: poketwo-forms
+        - name: DISCORD_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: discord-client-secret
+              name: poketwo-forms
+        image: ghcr.io/poketwo/forms.poketwo.net:latest
+        imagePullPolicy: Always
+        name: poketwo-forms
+      imagePullSecrets:
+      - name: ghcr-auth

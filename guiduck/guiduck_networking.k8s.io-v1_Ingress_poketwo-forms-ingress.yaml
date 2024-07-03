@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: poketwo-forms-ingress
+  namespace: guiduck
+spec:
+  rules:
+  - host: forms.poketwo.net
+    http:
+      paths:
+      - backend:
+          service:
+            name: poketwo-forms
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - forms.poketwo.net
+    secretName: poketwo-forms-ingress-tls
