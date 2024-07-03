@@ -49,6 +49,11 @@ in
         };
 
         loki.structuredConfig = {
+          limits_config = {
+            ingestion_rate_mb = 20;
+            ingestion_burst_size_mb = 50;
+          };
+
           analytics.reporting_enabled = false;
           auth_enabled = false;
           common.ring.instance_enable_ipv6 = true;

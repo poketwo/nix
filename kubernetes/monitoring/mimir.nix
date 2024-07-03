@@ -49,6 +49,7 @@ in
             };
           };
 
+          limits.max_global_series_per_user = 2000000;
           blocks_storage.s3.bucket_name = "hfym-mimir-blocks";
           alertmanager_storage.s3.bucket_name = "hfym-mimir-alertmanager";
           ruler_storage.s3.bucket_name = "hfym-mimir-ruler";
