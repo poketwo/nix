@@ -12,7 +12,7 @@
     transpire.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, systems, agenix, transpire }:
+  outputs = { nixpkgs, systems, agenix, transpire, ... }:
     let
       # ========================
       # NixOS Host Configuration
@@ -97,6 +97,10 @@
         kubernetes = transpire.lib.${system}.build.cluster {
           inherit openApiSpec;
           modules = kubernetesModules ++ kubernetesExtraModules;
+        };
+
+        docs = transpire.lib.${system}.buildDocs {
+          inherit openApiSpec;
         };
 
         # This is used for the `push-vault-secrets` app
