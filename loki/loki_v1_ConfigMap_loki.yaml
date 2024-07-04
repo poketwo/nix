@@ -65,6 +65,8 @@ data:
           kvstore:
             store: memberlist
     limits_config:
+      ingestion_burst_size_mb: 50
+      ingestion_rate_mb: 20
       max_cache_freshness_per_query: 10m
       query_timeout: 300s
       reject_old_samples: true

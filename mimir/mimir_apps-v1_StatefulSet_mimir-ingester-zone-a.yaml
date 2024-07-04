@@ -30,7 +30,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: b6078317eea771b693a6162d4f2c7270f40688eb42833b3714c634fa5395d618
+        checksum/config: 95c592bcf6dfdf7cffc29d0403d72a6b149c37ddb9e83a972a1e8c837bc7dcb6
       labels:
         app.kubernetes.io/component: ingester
         app.kubernetes.io/instance: mimir
