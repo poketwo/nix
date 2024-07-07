@@ -57,7 +57,7 @@
 
       template = {
         metadata = {
-          name = "{{path.basename}}";
+          name = "poketwo-{{path.basename}}";
           namespace = "argocd";
         };
         spec = {
