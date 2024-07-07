@@ -19,6 +19,7 @@
           "--domain-filter=hfym.co"
           "--domain-filter=poketwo.io"
           "--domain-filter=poketwo.net"
+          "--domain-filter=berkeley.mt"
           "--cloudflare-proxied"
         ];
       };
