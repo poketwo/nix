@@ -39,6 +39,10 @@
         })
         (builtins.readDir ./hosts);
 
+      # =======================
+      # Transpire Configuration
+      # =======================
+
       fs = nixpkgs.lib.fileset;
       allNixFiles = fs.fileFilter (file: file.hasExt "nix") ./.;
 

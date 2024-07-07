@@ -45,35 +45,5 @@
         };
       };
     };
-
-    resources."argoproj.io/v1alpha1".ApplicationSet.poketwo.spec = {
-      generators = [{
-        git = {
-          repoURL = "https://github.com/poketwo/nix.git";
-          revision = "cluster";
-          directories = [{ path = "*"; }];
-        };
-      }];
-
-      template = {
-        metadata = {
-          name = "poketwo-{{path.basename}}";
-          namespace = "argocd";
-        };
-        spec = {
-          project = "default";
-          source = {
-            repoURL = "https://github.com/poketwo/nix.git";
-            targetRevision = "cluster";
-            path = "{{path}}";
-          };
-          destination = {
-            server = "https://kubernetes.default.svc";
-            namespace = "{{path.basename}}";
-          };
-          syncPolicy.automated = { };
-        };
-      };
-    };
   };
 }
