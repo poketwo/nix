@@ -12,7 +12,7 @@ spec:
       revision: cluster
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: poketwo-{{path.basename}}
       namespace: argocd
     spec:
       destination:
