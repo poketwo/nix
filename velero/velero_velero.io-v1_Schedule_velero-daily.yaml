@@ -11,5 +11,7 @@ metadata:
 spec:
   schedule: 0 4 * * *
   template:
+    excludedNamespaces:
+    - velero
     snapshotMoveData: true
     ttl: 168h
