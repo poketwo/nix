@@ -51,6 +51,7 @@
           template = {
             ttl = "168h";
             snapshotMoveData = true;
+            excludedNamespaces = [ "velero" ];
           };
         };
 
