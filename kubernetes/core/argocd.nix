@@ -30,6 +30,12 @@
 
         configs = {
           cm = {
+            "resource.exclusions" = ''
+              - apiGroups:
+                - velero.io
+                kinds:
+                - Backup
+            '';
             "resource.customizations.ignoreDifferences.admissionregistration.k8s.io_MutatingWebhookConfiguration" = ''
               jqPathExpressions:
               - .webhooks[]?.clientConfig.caBundle
