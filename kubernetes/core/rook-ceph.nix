@@ -129,7 +129,7 @@ in
     # ==========================
 
     resources."storage.k8s.io/v1".StorageClass = rec {
-      rbd-nvme-retain = {
+      rbd-nvme = {
         provisioner = "rook-ceph.rbd.csi.ceph.com";
         parameters = commonStorageClassParamters // {
           pool = "rbd-nvme";
@@ -142,13 +142,13 @@ in
           imageFeatures = "layering,fast-diff,object-map,deep-flatten,exclusive-lock";
         };
         allowVolumeExpansion = true;
-        reclaimPolicy = "Retain";
+        reclaimPolicy = "Delete";
       };
 
-      rbd-nvme = rbd-nvme-retain // {
+      rbd-nvme-retain = rbd-nvme // {
         metadata.annotations."storageclass.kubernetes.io/is-default-class" = "true";
         allowVolumeExpansion = true;
-        reclaimPolicy = "Delete";
+        reclaimPolicy = "Retain";
       };
 
       cephfs-nvme = {
@@ -162,6 +162,11 @@ in
         };
         allowVolumeExpansion = true;
         reclaimPolicy = "Delete";
+      };
+
+      cephfs-nvme-retain = cephfs-nvme // {
+        allowVolumeExpansion = true;
+        reclaimPolicy = "Retain";
       };
 
       rgw-nvme = {
