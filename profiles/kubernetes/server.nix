@@ -12,7 +12,7 @@ in
   swapDevices = lib.mkForce [ ];
   environment.systemPackages = [ pkgs.k3s ];
 
-  boot.kernelModules = [ "ceph" ];
+  boot.kernelModules = [ "ceph" "br_netfilter" "ip6_tables" "ip6table_mangle" "ip6table_raw" "ip6table_filter" ];
   boot.kernel.sysctl = {
     "fs.inotify.max_user_instances" = 1048576;
     "vm.max_map_count" = 262144;
