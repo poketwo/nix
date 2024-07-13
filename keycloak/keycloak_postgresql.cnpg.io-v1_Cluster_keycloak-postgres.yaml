@@ -1,0 +1,12 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: keycloak-postgres
+  namespace: keycloak
+spec:
+  bootstrap:
+    initdb:
+      database: keycloak
+  instances: 3
+  storage:
+    size: 8Gi

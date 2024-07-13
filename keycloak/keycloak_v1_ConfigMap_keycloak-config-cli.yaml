@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+  configuration: '{"accountTheme":"keycloak.v2","adminTheme":"keycloak.v2","authenticationFlows":[{"alias":"User
+    creation or linking","authenticationExecutions":[{"authenticator":"idp-create-user-if-unique","authenticatorConfig":"create
+    unique user config","authenticatorFlow":false,"autheticatorFlow":false,"priority":10,"requirement":"DISABLED","userSetupAllowed":false},{"authenticatorFlow":true,"autheticatorFlow":true,"flowAlias":"Handle
+    Existing Account","priority":20,"requirement":"ALTERNATIVE","userSetupAllowed":false}],"builtIn":true,"description":"Flow
+    for the existing/non-existing user alternatives","providerId":"basic-flow","topLevel":false},{"alias":"first
+    broker login","authenticationExecutions":[{"authenticator":"idp-review-profile","authenticatorConfig":"review
+    profile config","authenticatorFlow":false,"autheticatorFlow":false,"priority":10,"requirement":"DISABLED","userSetupAllowed":false},{"authenticatorFlow":true,"autheticatorFlow":true,"flowAlias":"User
+    creation or linking","priority":20,"requirement":"REQUIRED","userSetupAllowed":false}],"builtIn":true,"description":"Actions
+    taken after first broker login with identity provider account, which is not yet
+    linked to any Keycloak account","providerId":"basic-flow","topLevel":true}],"clients":[{"attributes":{"saml.assertion.signature":"true","saml.client.signature":"false","saml.server.signature":"false","saml_name_id_format":"email"},"clientAuthenticatorType":"client-secret","clientId":"google.com","enabled":true,"name":"Google
+    Workspace","protocol":"saml","redirectUris":["https://www.google.com/*"]},{"clientAuthenticatorType":"client-secret","clientId":"guiduck","enabled":true,"name":"Guiduck","protocol":"openid-connect","publicClient":false,"standardFlowEnabled":false},{"clientAuthenticatorType":"client-secret","clientId":"outline.poketwo.io","enabled":true,"name":"Outline","protocol":"openid-connect","publicClient":false,"redirectUris":["https://outline.poketwo.io/auth/oidc.callback"]}],"displayName":"Pokétwo","emailTheme":"keycloak","enabled":true,"loginTheme":"keywind","offlineSessionIdleTimeout":2592000,"realm":"poketwo","registrationAllowed":false,"sslRequired":"all","ssoSessionIdleTimeout":2592000,"ssoSessionMaxLifespan":2592000}'
+kind: ConfigMap
+metadata:
+  name: keycloak-config-cli
+  namespace: keycloak
