@@ -2,7 +2,10 @@
 
 let
   makeLoadBalancer = index: {
-    metadata.labels."tailscale.com/proxy-class" = "prod";
+    metadata.annotations = {
+      "external-dns.alpha.kubernetes.io/hostname" = "mongodb-${index}-external.guiduck.ds.hfym.co";
+      "external-dns.alpha.kubernetes.io/cloudflare-proxied" = "false";
+    };
     spec = {
       selector = {
         app = "mongodb-svc";
@@ -10,7 +13,6 @@ let
       };
       ports = [{ port = 27017; }];
       type = "LoadBalancer";
-      loadBalancerClass = "tailscale";
     };
   };
 in
@@ -61,9 +63,9 @@ in
         };
       };
       replicaSetHorizons = [
-        { external = "guiduck-mongodb-0-external.royal-pinecone.ts.net:27017"; }
-        { external = "guiduck-mongodb-1-external.royal-pinecone.ts.net:27017"; }
-        { external = "guiduck-mongodb-2-external.royal-pinecone.ts.net:27017"; }
+        { external = "mongodb-0-external.guiduck.ds.hfym.co:27017"; }
+        { external = "mongodb-1-external.guiduck.ds.hfym.co:27017"; }
+        { external = "mongodb-2-external.guiduck.ds.hfym.co:27017"; }
       ];
     };
 
@@ -78,9 +80,9 @@ in
         value = makeLoadBalancer index;
       }) [ "0" "1" "2" ]);
 
-    # resources."cilium.io/v2".CiliumNetworkPolicy.allow-tailnet-ingress-to-mongodb.spec = {
-    #   endpointSelector.matchLabels.app = "mongodb-svc";
-    #   ingress = [{ fromCIDR = [ "fd7a:115c:a1e0::/96" ]; }];
-    # };
+    resources."cilium.io/v2".CiliumNetworkPolicy.allow-ingress-to-mongodb.spec = {
+      endpointSelector.matchLabels.app = "mongodb-svc";
+      ingress = [{ fromEntities = [ "all" ]; }];
+    };
   };
 }
