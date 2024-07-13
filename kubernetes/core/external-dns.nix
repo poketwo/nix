@@ -22,6 +22,7 @@
           "--domain-filter=berkeley.mt"
           "--cloudflare-proxied"
         ];
+        policy = "sync";
       };
     };
 
