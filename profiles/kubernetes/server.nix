@@ -39,6 +39,7 @@ in
       "--kubelet-arg=kube-reserved=cpu=100m,memory=200m,ephemeral-storage=1Gi,pid=1000"
       "--kubelet-arg=system-reserved=cpu=100m,memory=200m,ephemeral-storage=1Gi,pid=1000"
       "--kubelet-arg=reserved-cpus=0"
+      "--cluster-cidr=10.42.0.0/16,fde8:9036:df25::/56 --service-cidr=10.43.0.0/16,fd0a:5a2f:1807::/112"
     ];
   };
 
