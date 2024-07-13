@@ -8,9 +8,9 @@ spec:
     net.ipv6: true
   members: 3
   replicaSetHorizons:
-  - external: guiduck-mongodb-0-external.royal-pinecone.ts.net:27017
-  - external: guiduck-mongodb-1-external.royal-pinecone.ts.net:27017
-  - external: guiduck-mongodb-2-external.royal-pinecone.ts.net:27017
+  - external: mongodb-0-external.guiduck.ds.hfym.co:27017
+  - external: mongodb-1-external.guiduck.ds.hfym.co:27017
+  - external: mongodb-2-external.guiduck.ds.hfym.co:27017
   security:
     tls:
       caCertificateSecretRef:

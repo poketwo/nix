@@ -30,7 +30,7 @@ spec:
         - --interval=1m
         - --source=service
         - --source=ingress
-        - --policy=upsert-only
+        - --policy=sync
         - --registry=txt
         - --provider=cloudflare
         - --domain-filter=hfym.co
