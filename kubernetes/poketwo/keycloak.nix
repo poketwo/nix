@@ -176,10 +176,7 @@ in
         keycloakConfigCli = {
           enabled = true;
           existingConfigmap = "keycloak-config-cli";
-          cleanupAfterFinished = {
-            enabled = true;
-            seconds = 0;
-          };
+          cleanupAfterFinished.enabled = true;
         };
       };
     };
