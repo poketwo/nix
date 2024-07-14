@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'false'
+    external-dns.alpha.kubernetes.io/hostname: mongodb-1-external.poketwo.ds.hfym.co
+  labels:
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/version: 7.0.12
+    helm.sh/chart: mongodb-15.6.12
+    pod: mongodb-1
+  name: mongodb-1-external
+  namespace: poketwo
+spec:
+  allocateLoadBalancerNodePorts: true
+  externalTrafficPolicy: Local
+  ports:
+  - name: mongodb
+    port: 27017
+    targetPort: mongodb
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/name: mongodb
+    statefulset.kubernetes.io/pod-name: mongodb-1
+  sessionAffinity: None
+  type: LoadBalancer

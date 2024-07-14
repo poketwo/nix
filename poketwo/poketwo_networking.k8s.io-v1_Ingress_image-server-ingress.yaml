@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: image-server-ingress
+  namespace: poketwo
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: server.poketwo.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: image-server
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - server.poketwo.io
+    secretName: image-server-ingress-tls

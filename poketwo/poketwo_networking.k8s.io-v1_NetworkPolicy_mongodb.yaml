@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/component: mongodb
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/version: 7.0.12
+    helm.sh/chart: mongodb-15.6.12
+  name: mongodb
+  namespace: poketwo
+spec:
+  egress:
+  - {}
+  ingress:
+  - ports:
+    - port: 27017
+    - port: 9216
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: mongodb
+      app.kubernetes.io/instance: mongodb
+      app.kubernetes.io/name: mongodb
+  policyTypes:
+  - Ingress
+  - Egress

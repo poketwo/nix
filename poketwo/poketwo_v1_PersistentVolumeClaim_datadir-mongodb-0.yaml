@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: datadir-mongodb-0
+  namespace: poketwo
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Ti
+  storageClassName: manual
+  volumeName: datadir-mongodb-0

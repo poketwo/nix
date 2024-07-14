@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-server
+  namespace: poketwo
+spec:
+  replicas: 16
+  selector:
+    matchLabels:
+      app: image-server
+  template:
+    metadata:
+      labels:
+        app: image-server
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: image-server
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - image: ghcr.io/poketwo/image-server:latest
+        name: server
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          limits:
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 500Mi
+      imagePullSecrets:
+      - name: ghcr-auth
