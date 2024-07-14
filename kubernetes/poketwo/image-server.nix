@@ -38,7 +38,6 @@
       "networking.k8s.io/v1".Ingress.image-server-ingress = {
         metadata.annotations."cert-manager.io/cluster-issuer" = "letsencrypt";
         spec = {
-          ingressClassName = "nginx";
           rules = [{
             host = "server.poketwo.io";
             http.paths = [{
