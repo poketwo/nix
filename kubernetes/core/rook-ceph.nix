@@ -1,4 +1,4 @@
-{ lib, transpire, ... }:
+{ transpire, ... }:
 
 let
   # All three nodes happen to have drives in the same place. (right now)
