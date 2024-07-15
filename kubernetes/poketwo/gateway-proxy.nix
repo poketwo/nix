@@ -40,7 +40,7 @@
 
       v1.Service.gateway-proxy.spec = {
         selector.app = "gateway-proxy";
-        ports = [{ port = 7878; }];
+        ports = [{ port = 80; targetPort = 7878; }];
       };
 
       v1.Secret.poketwo.stringData = {
@@ -57,7 +57,7 @@
           status = "online";
           backpressure = 100;
           validate_token = true;
-          externally_accessible_url = "ws://gateway-proxy.poketwo.svc.cluster.local:7878";
+          externally_accessible_url = "ws://gateway-proxy.poketwo.svc.cluster.local";
           cache = {
             channels = true;
             presences = false;
