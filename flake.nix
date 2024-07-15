@@ -141,8 +141,10 @@
                 (.data // {} | .[] |= @base64d) + (.stringData // {})
               ' \
             | while read -r path; read -r data; do
-              echo "Pushing $path"
-              ${pkgs.vault-bin}/bin/vault kv put -mount=hfym-ds "$path" - <<< "$data" > /dev/null
+              read -r -p "Push $path? [y/N] " choice <&2
+              if [[ $choice =~ ^[Yy] ]] ; then
+                ${pkgs.vault-bin}/bin/vault kv put -mount=hfym-ds "$path" - <<< "$data" > /dev/null
+              fi
             done
           '');
         };
