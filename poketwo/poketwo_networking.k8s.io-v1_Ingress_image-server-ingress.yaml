@@ -14,7 +14,7 @@ spec:
           service:
             name: image-server
             port:
-              number: 8080
+              number: 80
         path: /
         pathType: Prefix
   tls:
