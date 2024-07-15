@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imgen-rust
+  namespace: poketwo
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      app: imgen-rust
+  template:
+    metadata:
+      labels:
+        app: imgen-rust
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: imgen-rust
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - image: ghcr.io/poketwo/imgen-rust:latest
+        name: server
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            cpu: 50m
+            memory: 10Mi
+      imagePullSecrets:
+      - name: ghcr-auth

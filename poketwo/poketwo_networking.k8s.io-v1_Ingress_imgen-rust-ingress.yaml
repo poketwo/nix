@@ -3,21 +3,21 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
-  name: image-server-ingress
+  name: imgen-rust-ingress
   namespace: poketwo
 spec:
   rules:
-  - host: server.poketwo.io
+  - host: imgen.poketwo.io
     http:
       paths:
       - backend:
           service:
-            name: image-server
+            name: imgen-rust
             port:
-              number: 8080
+              number: 8000
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - server.poketwo.io
-    secretName: image-server-ingress-tls
+    - imgen.poketwo.io
+    secretName: imgen-rust-ingress-tls
