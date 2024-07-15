@@ -32,8 +32,8 @@
               { name = "POKETWO_DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-mongodb-password"; }; }
               { name = "POKETWO_DATABASE_NAME"; value = "pokemon"; }
 
-              { name = "REDIS_URI"; value = "redis://[64:ff9b::204.16.243.197]/1"; }
-              { name = "REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "redis-password"; }; }
+              { name = "REDIS_URI"; value = "redis://redis-master"; }
+              { name = "REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; }; }
               { name = "POKETWO_REDIS_URI"; value = "redis://[64:ff9b::204.16.243.197]/0"; }
               { name = "POKETWO_REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-redis-password"; }; }
               { name = "OUTLINE_BASE_URL"; value = "https://outline.poketwo.io"; }
