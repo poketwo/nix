@@ -1,6 +1,6 @@
 apiVersion: v1
 data:
-  config.json: '{"activity":{"name":"@Pokétwo help","type":0},"backpressure":100,"cache":{"channels":true,"current_member":true,"emojis":false,"members":false,"presences":false,"roles":true,"scheduled_events":false,"stage_instances":false,"stickers":false,"users":true,"voice_states":false},"externally_accessible_url":"ws://gateway-proxy.poketwo.svc.cluster.local:7878","intents":32509,"log_level":"info","port":7878,"shards":1600,"status":"online","validate_token":true}'
+  config.json: '{"activity":{"name":"@Pokétwo help","type":0},"backpressure":100,"cache":{"channels":true,"current_member":true,"emojis":false,"members":false,"presences":false,"roles":true,"scheduled_events":false,"stage_instances":false,"stickers":false,"users":true,"voice_states":false},"externally_accessible_url":"ws://gateway-proxy.poketwo.svc.cluster.local","intents":32509,"log_level":"info","port":7878,"shards":1600,"status":"online","validate_token":true}'
 kind: ConfigMap
 metadata:
   name: gateway-proxy
