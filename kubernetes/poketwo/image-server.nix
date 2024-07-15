@@ -43,7 +43,7 @@
             http.paths = [{
               path = "/";
               pathType = "Prefix";
-              backend.service = { name = "image-server"; port.number = 8080; };
+              backend.service = { name = "image-server"; port.number = 80; };
             }];
           }];
           tls = [{
@@ -57,7 +57,7 @@
         metadata.annotations."service.kubernetes.io/topology-mode" = "Auto";
         spec = {
           selector.app = "image-server";
-          ports = [{ port = 8080; }];
+          ports = [{ port = 80; targetPort = 8080; }];
         };
       };
     };

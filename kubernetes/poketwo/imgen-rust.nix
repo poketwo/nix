@@ -38,7 +38,7 @@
             http.paths = [{
               path = "/";
               pathType = "Prefix";
-              backend.service = { name = "imgen-rust"; port.number = 8000; };
+              backend.service = { name = "imgen-rust"; port.number = 80; };
             }];
           }];
           tls = [{
@@ -52,7 +52,7 @@
         metadata.annotations."service.kubernetes.io/topology-mode" = "auto";
         spec = {
           selector.app = "imgen-rust";
-          ports = [{ port = 8000; }];
+          ports = [{ port = 80; targetPort = 8000; }];
         };
       };
     };
