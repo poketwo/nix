@@ -5,22 +5,22 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  - git:
-      directories:
-      - path: '*'
-      repoURL: https://github.com/poketwo/nix.git
-      revision: cluster
+    - git:
+        directories:
+          - path: "*"
+        repoURL: https://github.com/poketwo/nix.git
+        revision: cluster
   template:
     metadata:
       name: poketwo-{{path.basename}}
       namespace: argocd
     spec:
       destination:
-        namespace: '{{path.basename}}'
+        namespace: "{{path.basename}}"
         server: https://kubernetes.default.svc
       project: default
       source:
-        path: '{{path}}'
+        path: "{{path}}"
         repoURL: https://github.com/poketwo/nix.git
         targetRevision: cluster
       syncPolicy:
@@ -29,3 +29,6 @@ spec:
           - CreateNamespace=true
   syncPolicy:
     applicationsSync: create-update
+  ignoreApplicationDifferences:
+    - jsonPointers:
+        - /spec/syncPolicy
