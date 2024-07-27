@@ -12,8 +12,6 @@ spec:
   gateway:
     instances: 1
     port: 80
-    securePort: 443
-    sslCertificateRef: rgw-nvme-tls
   metadataPool:
     deviceClass: nvme
     failureDomain: host
