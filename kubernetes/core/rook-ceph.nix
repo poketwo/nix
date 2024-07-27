@@ -95,9 +95,7 @@ in
       metadataPool = defaultPool;
       dataPool = defaultPool;
       gateway = {
-        sslCertificateRef = "rgw-nvme-tls";
         port = 80;
-        securePort = 443;
         instances = 1;
       };
     };
