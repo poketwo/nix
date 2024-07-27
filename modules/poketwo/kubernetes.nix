@@ -29,6 +29,7 @@ let
     apiVersion = "kubeadm.k8s.io/v1beta1";
     kind = "KubeletConfiguration";
     serverTLSBootstrap = true;
+    maxPods = 4096;
   };
 
   kubeadmYaml = pkgs.concatText "kubeadm.yaml" [
