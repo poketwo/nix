@@ -11,14 +11,17 @@ let
     }];
   };
 
-  datadirPvSpec = hostname: {
-    capacity.storage = "2Ti";
-    volumeMode = "Filesystem";
-    accessModes = [ "ReadWriteOnce" ];
-    persistentVolumeReclaimPolicy = "Retain";
-    storageClassName = "manual";
-    local.path = "/mongo";
-    nodeAffinity = requireHostname hostname;
+  datadirPv = hostname: {
+    metadata.labels."velero.io/exclude-from-backup" = "true";
+    spec = {
+      capacity.storage = "2Ti";
+      volumeMode = "Filesystem";
+      accessModes = [ "ReadWriteOnce" ];
+      persistentVolumeReclaimPolicy = "Retain";
+      storageClassName = "manual";
+      local.path = "/mongo";
+      nodeAffinity = requireHostname hostname;
+    };
   };
 
   datadirPvcSpec = pvName: {
@@ -81,8 +84,8 @@ in
     };
 
     resources = {
-      v1.PersistentVolume.datadir-mongodb-0.spec = datadirPvSpec "vaporeon";
-      v1.PersistentVolume.datadir-mongodb-1.spec = datadirPvSpec "jolteon";
+      v1.PersistentVolume.datadir-mongodb-0 = datadirPv "vaporeon";
+      v1.PersistentVolume.datadir-mongodb-1 = datadirPv "jolteon";
 
       v1.PersistentVolumeClaim.datadir-mongodb-0.spec = datadirPvcSpec "datadir-mongodb-0";
       v1.PersistentVolumeClaim.datadir-mongodb-1.spec = datadirPvcSpec "datadir-mongodb-1";
