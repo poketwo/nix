@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: poketwo
+  namespace: poketwo
+spec:
+  podManagementPolicy: Parallel
+  replicas: 200
+  selector:
+    matchLabels:
+      app: poketwo
+  serviceName: poketwo
+  template:
+    metadata:
+      labels:
+        app: poketwo
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_HOST
+          value: mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo
+        - name: DATABASE_USERNAME
+          value: root
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-root-password
+              name: mongodb
+        - name: DATABASE_NAME
+          value: pokemon
+        - name: REDIS_URI
+          value: redis://redis-master
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis
+        - name: NUM_SHARDS
+          value: '1600'
+        - name: NUM_CLUSTERS
+          value: '200'
+        - name: CLUSTER_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: SERVER_URL
+          value: http://image-server
+        - name: EXT_SERVER_URL
+          value: https://server.poketwo.io
+        - name: IMGEN_URL
+          value: http://imgen-rust
+        - name: API_GATEWAY
+          value: ws://gateway-proxy
+        envFrom:
+        - secretRef:
+            name: poketwo
+        image: ghcr.io/poketwo/poketwo:production
+        imagePullPolicy: Always
+        name: poketwo
+        resources:
+          limits:
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 2Gi
+      imagePullSecrets:
+      - name: ghcr-auth

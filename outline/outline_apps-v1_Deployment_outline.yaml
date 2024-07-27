@@ -1,0 +1,146 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outline
+  namespace: outline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: outline
+  template:
+    metadata:
+      labels:
+        app: outline
+    spec:
+      containers:
+      - env:
+        - name: URL
+          value: https://outline.poketwo.io
+        - name: PORT
+          value: '3000'
+        - name: REDIS_PASS
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis
+        - name: REDIS_URL
+          value: redis://:$(REDIS_PASS)@redis-master:6379/?family=6
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: postgres-app
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: postgres-app
+        - name: DATABASE_URL
+          value: postgres://$(DB_USER):$(DB_PASS)@postgres-rw:5432/outline
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCESS_KEY_ID
+              name: outline-bucket
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: outline-bucket
+        - name: AWS_S3_UPLOAD_BUCKET_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: BUCKET_NAME
+              name: outline-bucket
+        - name: AWS_S3_UPLOAD_BUCKET_URL
+          value: https://rgw.hfym.co
+        - name: AWS_S3_ACL
+          value: private
+        - name: OIDC_CLIENT_ID
+          value: outline.poketwo.io
+        - name: OIDC_AUTH_URI
+          value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth
+        - name: OIDC_TOKEN_URI
+          value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token
+        - name: OIDC_USERINFO_URI
+          value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo
+        - name: OIDC_DISPLAY_NAME
+          value: Pokétwo
+        envFrom:
+        - secretRef:
+            name: outline
+        image: outlinewiki/outline:0.71.0
+        name: outline
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 1Gi
+      initContainers:
+      - args:
+        - db:migrate
+        - --env=production
+        command:
+        - yarn
+        env:
+        - name: URL
+          value: https://outline.poketwo.io
+        - name: PORT
+          value: '3000'
+        - name: REDIS_PASS
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis
+        - name: REDIS_URL
+          value: redis://:$(REDIS_PASS)@redis-master:6379/?family=6
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: postgres-app
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: postgres-app
+        - name: DATABASE_URL
+          value: postgres://$(DB_USER):$(DB_PASS)@postgres-rw:5432/outline
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              key: AWS_ACCESS_KEY_ID
+              name: outline-bucket
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: outline-bucket
+        - name: AWS_S3_UPLOAD_BUCKET_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: BUCKET_NAME
+              name: outline-bucket
+        - name: AWS_S3_UPLOAD_BUCKET_URL
+          value: https://rgw.hfym.co
+        - name: AWS_S3_ACL
+          value: private
+        - name: OIDC_CLIENT_ID
+          value: outline.poketwo.io
+        - name: OIDC_AUTH_URI
+          value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth
+        - name: OIDC_TOKEN_URI
+          value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token
+        - name: OIDC_USERINFO_URI
+          value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo
+        - name: OIDC_DISPLAY_NAME
+          value: Pokétwo
+        envFrom:
+        - secretRef:
+            name: outline
+        image: outlinewiki/outline:0.66.3
+        name: migrate

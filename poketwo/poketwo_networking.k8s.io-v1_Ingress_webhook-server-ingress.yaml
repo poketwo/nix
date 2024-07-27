@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: webhook-server-ingress
+  namespace: poketwo
+spec:
+  rules:
+  - host: webhooks.poketwo.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: webhook-server
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - webhooks.poketwo.io
+    secretName: webhook-server-ingress-tls

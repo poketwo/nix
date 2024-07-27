@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  name: outline-ingress
+  namespace: outline
+spec:
+  rules:
+  - host: outline.poketwo.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: outline
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - outline.poketwo.io
+    secretName: outline-ingress-tls

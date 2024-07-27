@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook-server
+  namespace: poketwo
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: webhook-server
+  template:
+    metadata:
+      labels:
+        app: webhook-server
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_HOST
+          value: mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo
+        - name: DATABASE_USERNAME
+          value: root
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-root-password
+              name: mongodb
+        - name: DATABASE_NAME
+          value: pokemon
+        - name: REDIS_URI
+          value: redis://redis-master
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis
+        envFrom:
+        - secretRef:
+            name: webhook-server
+        image: ghcr.io/poketwo/webhook-server:latest
+        name: server
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 10Mi
+      imagePullSecrets:
+      - name: ghcr-auth
