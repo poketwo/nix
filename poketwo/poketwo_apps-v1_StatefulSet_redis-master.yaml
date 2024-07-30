@@ -25,7 +25,7 @@ spec:
         checksum/configmap: 86bcc953bb473748a3d3dc60b7c11f34e60c93519234d4c37f42e22ada559d47
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
         checksum/scripts: 560c33ff34d845009b51830c332aa05fa211444d1877d3526d3599be7543aaa5
-        checksum/secret: a980b25c13f940aeb68aab72d7f2fa7f786d2011753342b9c164dff92812b87e
+        checksum/secret: c45fc2ba985b1936408122b1b475a6d82b498ce125edcedfca95bea06e9c3621
         prometheus.io/port: '9121'
         prometheus.io/scrape: 'true'
       labels:
@@ -101,9 +101,9 @@ spec:
         resources:
           limits:
             cpu: 200m
-            memory: 5Gi
+            memory: 10Gi
           requests:
-            memory: 5Gi
+            memory: 10Gi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
