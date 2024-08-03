@@ -25,6 +25,9 @@
               { name = "FORMIUM_TOKEN"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "formium-token"; }; }
               { name = "DISCORD_CLIENT_ID"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-id"; }; }
               { name = "DISCORD_CLIENT_SECRET"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-secret"; }; }
+
+              # FIXME: Remove this when Formium fixes their site
+              { name = "NODE_TLS_REJECT_UNAUTHORIZED"; value = "0"; }
             ];
           }];
           imagePullSecrets = [{ name = "ghcr-auth"; }];
