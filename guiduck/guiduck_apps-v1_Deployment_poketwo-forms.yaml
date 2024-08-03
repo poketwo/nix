@@ -58,6 +58,8 @@ spec:
             secretKeyRef:
               key: discord-client-secret
               name: poketwo-forms
+        - name: NODE_TLS_REJECT_UNAUTHORIZED
+          value: '0'
         image: ghcr.io/poketwo/forms.poketwo.net:latest
         imagePullPolicy: Always
         name: poketwo-forms
