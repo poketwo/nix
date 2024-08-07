@@ -1,35 +1,111 @@
 apiVersion: v1
 data:
-  config.alloy: "discovery.kubernetes \"pods\" { role = \"pod\" }\ndiscovery.kubernetes
-    \"nodes\" { role = \"node\" }\n\ndiscovery.relabel \"nodes\" {\n  targets = discovery.kubernetes.nodes.targets\n
-    \ rule {\n    source_labels = [\"__meta_kubernetes_node_name\"]\n    target_label
-    = \"node\"\n  }\n}\n\ndiscovery.relabel \"nodes_cadvisor\" {\n  targets = discovery.relabel.nodes.output\n
-    \ rule {\n    replacement   = \"/metrics/cadvisor\"\n    target_label  = \"__metrics_path__\"\n
-    \ }\n}\n\ndiscovery.relabel \"pods\" {\n  targets = discovery.kubernetes.pods.targets\n
-    \ rule {\n    source_labels = [\"__meta_kubernetes_namespace\"]\n    target_label
-    = \"namespace\"\n  }\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_name\"]\n
-    \   target_label = \"pod\"\n  }\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_container_name\"]\n
-    \   target_label = \"container\"\n  }\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_node_name\"]\n
-    \   target_label = \"node\"\n  }\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_label_app_kubernetes_io_name\"]\n
-    \   target_label = \"app\"\n  }\n  rule {\n    source_labels = [\"__meta_kubernetes_pod_label_app\"]\n
-    \   target_label = \"app\"\n  }\n}\n\n//////////\n// Loki //\n//////////\n\nloki.source.kubernetes
-    \"pods\" {\n  targets = discovery.relabel.pods.output\n  forward_to = [loki.write.default.receiver]\n
-    \ clustering { enabled = true }\n}\n\nloki.source.kubernetes_events \"default\"
-    {\n  forward_to = [loki.write.default.receiver]\n}\n\nloki.write \"default\" {\n
-    \ endpoint { url = \"http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push\"
-    }\n}\n\n////////////////\n// Prometheus //\n////////////////\n\nprometheus.scrape
-    \"pods\" {\n  targets = discovery.relabel.pods.output\n  forward_to = [prometheus.remote_write.default.receiver]\n
-    \ clustering { enabled = true }\n}\n\nprometheus.scrape \"nodes_cadvisor\" {\n\ttargets
-    = discovery.relabel.nodes_cadvisor.output\n\tforward_to = [prometheus.remote_write.default.receiver]\n
-    \ bearer_token_file = \"/var/run/secrets/kubernetes.io/serviceaccount/token\"\n
-    \ scheme = \"https\"\n\ttls_config {\n\t\tca_file = \"/var/run/secrets/kubernetes.io/serviceaccount/ca.crt\"\n\t\tinsecure_skip_verify
-    = false\n\t}\n  clustering { enabled = true }\n}\n\nprometheus.operator.servicemonitors
-    \"default\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n  clustering
-    { enabled = true }\n}\n\nprometheus.operator.podmonitors \"default\" {\n  forward_to
-    = [prometheus.remote_write.default.receiver]\n  clustering { enabled = true }\n}\n\nprometheus.operator.probes
-    \"default\" {\n  forward_to = [prometheus.remote_write.default.receiver]\n  clustering
-    { enabled = true }\n}\n\nprometheus.remote_write \"default\" {\n  endpoint { url
-    = \"http://mimir-gateway.mimir.svc.cluster.local/api/v1/push\" }\n}"
+  config.alloy: |-
+    discovery.kubernetes "pods" { role = "pod" }
+    discovery.kubernetes "nodes" { role = "node" }
+
+    discovery.relabel "nodes" {
+      targets = discovery.kubernetes.nodes.targets
+      rule {
+        source_labels = ["__meta_kubernetes_node_name"]
+        target_label = "node"
+      }
+    }
+
+    discovery.relabel "nodes_cadvisor" {
+      targets = discovery.relabel.nodes.output
+      rule {
+        replacement   = "/metrics/cadvisor"
+        target_label  = "__metrics_path__"
+      }
+    }
+
+    discovery.relabel "pods" {
+      targets = discovery.kubernetes.pods.targets
+      rule {
+        source_labels = ["__meta_kubernetes_namespace"]
+        target_label = "namespace"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_pod_name"]
+        target_label = "pod"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_pod_container_name"]
+        target_label = "container"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_pod_node_name"]
+        target_label = "node"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+        target_label = "app"
+      }
+      rule {
+        source_labels = ["__meta_kubernetes_pod_label_app"]
+        target_label = "app"
+      }
+    }
+
+    //////////
+    // Loki //
+    //////////
+
+    loki.source.kubernetes "pods" {
+      targets = discovery.relabel.pods.output
+      forward_to = [loki.write.default.receiver]
+      clustering { enabled = true }
+    }
+
+    loki.source.kubernetes_events "default" {
+      forward_to = [loki.write.default.receiver]
+    }
+
+    loki.write "default" {
+      endpoint { url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push" }
+    }
+
+    ////////////////
+    // Prometheus //
+    ////////////////
+
+    prometheus.scrape "pods" {
+      targets = discovery.relabel.pods.output
+      forward_to = [prometheus.remote_write.default.receiver]
+      clustering { enabled = true }
+    }
+
+    prometheus.scrape "nodes_cadvisor" {
+      targets = discovery.relabel.nodes_cadvisor.output
+      forward_to = [prometheus.remote_write.default.receiver]
+      bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+      scheme = "https"
+      tls_config {
+        ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+        insecure_skip_verify = false
+      }
+      clustering { enabled = true }
+    }
+
+    prometheus.operator.servicemonitors "default" {
+      forward_to = [prometheus.remote_write.default.receiver]
+      clustering { enabled = true }
+    }
+
+    prometheus.operator.podmonitors "default" {
+      forward_to = [prometheus.remote_write.default.receiver]
+      clustering { enabled = true }
+    }
+
+    prometheus.operator.probes "default" {
+      forward_to = [prometheus.remote_write.default.receiver]
+      clustering { enabled = true }
+    }
+
+    prometheus.remote_write "default" {
+      endpoint { url = "http://mimir-gateway.mimir.svc.cluster.local/api/v1/push" }
+    }
 kind: ConfigMap
 metadata:
   labels:
