@@ -46,12 +46,22 @@
           }];
         };
 
-        schedules.daily = {
-          schedule = "0 4 * * *";
-          template = {
-            ttl = "168h";
-            snapshotMoveData = true;
-            excludedNamespaces = [ "velero" ];
+        schedules = {
+          daily = {
+            schedule = "30 4 * * *";
+            template = {
+              ttl = "168h";
+              snapshotMoveData = true;
+              excludedNamespaces = [ "velero" ];
+            };
+          };
+          hourly = {
+            schedule = "0 * * * *";
+            template = {
+              ttl = "24h";
+              snapshotMoveData = true;
+              excludedNamespaces = [ "velero" ];
+            };
           };
         };
 
