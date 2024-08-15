@@ -13,6 +13,6 @@ parameters:
   csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
   csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
   fsName: cephfs-nvme
-  pool: cephfs-nvme
+  pool: rbd-nvme
 provisioner: rook-ceph.cephfs.csi.ceph.com
 reclaimPolicy: Retain
