@@ -153,7 +153,7 @@ in
         provisioner = "rook-ceph.cephfs.csi.ceph.com";
         parameters = commonStorageClassParamters // {
           fsName = "cephfs-nvme";
-          pool = "rbd-nvme";
+          pool = "cephfs-nvme-nvme";
           "csi.storage.k8s.io/provisioner-secret-name" = "rook-csi-cephfs-provisioner";
           "csi.storage.k8s.io/controller-expand-secret-name" = "rook-csi-cephfs-provisioner";
           "csi.storage.k8s.io/node-stage-secret-name" = "rook-csi-cephfs-node";
