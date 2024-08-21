@@ -10,7 +10,7 @@ let
 
   defaultPool = {
     failureDomain = "host";
-    replicated.size = 3;
+    replicated.size = 2;
     deviceClass = "nvme";
   };
 
