@@ -62,7 +62,6 @@ in
     virtualisation.cri-o = {
       enable = true;
       storageDriver = "zfs";
-      runtime = "crun";
     };
 
     networking.firewall = {
