@@ -9,12 +9,12 @@ spec:
     failureDomain: host
     name: nvme
     replicated:
-      size: 3
+      size: 2
   metadataPool:
     deviceClass: nvme
     failureDomain: host
     replicated:
-      size: 3
+      size: 2
   metadataServer:
     activeCount: 1
     activeStandby: true

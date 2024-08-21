@@ -1,5 +1,5 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   labels:
     app.kubernetes.io/part-of: cilium
@@ -18,6 +18,8 @@ rules:
   - hubble-server-certs
   - hubble-relay-client-certs
   - hubble-relay-server-certs
+  - hubble-metrics-server-certs
+  - hubble-ui-client-certs
   resources:
   - secrets
   verbs:

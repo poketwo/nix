@@ -8,7 +8,7 @@ spec:
     deviceClass: nvme
     failureDomain: host
     replicated:
-      size: 3
+      size: 2
   gateway:
     instances: 1
     port: 80
@@ -16,4 +16,4 @@ spec:
     deviceClass: nvme
     failureDomain: host
     replicated:
-      size: 3
+      size: 2

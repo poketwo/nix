@@ -65,7 +65,7 @@ spec:
           value: ds.hfym.co
         - name: KUBERNETES_SERVICE_PORT
           value: '443'
-        image: quay.io/cilium/operator-generic:v1.15.6@sha256:5789f0935eef96ad571e4f5565a8800d3a8fbb05265cf6909300cd82fd513c3d
+        image: quay.io/cilium/operator-generic:v1.16.1@sha256:3bc7e7a43bc4a4d8989cb7936c5d96675dd2d02c306adf925ce0a7c35aa27dc4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -102,7 +102,6 @@ spec:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
       restartPolicy: Always
-      serviceAccount: cilium-operator
       serviceAccountName: cilium-operator
       tolerations:
       - operator: Exists

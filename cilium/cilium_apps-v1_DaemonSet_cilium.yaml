@@ -57,7 +57,7 @@ spec:
           value: ds.hfym.co
         - name: KUBERNETES_SERVICE_PORT
           value: '443'
-        image: quay.io/cilium/cilium:v1.15.6@sha256:6aa840986a3a9722cd967ef63248d675a87add7e1704740902d5d3162f0c0def
+        image: quay.io/cilium/cilium:v1.16.1@sha256:0b4a3ab41a4760d86b7fc945b8783747ba27f29dac30dd434d94f2c9e3679f39
         imagePullPolicy: IfNotPresent
         lifecycle:
           postStart:
@@ -115,6 +115,10 @@ spec:
         - containerPort: 9964
           hostPort: 9964
           name: envoy-metrics
+          protocol: TCP
+        - containerPort: 9901
+          hostPort: 9901
+          name: envoy-admin
           protocol: TCP
         readinessProbe:
           failureThreshold: 3
@@ -208,7 +212,7 @@ spec:
           value: ds.hfym.co
         - name: KUBERNETES_SERVICE_PORT
           value: '443'
-        image: quay.io/cilium/cilium:v1.15.6@sha256:6aa840986a3a9722cd967ef63248d675a87add7e1704740902d5d3162f0c0def
+        image: quay.io/cilium/cilium:v1.16.1@sha256:0b4a3ab41a4760d86b7fc945b8783747ba27f29dac30dd434d94f2c9e3679f39
         imagePullPolicy: IfNotPresent
         name: config
         terminationMessagePolicy: FallbackToLogsOnError
@@ -227,7 +231,7 @@ spec:
           value: /run/cilium/cgroupv2
         - name: BIN_PATH
           value: /opt/cni/bin
-        image: quay.io/cilium/cilium:v1.15.6@sha256:6aa840986a3a9722cd967ef63248d675a87add7e1704740902d5d3162f0c0def
+        image: quay.io/cilium/cilium:v1.16.1@sha256:0b4a3ab41a4760d86b7fc945b8783747ba27f29dac30dd434d94f2c9e3679f39
         imagePullPolicy: IfNotPresent
         name: mount-cgroup
         securityContext:
@@ -257,7 +261,7 @@ spec:
         env:
         - name: BIN_PATH
           value: /opt/cni/bin
-        image: quay.io/cilium/cilium:v1.15.6@sha256:6aa840986a3a9722cd967ef63248d675a87add7e1704740902d5d3162f0c0def
+        image: quay.io/cilium/cilium:v1.16.1@sha256:0b4a3ab41a4760d86b7fc945b8783747ba27f29dac30dd434d94f2c9e3679f39
         imagePullPolicy: IfNotPresent
         name: apply-sysctl-overwrites
         securityContext:
@@ -283,7 +287,7 @@ spec:
         - /bin/bash
         - -c
         - --
-        image: quay.io/cilium/cilium:v1.15.6@sha256:6aa840986a3a9722cd967ef63248d675a87add7e1704740902d5d3162f0c0def
+        image: quay.io/cilium/cilium:v1.16.1@sha256:0b4a3ab41a4760d86b7fc945b8783747ba27f29dac30dd434d94f2c9e3679f39
         imagePullPolicy: IfNotPresent
         name: mount-bpf-fs
         securityContext:
@@ -318,7 +322,7 @@ spec:
           value: ds.hfym.co
         - name: KUBERNETES_SERVICE_PORT
           value: '443'
-        image: quay.io/cilium/cilium:v1.15.6@sha256:6aa840986a3a9722cd967ef63248d675a87add7e1704740902d5d3162f0c0def
+        image: quay.io/cilium/cilium:v1.16.1@sha256:0b4a3ab41a4760d86b7fc945b8783747ba27f29dac30dd434d94f2c9e3679f39
         imagePullPolicy: IfNotPresent
         name: clean-cilium-state
         securityContext:
@@ -344,7 +348,7 @@ spec:
           name: cilium-run
       - command:
         - /install-plugin.sh
-        image: quay.io/cilium/cilium:v1.15.6@sha256:6aa840986a3a9722cd967ef63248d675a87add7e1704740902d5d3162f0c0def
+        image: quay.io/cilium/cilium:v1.16.1@sha256:0b4a3ab41a4760d86b7fc945b8783747ba27f29dac30dd434d94f2c9e3679f39
         imagePullPolicy: IfNotPresent
         name: install-cni-binaries
         resources:
@@ -369,7 +373,6 @@ spec:
       securityContext:
         appArmorProfile:
           type: Unconfined
-      serviceAccount: cilium
       serviceAccountName: cilium
       terminationGracePeriodSeconds: 1
       tolerations:
@@ -424,6 +427,16 @@ spec:
               - key: ca.crt
                 path: common-etcd-client-ca.crt
               name: clustermesh-apiserver-remote-cert
+              optional: true
+          - secret:
+              items:
+              - key: tls.key
+                path: local-etcd-client.key
+              - key: tls.crt
+                path: local-etcd-client.crt
+              - key: ca.crt
+                path: local-etcd-client-ca.crt
+              name: clustermesh-apiserver-local-cert
               optional: true
       - hostPath:
           path: /proc/sys/net
