@@ -14,7 +14,7 @@
         architecture = "standalone";
         usePassword = true;
         master = {
-          persistence.size = "32Gi";
+          persistence.size = "64Gi";
           resources = {
             requests = { memory = "10Gi"; };
             limits = { memory = "10Gi"; cpu = "200m"; };
