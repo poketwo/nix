@@ -27,7 +27,7 @@
               { name = "DATABASE_NAME"; value = "support"; }
               { name = "DATABASE_URI"; value = "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&authMechanism=SCRAM-SHA-256&tls=true&tlsAllowInvalidCertificates=true"; }
 
-              { name = "POKETWO_DATABASE_HOST"; value = "mongodb-0.svc-legacy.poketwo.io,monogdb-1.svc-legacy.poketwo.io"; }
+              { name = "POKETWO_DATABASE_HOST"; value = "mongodb-0-external.poketwo,mongodb-1-external.poketwo"; }
               { name = "POKETWO_DATABASE_USERNAME"; value = "root"; }
               { name = "POKETWO_DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-mongodb-password"; }; }
               { name = "POKETWO_DATABASE_NAME"; value = "pokemon"; }
