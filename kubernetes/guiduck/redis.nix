@@ -21,6 +21,7 @@
           };
         };
         metrics.enabled = true;
+        networkPolicy.enabled = false;
       };
     };
   };

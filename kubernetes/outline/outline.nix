@@ -41,6 +41,7 @@ in
         architecture = "standalone";
         master.persistence.size = "1Gi";
         metrics.enabled = true;
+        networkPolicy.enabled = false;
       };
     };
 

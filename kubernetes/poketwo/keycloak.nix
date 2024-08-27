@@ -1,7 +1,7 @@
 { transpire, ... }:
 
 let
-  downloadResources = ''  
+  downloadResources = ''
     mkdir -p /keycloak/providers /keycloak/themes/keywind \
     && wget -nc -O /keycloak/providers/keycloak-discord-0.4.0.jar \
       https://github.com/wadahiro/keycloak-discord/releases/download/v0.4.1/keycloak-discord-0.4.1.jar \
@@ -130,6 +130,7 @@ in
         replicaCount = 1;
         metrics.enabled = true;
         postgresql.enabled = false;
+        networkPolicy.enabled = false;
 
         initContainers = [{
           name = "download-resources";
@@ -203,5 +204,3 @@ in
     };
   };
 }
-
-

@@ -10,6 +10,11 @@
         sha256 = "8QwU58eWyWPIU2Xy4Z1Vx6TOf+CQRtjIOTx22EI4Nik=";
       };
 
+      values = {
+        clusterOperator.networkPolicy.enabled = false;
+        msgTopologyOperator.networkPolicy.enabled = false;
+      };
+
       includeCRDs = true;
     };
   };
