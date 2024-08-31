@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: retool
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: retool
+    helm.sh/chart: retool-6.0.2
+  name: retool
+  namespace: retool
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app.kubernetes.io/instance: retool
+    app.kubernetes.io/name: retool
+  type: ClusterIP

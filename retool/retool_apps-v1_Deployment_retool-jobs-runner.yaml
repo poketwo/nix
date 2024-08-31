@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: retool
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: retool
+    helm.sh/chart: retool-6.0.2
+  name: retool-jobs-runner
+  namespace: retool
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: retool
+      app.kubernetes.io/name: retool-jobs-runner
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: retool
+        app.kubernetes.io/name: retool-jobs-runner
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - retool
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - bash
+        - -c
+        - chmod -R +x ./docker_scripts; sync; ./docker_scripts/wait-for-it.sh -t 0
+          "postgres-rw":"5432"; ./docker_scripts/start_api.sh
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: SERVICE_TYPE
+          value: JOBS_RUNNER
+        - name: CLIENT_ID
+          value: 997504863600-6nfvs9g5cbtovgnfjpq50h6r3p7jnr2l.apps.googleusercontent.com
+        - name: COOKIE_INSECURE
+          value: 'false'
+        - name: POSTGRES_HOST
+          value: postgres-rw
+        - name: POSTGRES_PORT
+          value: '5432'
+        - name: POSTGRES_DB
+          value: retool
+        - name: POSTGRES_USER
+          value: retool
+        - name: POSTGRES_SSL_ENABLED
+          value: 'true'
+        - name: LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: license-key
+              name: retool
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: jwt-secret
+              name: retool
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: encryption-key
+              name: retool
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: postgres-app
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: google-client-secret
+              name: retool
+        - name: DEFAULT_GROUP_FOR_DOMAINS
+          value: poketwo.net -> all-users
+        image: tryretool/backend:3.75.1-stable
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /api/checkJobsRunnerHealth
+            port: 3003
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 3
+        name: retool
+        resources:
+          limits:
+            cpu: 4096m
+            memory: 8192Mi
+          requests:
+            cpu: 2048m
+            memory: 4096Mi
+      serviceAccountName: retool
+      tolerations: []

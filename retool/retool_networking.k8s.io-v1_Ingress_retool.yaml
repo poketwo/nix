@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  labels:
+    app.kubernetes.io/instance: retool
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: retool
+    helm.sh/chart: retool-6.0.2
+  name: retool
+  namespace: retool
+spec:
+  rules:
+  - host: retool.poketwo.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: retool
+            port:
+              number: 3000
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - retool.poketwo.io
+    secretName: retool-ingress-tls

@@ -1,0 +1,12 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: retool
+spec:
+  bootstrap:
+    initdb:
+      database: retool
+  instances: 3
+  storage:
+    size: 8Gi
