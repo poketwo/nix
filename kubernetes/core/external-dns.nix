@@ -20,6 +20,7 @@
           "--domain-filter=poketwo.io"
           "--domain-filter=poketwo.net"
           "--domain-filter=berkeley.mt"
+          "--domain-filter=contestdojo.com"
           "--cloudflare-proxied"
         ];
         policy = "sync";
