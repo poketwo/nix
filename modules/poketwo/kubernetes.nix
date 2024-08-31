@@ -59,10 +59,7 @@ in
       etc."kubernetes/kubeadm.yaml".source = kubeadmYaml;
     };
 
-    virtualisation.cri-o = {
-      enable = true;
-      storageDriver = "zfs";
-    };
+    virtualisation.cri-o.enable = true;
 
     networking.firewall = {
       allowedTCPPorts = [
