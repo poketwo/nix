@@ -37,6 +37,7 @@ spec:
         - --domain-filter=poketwo.io
         - --domain-filter=poketwo.net
         - --domain-filter=berkeley.mt
+        - --domain-filter=contestdojo.com
         - --cloudflare-proxied
         env:
         - name: CF_API_TOKEN
