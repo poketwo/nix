@@ -50,7 +50,7 @@ in
         enableIPv6 = true;
 
         resources = {
-          limits = { cpu = "20000m"; memory = "80Gi"; };
+          limits = { memory = "80Gi"; };
           requests = { cpu = "6000m"; memory = "60Gi"; };
         };
         persistence = { enabled = true; size = "2Ti"; };
@@ -75,11 +75,16 @@ in
           };
         };
 
-        volumePermissions.enabled = true;
-        arbiter.enabled = false;
-        metrics.enabled = true;
+        arbiter = {
+          enabled = true;
+          resources = {
+            limits = { memory = "2Gi"; };
+            requests = { cpu = "100m"; memory = "2Gi"; };
+          };
+        };
 
-        # arbiter = { enabled = true; resources = { limits = { cpu = "100m"; memory = "2Gi"; }; requests = { cpu = "100m"; memory = "2Gi"; }; }; };
+        volumePermissions.enabled = true;
+        metrics.enabled = true;
       };
     };
 
