@@ -121,7 +121,6 @@ spec:
           timeoutSeconds: 5
         resources:
           limits:
-            cpu: 20000m
             memory: 80Gi
           requests:
             cpu: 6000m
@@ -301,7 +300,6 @@ spec:
         name: log-dir
         resources:
           limits:
-            cpu: 20000m
             memory: 80Gi
           requests:
             cpu: 6000m

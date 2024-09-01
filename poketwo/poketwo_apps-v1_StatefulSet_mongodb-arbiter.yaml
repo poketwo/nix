@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: arbiter
+    app.kubernetes.io/instance: mongodb
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mongodb
+    app.kubernetes.io/version: 7.0.12
+    helm.sh/chart: mongodb-15.6.12
+  name: mongodb-arbiter
+  namespace: poketwo
+spec:
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: arbiter
+      app.kubernetes.io/instance: mongodb
+      app.kubernetes.io/name: mongodb
+  serviceName: mongodb-arbiter-headless
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: arbiter
+        app.kubernetes.io/instance: mongodb
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: mongodb
+        app.kubernetes.io/version: 7.0.12
+        helm.sh/chart: mongodb-15.6.12
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: arbiter
+                  app.kubernetes.io/instance: mongodb
+                  app.kubernetes.io/name: mongodb
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      automountServiceAccountToken: false
+      containers:
+      - env:
+        - name: BITNAMI_DEBUG
+          value: 'false'
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: K8S_SERVICE_NAME
+          value: mongodb-arbiter-headless
+        - name: MONGODB_REPLICA_SET_MODE
+          value: arbiter
+        - name: MONGODB_INITIAL_PRIMARY_HOST
+          value: mongodb-0.$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
+        - name: MONGODB_REPLICA_SET_NAME
+          value: poketwo
+        - name: MONGODB_ADVERTISED_HOSTNAME
+          value: $(MY_POD_NAME).$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
+        - name: MONGODB_PORT_NUMBER
+          value: '27017'
+        - name: MONGODB_ENABLE_IPV6
+          value: 'yes'
+        - name: MONGODB_INITIAL_PRIMARY_ROOT_USER
+          value: root
+        - name: MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-root-password
+              name: mongodb
+        - name: MONGODB_REPLICA_SET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-replica-set-key
+              name: mongodb
+        - name: ALLOW_EMPTY_PASSWORD
+          value: 'no'
+        image: docker.io/bitnami/mongodb:7.0.12-debian-12-r0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - pgrep
+            - mongod
+          failureThreshold: 6
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: mongodb-arbiter
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        readinessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 5
+          periodSeconds: 20
+          successThreshold: 1
+          tcpSocket:
+            port: mongodb
+          timeoutSeconds: 10
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 2Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1001
+          runAsNonRoot: true
+          runAsUser: 1001
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /tmp
+          name: empty-dir
+          subPath: tmp-dir
+        - mountPath: /opt/bitnami/mongodb/conf
+          name: empty-dir
+          subPath: app-conf-dir
+        - mountPath: /opt/bitnami/mongodb/tmp
+          name: empty-dir
+          subPath: app-tmp-dir
+        - mountPath: /opt/bitnami/mongodb/logs
+          name: empty-dir
+          subPath: app-logs-dir
+        - mountPath: /bitnami/mongodb
+          name: empty-dir
+          subPath: app-volume-dir
+      enableServiceLinks: true
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      serviceAccountName: mongodb
+      volumes:
+      - emptyDir: {}
+        name: empty-dir
+  updateStrategy:
+    type: RollingUpdate

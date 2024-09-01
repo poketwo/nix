@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: poketwo
+  namespace: poketwo-staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poketwo
+  serviceName: poketwo
+  template:
+    metadata:
+      labels:
+        app: poketwo
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_URI
+          valueFrom:
+            secretKeyRef:
+              key: connectionString.standard
+              name: mongodb-admin-poketwo
+        - name: DATABASE_NAME
+          value: pokemon_dev
+        - name: REDIS_URI
+          value: redis://redis-master
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis
+        - name: SERVER_URL
+          value: http://image-server.poketwo
+        - name: EXT_SERVER_URL
+          value: https://server.poketwo.io
+        - name: IMGEN_URL
+          value: http://imgen-rust.poketwo
+        - name: API_GATEWAY
+          value: ws://gateway-proxy
+        envFrom:
+        - secretRef:
+            name: poketwo
+        image: ghcr.io/poketwo/poketwo:production
+        imagePullPolicy: Always
+        name: poketwo
+        resources:
+          limits:
+            memory: 4Gi
+          requests:
+            cpu: 100m
+            memory: 2Gi
+      imagePullSecrets:
+      - name: ghcr-auth

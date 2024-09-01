@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-proxy
+  namespace: poketwo-staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-proxy
+  template:
+    metadata:
+      labels:
+        app: gateway-proxy
+    spec:
+      containers:
+      - env:
+        - name: CONFIG
+          value: /config/config.json
+        envFrom:
+        - secretRef:
+            name: poketwo
+        image: ghcr.io/poketwo/gateway-proxy:latest
+        name: server
+        ports:
+        - containerPort: 7878
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 7878
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 50m
+            memory: 2Gi
+        volumeMounts:
+        - mountPath: /config
+          name: config
+      imagePullSecrets:
+      - name: ghcr-auth
+      volumes:
+      - configMap:
+          name: gateway-proxy
+        name: config
