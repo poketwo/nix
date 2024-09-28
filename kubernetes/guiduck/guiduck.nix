@@ -34,7 +34,7 @@
 
               { name = "REDIS_URI"; value = "redis://redis-master"; }
               { name = "REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; }; }
-              { name = "POKETWO_REDIS_URI"; value = "redis://[64:ff9b::204.16.243.197]/0"; }
+              { name = "POKETWO_REDIS_URI"; value = "redis://redis-master.poketwo"; }
               { name = "POKETWO_REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-redis-password"; }; }
               { name = "OUTLINE_BASE_URL"; value = "https://outline.poketwo.io"; }
               { name = "OUTLINE_API_TOKEN"; valueFrom.secretKeyRef = { name = "guiduck"; key = "outline-api-token"; }; }
