@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: witherr
-  namespace: poketwo
+  namespace: poketwo-staging-private
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
