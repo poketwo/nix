@@ -11,7 +11,7 @@
         spec = {
           containers = [{
             name = "guiduck";
-            image = "ghcr.io/poketwo/guiduck:master";
+            image = "ghcr.io/poketwo/guiduck:latest";
             imagePullPolicy = "Always";
             resources = {
               limits = { memory = "4Gi"; cpu = "500m"; };
