@@ -68,7 +68,7 @@ spec:
             secretKeyRef:
               key: outline-api-token
               name: guiduck
-        image: ghcr.io/poketwo/guiduck:master
+        image: ghcr.io/poketwo/guiduck:latest
         imagePullPolicy: Always
         name: guiduck
         resources:
