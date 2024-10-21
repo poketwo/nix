@@ -20,7 +20,7 @@ spec:
         envFrom:
         - secretRef:
             name: poketwo
-        image: ghcr.io/poketwo/gateway-proxy:latest
+        image: ghcr.io/poketwo/gateway-proxy:sha-33fc97e
         name: server
         ports:
         - containerPort: 7878
