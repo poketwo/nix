@@ -58,33 +58,33 @@ in
         alertmanager = {
           replicas = 2;
           resources = {
-            limits = { memory = "1.4Gi"; };
-            requests = { cpu = "1"; memory = "1Gi"; };
+            limits = { memory = "500Mi"; };
+            requests = { cpu = "50m"; memory = "50Mi"; };
           };
         };
 
         compactor = {
-          persistentVolume.size = "20Gi";
+          persistentVolume.size = "500Mi";
           resources = {
             limits = { memory = "2.1Gi"; };
-            requests = { cpu = "1"; memory = "1.5Gi"; };
+            requests = { cpu = "50m"; memory = "50Mi"; };
           };
         };
 
         distributor = {
           replicas = 2;
           resources = {
-            limits = { memory = "5.7Gi"; };
-            requests = { cpu = "2"; memory = "4Gi"; };
+            limits = { memory = "1Gi"; };
+            requests = { cpu = "50m"; memory = "100Mi"; };
           };
         };
 
         ingester = {
           replicas = 3;
-          persistentVolume.size = "50Gi";
+          persistentVolume.size = "2Gi";
           resources = {
             limits = { memory = "12Gi"; };
-            requests = { cpu = "3.5"; memory = "8Gi"; };
+            requests = { cpu = "200m"; memory = "300Mi"; };
           };
           affinity = makeAffinity "ingester";
           zoneAwareReplication.topologyKey = "kubernetes.io/hostname";
@@ -93,31 +93,31 @@ in
         overrides_exporter = {
           resources = {
             limits = { memory = "128Mi"; };
-            requests = { cpu = "100m"; memory = "128Mi"; };
+            requests = { cpu = "50m"; memory = "128Mi"; };
           };
         };
 
         querier = {
           replicas = 1;
           resources = {
-            limits = { memory = "5.6Gi"; };
-            requests = { cpu = "2"; memory = "4Gi"; };
+            limits = { memory = "2Gi"; };
+            requests = { cpu = "100m"; memory = "200Mi"; };
           };
         };
 
         query_frontend = {
           replicas = 1;
           resources = {
-            limits = { memory = "2.8Gi"; };
-            requests = { cpu = "2"; memory = "2Gi"; };
+            limits = { memory = "2Gi"; };
+            requests = { cpu = "100m"; memory = "200Mi"; };
           };
         };
 
         ruler = {
           replicas = 1;
           resources = {
-            limits = { memory = "2.8Gi"; };
-            requests = { cpu = "1"; memory = "2Gi"; };
+            limits = { memory = "500Mi"; };
+            requests = { cpu = "50m"; memory = "50Mi"; };
           };
         };
 
@@ -125,8 +125,8 @@ in
           persistentVolume.size = "10Gi";
           replicas = 3;
           resources = {
-            limits = { memory = "2.1Gi"; };
-            requests = { cpu = "1"; memory = "1.5Gi"; };
+            limits = { memory = "500Mi"; };
+            requests = { cpu = "50m"; memory = "50Mi"; };
           };
           affinity = makeAffinity "store-gateway";
           zoneAwareReplication.topologyKey = "kubernetes.io/hostname";
