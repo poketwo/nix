@@ -11,7 +11,7 @@
       };
 
       values = {
-        extraArgs = [ "--direct-routing-device=inet0" ];
+        extraArgs = [ "--devices=inet0" "--direct-routing-device=inet0" ];
 
         # We use Kubernetes IPAM, but KCM isn't configured to allocate addresses
         # since we need more control over the CIDRs (which are disjoint).
