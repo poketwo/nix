@@ -19,4 +19,5 @@ in
 {
   "tailscale-auth-key.age".publicKeys = all-users ++ all-hosts;
   "cloudflare-warp-mdm.xml.age".publicKeys = all-users ++ all-hosts;
+  "jolteon-wireguard-private-key.age".publicKeys = all-users ++ [ hosts.jolteon ];
 }

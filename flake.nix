@@ -77,6 +77,7 @@
         (host: modules: {
           imports = commonModules ++ modules;
           deployment.buildOnTarget = true;
+          deployment.targetHost = "${host}.hfym.co";
           deployment.targetUser = "oliver";
           deployment.allowLocalDeployment = true;
         })
@@ -87,6 +88,8 @@
         (system: fn system (pkgsFor system));
     in
     {
+      formatter = forAllSystems (system: pkgs: pkgs.nixpkgs-fmt);
+
       colmena = colmenaHosts // {
         meta = { nixpkgs = pkgsFor "x86_64-linux"; };
       };
