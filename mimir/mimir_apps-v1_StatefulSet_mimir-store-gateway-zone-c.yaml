@@ -68,7 +68,7 @@ spec:
         - name: GOMAXPROCS
           value: '5'
         - name: GOMEMLIMIT
-          value: '1073741824'
+          value: '52428800'
         - name: JAEGER_REPORTER_MAX_QUEUE_SIZE
           value: '1000'
         envFrom:
@@ -94,10 +94,10 @@ spec:
           initialDelaySeconds: 60
         resources:
           limits:
-            memory: 2.1Gi
+            memory: 500Mi
           requests:
-            cpu: '1'
-            memory: 1.5Gi
+            cpu: 50m
+            memory: 50Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

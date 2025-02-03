@@ -32,6 +32,7 @@ spec:
       containers:
       - args:
         - --config-dir=/tmp/cilium/config-map
+        - --devices=inet0
         - --direct-routing-device=inet0
         command:
         - cilium-agent

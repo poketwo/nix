@@ -92,8 +92,8 @@ spec:
           limits:
             memory: 12Gi
           requests:
-            cpu: '3.5'
-            memory: 8Gi
+            cpu: 200m
+            memory: 300Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -149,4 +149,4 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 50Gi
+          storage: 2Gi

@@ -44,7 +44,7 @@ spec:
         - -config.file=/etc/mimir/mimir.yaml
         env:
         - name: GOMAXPROCS
-          value: '6'
+          value: '5'
         - name: JAEGER_REPORTER_MAX_QUEUE_SIZE
           value: '5000'
         envFrom:
@@ -70,10 +70,10 @@ spec:
           initialDelaySeconds: 45
         resources:
           limits:
-            memory: 5.6Gi
+            memory: 2Gi
           requests:
-            cpu: '2'
-            memory: 4Gi
+            cpu: 100m
+            memory: 200Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
