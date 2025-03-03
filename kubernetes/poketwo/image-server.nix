@@ -4,7 +4,7 @@
   namespaces.poketwo = {
     resources = {
       "apps/v1".Deployment.image-server.spec = {
-        replicas = 16;
+        replicas = 12;
         selector.matchLabels.app = "image-server";
         template = {
           metadata.labels.app = "image-server";
@@ -14,8 +14,8 @@
               image = "ghcr.io/poketwo/image-server:latest";
               ports = [{ containerPort = 8080; }];
               resources = {
-                limits = { memory = "500Mi"; };
-                requests = { memory = "500Mi"; cpu = "100m"; };
+                limits = { memory = "700Mi"; };
+                requests = { memory = "700Mi"; cpu = "100m"; };
               };
               readinessProbe = {
                 httpGet = { path = "/"; port = 8080; };
