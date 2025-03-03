@@ -4,7 +4,7 @@ metadata:
   name: image-server
   namespace: poketwo
 spec:
-  replicas: 16
+  replicas: 12
   selector:
     matchLabels:
       app: image-server
@@ -35,9 +35,9 @@ spec:
           periodSeconds: 5
         resources:
           limits:
-            memory: 500Mi
+            memory: 700Mi
           requests:
             cpu: 100m
-            memory: 500Mi
+            memory: 700Mi
       imagePullSecrets:
       - name: ghcr-auth
