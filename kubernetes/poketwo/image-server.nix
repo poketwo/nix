@@ -14,8 +14,8 @@
               image = "ghcr.io/poketwo/image-server:latest";
               ports = [{ containerPort = 8080; }];
               resources = {
-                limits = { memory = "700Mi"; };
-                requests = { memory = "700Mi"; cpu = "100m"; };
+                limits = { memory = "1.5Gi"; };
+                requests = { memory = "1.5Gi"; cpu = "100m"; };
               };
               readinessProbe = {
                 httpGet = { path = "/"; port = 8080; };
