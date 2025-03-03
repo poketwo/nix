@@ -14,8 +14,8 @@
               image = "ghcr.io/poketwo/gateway-proxy:latest";
               ports = [{ containerPort = 7878; }];
               resources = {
-                limits = { memory = "120Gi"; };
-                requests = { memory = "120Gi"; cpu = "500m"; };
+                limits = { memory = "150Gi"; };
+                requests = { memory = "150Gi"; cpu = "500m"; };
               };
               readinessProbe = {
                 httpGet = { path = "/metrics"; port = 7878; };
