@@ -35,9 +35,9 @@ spec:
           periodSeconds: 5
         resources:
           limits:
-            memory: 700Mi
+            memory: 1.5Gi
           requests:
             cpu: 100m
-            memory: 700Mi
+            memory: 1.5Gi
       imagePullSecrets:
       - name: ghcr-auth
