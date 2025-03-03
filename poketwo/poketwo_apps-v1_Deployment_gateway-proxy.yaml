@@ -32,10 +32,10 @@ spec:
           periodSeconds: 5
         resources:
           limits:
-            memory: 120Gi
+            memory: 150Gi
           requests:
             cpu: 500m
-            memory: 120Gi
+            memory: 150Gi
         volumeMounts:
         - mountPath: /config
           name: config
