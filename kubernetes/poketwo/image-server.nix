@@ -4,7 +4,7 @@
   namespaces.poketwo = {
     resources = {
       "apps/v1".Deployment.image-server.spec = {
-        replicas = 6;
+        replicas = 15;
         selector.matchLabels.app = "image-server";
         template = {
           metadata.labels.app = "image-server";
