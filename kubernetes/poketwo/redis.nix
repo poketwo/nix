@@ -16,8 +16,8 @@
         master = {
           persistence.size = "64Gi";
           resources = {
-            requests = { memory = "20Gi"; };
-            limits = { memory = "20Gi"; cpu = "200m"; };
+            requests = { memory = "30Gi"; };
+            limits = { memory = "30Gi"; cpu = "300m"; };
           };
         };
         metrics.enabled = true;
