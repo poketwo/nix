@@ -27,7 +27,7 @@
               imagePullPolicy = "Always";
               resources = {
                 limits = { memory = "4Gi"; };
-                requests = { memory = "2Gi"; cpu = "100m"; };
+                requests = { memory = "2Gi"; cpu = "300m"; };
               };
               envFrom = [{ secretRef.name = "poketwo"; }];
               env = [
