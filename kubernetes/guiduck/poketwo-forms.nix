@@ -19,6 +19,11 @@
               { name = "DATABASE_NAME"; value = "support"; }
               { name = "DATABASE_URI"; value = "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true"; }
 
+              { name = "POKETWO_DATABASE_HOST"; value = "mongodb-0-external.poketwo,mongodb-1-external.poketwo"; }
+              { name = "POKETWO_DATABASE_USERNAME"; value = "root"; }
+              { name = "POKETWO_DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-mongodb-password"; }; }
+              { name = "POKETWO_DATABASE_NAME"; value = "pokemon"; }
+
               { name = "SECRET_KEY"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "secret-key"; }; }
               { name = "SENDGRID_KEY"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "sendgrid-key"; }; }
               { name = "NEXT_PUBLIC_FORMIUM_PROJECT_ID"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "formium-project-id"; }; }
