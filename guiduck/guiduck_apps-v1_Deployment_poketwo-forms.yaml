@@ -28,6 +28,19 @@ spec:
           value: support
         - name: DATABASE_URI
           value: mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true
+        - name: POKETWO_DATABASE_HOST
+          value: mongodb-0-external.poketwo,mongodb-1-external.poketwo
+        - name: POKETWO_DATABASE_USERNAME
+          value: root
+        - name: POKETWO_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: poketwo-mongodb-password
+              name: guiduck
+        - name: POKETWO_DATABASE_NAME
+          value: pokemon
+        - name: POKETWO_DATABASE_URI
+          value: mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
