@@ -40,7 +40,7 @@ spec:
         - name: POKETWO_DATABASE_NAME
           value: pokemon
         - name: POKETWO_DATABASE_URI
-          value: mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true
+          value: mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
