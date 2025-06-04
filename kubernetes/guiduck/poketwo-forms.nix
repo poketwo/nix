@@ -23,7 +23,7 @@
               { name = "POKETWO_DATABASE_USERNAME"; value = "root"; }
               { name = "POKETWO_DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-mongodb-password"; }; }
               { name = "POKETWO_DATABASE_NAME"; value = "pokemon"; }
-              { name = "POKETWO_DATABASE_URI"; value = "mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true"; }
+              { name = "POKETWO_DATABASE_URI"; value = "mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)"; }
 
               { name = "SECRET_KEY"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "secret-key"; }; }
               { name = "SENDGRID_KEY"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "sendgrid-key"; }; }
