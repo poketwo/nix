@@ -24,7 +24,16 @@
     };
     networks."10-inet0" = {
       matchConfig.Name = "inet0";
-      networkConfig.DHCP = "yes";
+      address = [
+        "50.116.4.187/24"
+        "2600:3c01::f03c:94ff:fe23:6ecb/64"
+      ];
+      routes = [
+        { routeConfig.Gateway = "50.116.4.1"; }
+        { routeConfig.Gateway = "fe80::1"; }
+      ];
+      domains = [ ];
+      linkConfig.RequiredForOnline = "routable";
     };
   };
 
