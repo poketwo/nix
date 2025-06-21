@@ -4,7 +4,7 @@ metadata:
   name: image-server
   namespace: poketwo
 spec:
-  replicas: 20
+  replicas: 35
   selector:
     matchLabels:
       app: image-server
