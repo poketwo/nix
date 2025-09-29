@@ -50,8 +50,8 @@ in
         enableIPv6 = true;
 
         resources = {
-          limits = { memory = "80Gi"; };
-          requests = { cpu = "6000m"; memory = "60Gi"; };
+          limits = { memory = "120Gi"; };
+          requests = { cpu = "8000m"; memory = "60Gi"; };
         };
         persistence = { enabled = true; size = "2Ti"; };
 
