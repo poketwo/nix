@@ -49,7 +49,7 @@ in
 
   config = lib.mkIf cfg.enable {
     networking = {
-      nameservers = lib.mkForce [ "2606:4700:4700::64" "2606:4700:4700::6400" "1.1.1.1" "1.1.1.1" ];
+      nameservers = lib.mkForce [ "2606:4700:4700::64" "2606:4700:4700::6400" ];
 
       jool = {
         enable = true;
