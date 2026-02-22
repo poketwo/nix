@@ -8,6 +8,11 @@ let
     { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:05:00.0-nvme-1-part3"; }
   ];
 
+  commonDevicesWithoutBootDrive = [
+    { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:03:00.0-nvme-1"; }
+    { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:04:00.0-nvme-1"; }
+  ];
+
   defaultPool = {
     failureDomain = "host";
     replicated.size = 2;
@@ -74,7 +79,7 @@ in
         nodes = [
           { name = "vaporeon"; devices = commonDevices; }
           { name = "jolteon"; devices = commonDevices; }
-          { name = "flareon"; devices = commonDevices; }
+          { name = "flareon"; devices = commonDevicesWithoutBootDrive; }
         ];
       };
     };
