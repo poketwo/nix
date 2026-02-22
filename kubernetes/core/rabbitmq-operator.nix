@@ -11,6 +11,7 @@
       };
 
       values = {
+        global.imageRegistry = "docker.io/bitnamilegacy";
         clusterOperator.networkPolicy.enabled = false;
         msgTopologyOperator.networkPolicy.enabled = false;
       };
