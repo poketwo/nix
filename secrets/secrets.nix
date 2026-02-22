@@ -10,7 +10,7 @@ let
 
     vaporeon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIlJzVVwoQc1sPYr1fEWumBrIPKjKYvYORmarx0ofDV";
     jolteon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILwnAVJa18Nvwpx8L1r4qG3jpRr1aAJN/4HjHHUCnkun";
-    flareon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHXAcViD+JS3KHgz2KYG6Q7g11UMyRh0IypAfvW5MYqN";
+    flareon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFHiJuP5fYnqHxAAMi/F1nwVA/zKw0zFazvxgsx9obqC";
   };
 
   all-users = with users; [ oliver ];
