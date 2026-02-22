@@ -95,7 +95,7 @@ spec:
           value: 'yes'
         - name: MONGODB_ENABLE_DIRECTORY_PER_DB
           value: 'no'
-        image: docker.io/bitnami/mongodb:7.0.12-debian-12-r0
+        image: docker.io/bitnamilegacy/bitnami/mongodb:7.0.12-debian-12-r0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
@@ -179,7 +179,7 @@ spec:
             secretKeyRef:
               key: mongodb-root-password
               name: mongodb
-        image: docker.io/bitnami/mongodb-exporter:0.40.0-debian-12-r30
+        image: docker.io/bitnamilegacy/bitnami/mongodb-exporter:0.40.0-debian-12-r30
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
@@ -238,7 +238,7 @@ spec:
           find  /bitnami/mongodb/ -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R 1001:1001
         command:
         - /bin/bash
-        image: docker.io/bitnami/os-shell:12-debian-12-r23
+        image: docker.io/bitnamilegacy/bitnami/os-shell:12-debian-12-r23
         imagePullPolicy: IfNotPresent
         name: volume-permissions
         resources:
@@ -268,7 +268,7 @@ spec:
               fieldPath: metadata.name
         - name: SHARED_FILE
           value: /shared/info.txt
-        image: docker.io/bitnami/kubectl:1.30.2-debian-12-r0
+        image: docker.io/bitnamilegacy/bitnami/kubectl:1.30.2-debian-12-r0
         imagePullPolicy: IfNotPresent
         name: auto-discovery
         resources:
@@ -295,7 +295,7 @@ spec:
           ln -sf /dev/stdout "/opt/bitnami/mongodb/logs/mongodb.log"
         command:
         - /bin/bash
-        image: docker.io/bitnami/mongodb:7.0.12-debian-12-r0
+        image: docker.io/bitnamilegacy/bitnami/mongodb:7.0.12-debian-12-r0
         imagePullPolicy: IfNotPresent
         name: log-dir
         resources:

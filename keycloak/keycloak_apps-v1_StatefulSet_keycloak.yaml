@@ -71,7 +71,7 @@ spec:
         envFrom:
         - configMapRef:
             name: keycloak-env-vars
-        image: docker.io/bitnami/keycloak:24.0.5-debian-12-r1
+        image: docker.io/bitnamilegacy/bitnami/keycloak:24.0.5-debian-12-r1
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
@@ -147,7 +147,7 @@ spec:
           cp -r /opt/bitnami/keycloak/lib/quarkus/* /quarkus
         command:
         - /bin/bash
-        image: docker.io/bitnami/keycloak:24.0.5-debian-12-r1
+        image: docker.io/bitnamilegacy/bitnami/keycloak:24.0.5-debian-12-r1
         imagePullPolicy: IfNotPresent
         name: init-quarkus-directory
         resources:
