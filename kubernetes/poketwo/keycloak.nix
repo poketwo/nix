@@ -134,8 +134,6 @@ in
         metrics.enabled = true;
         postgresql.enabled = false;
         networkPolicy.enabled = false;
-        keycloakConfigCli.image.repository = "bitnamilegacy/keycloak-config-cli";
-
         initContainers = [{
           name = "download-resources";
           image = "alpine/git";
@@ -182,6 +180,7 @@ in
           enabled = true;
           existingConfigmap = "keycloak-config-cli";
           cleanupAfterFinished.enabled = true;
+          image.repository = "bitnamilegacy/keycloak-config-cli";
         };
       };
     };

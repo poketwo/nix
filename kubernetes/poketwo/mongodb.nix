@@ -66,6 +66,7 @@ in
         externalAccess = {
           enabled = true;
           autoDiscovery.enabled = true;
+          autoDiscovery.image.repository = "bitnamilegacy/kubectl";
 
           service = {
             annotations."external-dns.alpha.kubernetes.io/cloudflare-proxied" = "false";
@@ -94,7 +95,6 @@ in
           enabled = true;
           image.repository = "bitnamilegacy/mongodb-exporter";
         };
-        externalAccess.autoDiscovery.image.repository = "bitnamilegacy/kubectl";
         tls.image.repository = "bitnamilegacy/nginx";
       };
     };
