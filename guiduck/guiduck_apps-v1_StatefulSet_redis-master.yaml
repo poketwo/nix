@@ -6,8 +6,8 @@ metadata:
     app.kubernetes.io/instance: redis
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
-    app.kubernetes.io/version: 7.2.5
-    helm.sh/chart: redis-19.6.1
+    app.kubernetes.io/version: 8.0.1
+    helm.sh/chart: redis-21.1.4
   name: redis-master
   namespace: guiduck
 spec:
@@ -22,10 +22,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap: 86bcc953bb473748a3d3dc60b7c11f34e60c93519234d4c37f42e22ada559d47
+        checksum/configmap: 2a9ab4a5432825504d910f022638674ce88eaefe9f9f595ad8bc107377d104fb
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
-        checksum/scripts: 560c33ff34d845009b51830c332aa05fa211444d1877d3526d3599be7543aaa5
-        checksum/secret: 171f63f8532f487c3cb33b5e9483a81af6a9547e725bcb23172b33d00068d916
+        checksum/scripts: 0717e77fd3bb941f602860e9be4f2ed87b481cddeadf37be463f8512ecde0c3e
+        checksum/secret: aa7a9e0a70713443059a6e87a21b193115ad212c55c194640bae5f22b390ddec
         prometheus.io/port: '9121'
         prometheus.io/scrape: 'true'
       labels:
@@ -33,8 +33,8 @@ spec:
         app.kubernetes.io/instance: redis
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: redis
-        app.kubernetes.io/version: 7.2.5
-        helm.sh/chart: redis-19.6.1
+        app.kubernetes.io/version: 8.0.1
+        helm.sh/chart: redis-21.1.4
     spec:
       affinity:
         podAntiAffinity:
@@ -50,7 +50,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - args:
-        - -c
+        - -ec
         - /opt/bitnami/scripts/start-scripts/start-master.sh
         command:
         - /bin/bash
@@ -61,22 +61,19 @@ spec:
           value: master
         - name: ALLOW_EMPTY_PASSWORD
           value: 'no'
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: redis-password
-              name: redis
+        - name: REDIS_PASSWORD_FILE
+          value: /opt/bitnami/redis/secrets/redis-password
         - name: REDIS_TLS_ENABLED
           value: 'no'
         - name: REDIS_PORT
           value: '6379'
-        image: docker.io/bitnamilegacy/bitnami/redis:7.2.5-debian-12-r2
+        image: docker.io/bitnamilegacy/redis:8.0.1-debian-12-r2
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
             command:
-            - sh
-            - -c
+            - /bin/bash
+            - -ec
             - /health/ping_liveness_local.sh 5
           failureThreshold: 5
           initialDelaySeconds: 20
@@ -90,8 +87,8 @@ spec:
         readinessProbe:
           exec:
             command:
-            - sh
-            - -c
+            - /bin/bash
+            - -ec
             - /health/ping_readiness_local.sh 1
           failureThreshold: 5
           initialDelaySeconds: 20
@@ -121,6 +118,8 @@ spec:
           name: start-scripts
         - mountPath: /health
           name: health
+        - mountPath: /opt/bitnami/redis/secrets/
+          name: redis-password
         - mountPath: /data
           name: redis-data
         - mountPath: /opt/bitnami/redis/mounted-etc
@@ -133,11 +132,9 @@ spec:
           subPath: tmp-dir
       - command:
         - /bin/bash
-        - -c
+        - -ec
         - |
-          if [[ -f '/secrets/redis-password' ]]; then
-          export REDIS_PASSWORD=$(cat /secrets/redis-password)
-          fi
+          export REDIS_PASSWORD="$(< $REDIS_PASSWORD_FILE)"
           redis_exporter
         env:
         - name: REDIS_ALIAS
@@ -146,12 +143,9 @@ spec:
           value: :9121
         - name: REDIS_USER
           value: default
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: redis-password
-              name: redis
-        image: docker.io/bitnamilegacy/bitnami/redis-exporter:1.61.0-debian-12-r2
+        - name: REDIS_PASSWORD_FILE
+          value: /secrets/redis-password
+        image: docker.io/bitnamilegacy/redis-exporter:1.72.1-debian-12-r0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 5
@@ -177,7 +171,7 @@ spec:
         resources:
           limits:
             cpu: 150m
-            ephemeral-storage: 1024Mi
+            ephemeral-storage: 2Gi
             memory: 192Mi
           requests:
             cpu: 100m
@@ -199,6 +193,8 @@ spec:
         - mountPath: /tmp
           name: empty-dir
           subPath: app-tmp-dir
+        - mountPath: /secrets/
+          name: redis-password
       enableServiceLinks: true
       securityContext:
         fsGroup: 1001
@@ -216,6 +212,12 @@ spec:
           defaultMode: 493
           name: redis-health
         name: health
+      - name: redis-password
+        secret:
+          items:
+          - key: redis-password
+            path: redis-password
+          secretName: redis
       - configMap:
           name: redis-configuration
         name: config
