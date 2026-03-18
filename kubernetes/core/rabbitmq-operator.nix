@@ -11,9 +11,18 @@
       };
 
       values = {
-        global.imageRegistry = "docker.io/bitnamilegacy";
-        clusterOperator.networkPolicy.enabled = false;
-        msgTopologyOperator.networkPolicy.enabled = false;
+        global.imageRegistry = "docker.io";
+        global.security.allowInsecureImages = true;
+        rabbitmqImage.repository = "bitnamilegacy/rabbitmq";
+        credentialUpdaterImage.repository = "bitnamilegacy/rmq-default-credential-updater";
+        clusterOperator = {
+          networkPolicy.enabled = false;
+          image.repository = "bitnamilegacy/rabbitmq-cluster-operator";
+        };
+        msgTopologyOperator = {
+          networkPolicy.enabled = false;
+          image.repository = "bitnamilegacy/rmq-messaging-topology-operator";
+        };
       };
 
       includeCRDs = true;

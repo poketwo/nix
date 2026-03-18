@@ -124,7 +124,9 @@ in
       };
 
       values = {
-        global.imageRegistry = "docker.io/bitnamilegacy";
+        global.imageRegistry = "docker.io";
+        global.security.allowInsecureImages = true;
+        image.repository = "bitnamilegacy/keycloak";
         auth.existingSecret = "keycloak-auth";
         production = true;
         proxy = "edge";
@@ -132,7 +134,6 @@ in
         metrics.enabled = true;
         postgresql.enabled = false;
         networkPolicy.enabled = false;
-
         initContainers = [{
           name = "download-resources";
           image = "alpine/git";
@@ -179,6 +180,7 @@ in
           enabled = true;
           existingConfigmap = "keycloak-config-cli";
           cleanupAfterFinished.enabled = true;
+          image.repository = "bitnamilegacy/keycloak-config-cli";
         };
       };
     };

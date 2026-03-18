@@ -42,7 +42,9 @@ in
       };
 
       values = {
-        global.imageRegistry = "docker.io/bitnamilegacy";
+        global.imageRegistry = "docker.io";
+        global.security.allowInsecureImages = true;
+        image.repository = "bitnamilegacy/mongodb";
         architecture = "replicaset";
         auth = { enabled = true; existingSecret = "mongodb"; };
         replicaSetName = "poketwo";
@@ -64,6 +66,7 @@ in
         externalAccess = {
           enabled = true;
           autoDiscovery.enabled = true;
+          autoDiscovery.image.repository = "bitnamilegacy/kubectl";
 
           service = {
             annotations."external-dns.alpha.kubernetes.io/cloudflare-proxied" = "false";
@@ -84,8 +87,15 @@ in
           };
         };
 
-        volumePermissions.enabled = true;
-        metrics.enabled = true;
+        volumePermissions = {
+          enabled = true;
+          image.repository = "bitnamilegacy/os-shell";
+        };
+        metrics = {
+          enabled = true;
+          image.repository = "bitnamilegacy/mongodb-exporter";
+        };
+        tls.image.repository = "bitnamilegacy/nginx";
       };
     };
 
