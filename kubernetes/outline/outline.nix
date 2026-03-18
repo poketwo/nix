@@ -38,7 +38,7 @@ in
       };
 
       values = {
-        global.imageRegistry = "docker.io/bitnamilegacy";
+        global.imageRegistry = "docker.io";
         architecture = "standalone";
         master.persistence.size = "1Gi";
         metrics.enabled = true;

@@ -42,7 +42,7 @@ in
       };
 
       values = {
-        global.imageRegistry = "docker.io/bitnamilegacy";
+        global.imageRegistry = "docker.io";
         architecture = "replicaset";
         auth = { enabled = true; existingSecret = "mongodb"; };
         replicaSetName = "poketwo";

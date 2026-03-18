@@ -124,7 +124,7 @@ in
       };
 
       values = {
-        global.imageRegistry = "docker.io/bitnamilegacy";
+        global.imageRegistry = "docker.io";
         auth.existingSecret = "keycloak-auth";
         production = true;
         proxy = "edge";

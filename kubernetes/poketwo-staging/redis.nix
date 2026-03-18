@@ -10,7 +10,7 @@
     };
 
     values = {
-      global.imageRegistry = "docker.io/bitnamilegacy";
+      global.imageRegistry = "docker.io";
       architecture = "standalone";
       usePassword = true;
       master = {
