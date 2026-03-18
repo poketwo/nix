@@ -39,10 +39,18 @@ in
 
       values = {
         global.imageRegistry = "docker.io";
+        image.repository = "bitnamilegacy/redis";
+        sentinel.image.repository = "bitnamilegacy/redis-sentinel";
         architecture = "standalone";
         master.persistence.size = "1Gi";
-        metrics.enabled = true;
+        metrics = {
+          enabled = true;
+          image.repository = "bitnamilegacy/redis-exporter";
+        };
         networkPolicy.enabled = false;
+        volumePermissions.image.repository = "bitnamilegacy/os-shell";
+        sysctl.image.repository = "bitnamilegacy/os-shell";
+        kubectl.image.repository = "bitnamilegacy/kubectl";
       };
     };
 
