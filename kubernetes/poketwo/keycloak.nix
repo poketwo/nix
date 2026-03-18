@@ -125,6 +125,8 @@ in
 
       values = {
         global.imageRegistry = "docker.io";
+        global.security.allowInsecureImages = true;
+        image.repository = "bitnamilegacy/keycloak";
         auth.existingSecret = "keycloak-auth";
         production = true;
         proxy = "edge";
@@ -132,6 +134,7 @@ in
         metrics.enabled = true;
         postgresql.enabled = false;
         networkPolicy.enabled = false;
+        keycloakConfigCli.image.repository = "bitnamilegacy/keycloak-config-cli";
 
         initContainers = [{
           name = "download-resources";

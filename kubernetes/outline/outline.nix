@@ -39,6 +39,7 @@ in
 
       values = {
         global.imageRegistry = "docker.io";
+        global.security.allowInsecureImages = true;
         image.repository = "bitnamilegacy/redis";
         sentinel.image.repository = "bitnamilegacy/redis-sentinel";
         architecture = "standalone";

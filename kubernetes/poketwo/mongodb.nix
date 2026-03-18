@@ -43,6 +43,8 @@ in
 
       values = {
         global.imageRegistry = "docker.io";
+        global.security.allowInsecureImages = true;
+        image.repository = "bitnamilegacy/mongodb";
         architecture = "replicaset";
         auth = { enabled = true; existingSecret = "mongodb"; };
         replicaSetName = "poketwo";
@@ -84,8 +86,16 @@ in
           };
         };
 
-        volumePermissions.enabled = true;
-        metrics.enabled = true;
+        volumePermissions = {
+          enabled = true;
+          image.repository = "bitnamilegacy/os-shell";
+        };
+        metrics = {
+          enabled = true;
+          image.repository = "bitnamilegacy/mongodb-exporter";
+        };
+        externalAccess.autoDiscovery.image.repository = "bitnamilegacy/kubectl";
+        tls.image.repository = "bitnamilegacy/nginx";
       };
     };
 

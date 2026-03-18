@@ -11,6 +11,9 @@
       };
 
       values = {
+        kubectl.image.repository = "docker.io/bitnamilegacy/kubectl";
+        kubectl.image.tag = "1.33.4";
+
         initContainers = [
           {
             name = "velero-plugin-for-csi";

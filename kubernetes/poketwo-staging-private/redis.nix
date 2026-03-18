@@ -11,6 +11,9 @@
 
     values = {
       global.imageRegistry = "docker.io";
+      global.security.allowInsecureImages = true;
+      image.repository = "bitnamilegacy/redis";
+      sentinel.image.repository = "bitnamilegacy/redis-sentinel";
       architecture = "standalone";
       usePassword = true;
       master = {
@@ -20,8 +23,14 @@
           limits = { memory = "1Gi"; cpu = "20m"; };
         };
       };
-      metrics.enabled = true;
+      metrics = {
+        enabled = true;
+        image.repository = "bitnamilegacy/redis-exporter";
+      };
       networkPolicy.enabled = false;
+      volumePermissions.image.repository = "bitnamilegacy/os-shell";
+      sysctl.image.repository = "bitnamilegacy/os-shell";
+      kubectl.image.repository = "bitnamilegacy/kubectl";
     };
   };
 }
