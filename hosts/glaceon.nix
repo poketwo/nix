@@ -15,7 +15,7 @@
   poketwo.network = {
     enable = true;
     interfaces = [ "enp225s0f0np0" "enp225s0f1np1" ];
-    lastOctet = 131; # TODO: confirm
+    lastOctet = 131;
   };
 
   poketwo.kubernetes.enable = true;

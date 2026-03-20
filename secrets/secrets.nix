@@ -12,8 +12,8 @@ let
     jolteon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILwnAVJa18Nvwpx8L1r4qG3jpRr1aAJN/4HjHHUCnkun";
     flareon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFHiJuP5fYnqHxAAMi/F1nwVA/zKw0zFazvxgsx9obqC";
 
-    glaceon = "TODO"; # TODO: fill in ssh-ed25519 host key
-    sylveon = "TODO"; # TODO: fill in ssh-ed25519 host key
+    glaceon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIhz8TgY7TI01qz7/5hIu6H36++ppJriNZfWySdDoMM1";
+    sylveon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBle4/fnS9I41btk49rzY/EXuUNZkHthwprDhQr5ZUaW";
   };
 
   all-users = with users; [ oliver ];
