@@ -1,4 +1,4 @@
-name: Build NixOS Hosts
+name: Evaluate NixOS Hosts
 
 on:
   pull_request:
