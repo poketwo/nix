@@ -14,7 +14,7 @@
 
   poketwo.network = {
     enable = true;
-    interfaces = [ "TODO" ]; # TODO: fill in network interface names
+    interfaces = [ "enp225s0f0np0" "enp225s0f1np1" ];
     lastOctet = 132; # TODO: confirm
   };
 
