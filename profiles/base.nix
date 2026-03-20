@@ -15,8 +15,6 @@
     };
   };
 
-  nixpkgs.flake.setNixPath = true;
-
   poketwo = {
     auth.enable = lib.mkDefault true;
     locale.enable = lib.mkDefault true;
