@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./presets/asus-rs500a-e12.nix
+    ./presets/supermicro-1015cs-tnr.nix
     ./presets/zfs-root.nix
   ];
 
