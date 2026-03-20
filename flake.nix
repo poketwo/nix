@@ -23,6 +23,7 @@
         agenix.nixosModules.default
         ./modules/poketwo/auth.nix
         ./modules/poketwo/cloudflare-warp.nix
+        ./modules/poketwo/deploy.nix
         ./modules/poketwo/kubernetes.nix
         ./modules/poketwo/locale.nix
         ./modules/poketwo/nat64.nix
@@ -78,7 +79,7 @@
           imports = commonModules ++ modules;
           deployment.buildOnTarget = true;
           deployment.targetHost = "${host}.hfym.co";
-          deployment.targetUser = "oliver";
+          deployment.targetUser = "deploy";
           deployment.allowLocalDeployment = true;
         })
         hosts;
