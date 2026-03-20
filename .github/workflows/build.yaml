@@ -50,5 +50,5 @@ jobs:
         uses: DeterminateSystems/determinate-nix-action@v3
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v8
-      - name: Build ${{ matrix.host }}
-        run: nix develop -c colmena build --on ${{ matrix.host }}
+      - name: Evaluate ${{ matrix.host }}
+        run: nix eval .#colmena.${{ matrix.host }}.config.system.build.toplevel --apply 'x: x.drvPath'
