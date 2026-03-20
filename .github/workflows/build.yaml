@@ -1,4 +1,4 @@
-name: Evaluate NixOS Hosts
+name: Build NixOS Hosts
 
 on:
   pull_request:
@@ -50,5 +50,5 @@ jobs:
         uses: DeterminateSystems/determinate-nix-action@v3
       - name: Setup Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@v8
-      - name: Evaluate ${{ matrix.host }}
-        run: nix eval .#colmena.${{ matrix.host }}.config.system.build.toplevel --apply 'x: x.drvPath'
+      - name: Build ${{ matrix.host }}
+        run: nix develop -c colmena build --on ${{ matrix.host }}
