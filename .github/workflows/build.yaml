@@ -1,0 +1,24 @@
+name: Build NixOS Hosts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@v3
+      - name: Check Nix flake inputs
+        uses: DeterminateSystems/flake-checker-action@v10
+      - name: Build NixOS configurations
+        run: nix develop -c colmena build
