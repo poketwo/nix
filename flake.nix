@@ -78,6 +78,10 @@
     {
       formatter = forAllSystems (system: pkgs: pkgs.nixpkgs-fmt);
 
+      # ========================
+      # deploy-rs Configuration
+      # ========================
+
       nixosConfigurations = builtins.mapAttrs
         (host: modules: nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
