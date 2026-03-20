@@ -12,7 +12,7 @@
     transpire.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, systems, agenix, transpire, ... }:
+  outputs = { self, nixpkgs, systems, agenix, transpire, ... }@inputs:
     let
       # ========================
       # NixOS Host Configuration
@@ -91,7 +91,10 @@
       formatter = forAllSystems (system: pkgs: pkgs.nixpkgs-fmt);
 
       colmena = colmenaHosts // {
-        meta = { nixpkgs = pkgsFor "x86_64-linux"; };
+        meta = {
+          nixpkgs = pkgsFor "x86_64-linux";
+          specialArgs = { inherit inputs; };
+        };
       };
 
       devShells = forAllSystems (system: pkgs: {

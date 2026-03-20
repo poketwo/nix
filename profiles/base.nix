@@ -1,7 +1,19 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, inputs, ... }:
 
 {
-  nix.settings.extra-experimental-features = [ "nix-command" "flakes" ];
+  nix = {
+    channel.enable = false;
+    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+    settings = {
+      experimental-features = "nix-command flakes";
+      nix-path = lib.mapAttrsToList (name: _: "${name}=flake:${name}") inputs;
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+  };
 
   poketwo = {
     auth.enable = lib.mkDefault true;
