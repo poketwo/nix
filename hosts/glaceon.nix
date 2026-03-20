@@ -9,7 +9,7 @@
 
   networking = {
     hostName = "glaceon";
-    hostId = "TODO"; # TODO: generate with `head -c 4 /dev/urandom | od -A none -t x4 | tr -d ' '`
+    hostId = "7c848081";
   };
 
   poketwo.network = {
