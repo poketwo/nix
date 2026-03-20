@@ -78,29 +78,30 @@
     {
       formatter = forAllSystems (system: pkgs: pkgs.nixpkgs-fmt);
 
-      # ========================
-      # deploy-rs Configuration
-      # ========================
-
       nixosConfigurations = builtins.mapAttrs
         (host: modules: nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
-          modules = commonModules ++ modules;
+          modules = commonModules ++ modules ++ [
+            { nixpkgs.overlays = overlays; nixpkgs.config.allowUnfree = true; }
+          ];
         })
         hosts;
 
+      # ========================
+      # deploy-rs Configuration
+      # ========================
+
       deploy.nodes = builtins.mapAttrs
-        (host: _: {
+        (host: nixosConfig: {
           hostname = "${host}.hfym.co";
           profiles.system = {
             user = "root";
             sshUser = "oliver";
-            path = deploy-rs.lib.x86_64-linux.activate.nixos
-              self.nixosConfigurations.${host};
+            path = deploy-rs.lib.x86_64-linux.activate.nixos nixosConfig;
           };
         })
-        hosts;
+        self.nixosConfigurations;
 
       checks = builtins.mapAttrs
         (system: deployLib: deployLib.deployChecks self.deploy)

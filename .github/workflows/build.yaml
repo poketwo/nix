@@ -56,4 +56,6 @@ jobs:
             nix-${{ matrix.host }}-
           gc-max-store-size-linux: 4000000000
       - name: Build ${{ matrix.host }}
-        run: nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
+        run: nix build ".#nixosConfigurations.$HOST.config.system.build.toplevel"
+        env:
+          HOST: ${{ matrix.host }}
