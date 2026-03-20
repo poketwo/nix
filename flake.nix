@@ -58,22 +58,9 @@
 
       openApiSpec = ./kube-openapi.json;
 
-      # =====================
-      # nixpkgs Configuration
-      # =====================
-
-      overlays = [
-        agenix.overlays.default
-      ];
-
-      pkgsFor = system: import nixpkgs {
-        inherit overlays system;
-        config = { allowUnfree = true; };
-      };
-
       forAllSystems = fn: nixpkgs.lib.genAttrs
         (import systems)
-        (system: fn system (pkgsFor system));
+        (system: fn system (import nixpkgs { inherit system; }));
     in
     {
       formatter = forAllSystems (system: pkgs: pkgs.nixpkgs-fmt);
@@ -82,9 +69,10 @@
         (host: modules: nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = { inherit inputs; };
-          modules = commonModules ++ modules ++ [
-            { nixpkgs.overlays = overlays; nixpkgs.config.allowUnfree = true; }
-          ];
+          modules = commonModules ++ modules ++ [{
+            nixpkgs.overlays = [ agenix.overlays.default ];
+            nixpkgs.config.allowUnfree = true;
+          }];
         })
         hosts;
 
@@ -109,7 +97,10 @@
 
       devShells = forAllSystems (system: pkgs: {
         default = pkgs.mkShell {
-          packages = [ pkgs.deploy-rs pkgs.agenix ];
+          packages = [
+            deploy-rs.packages.${system}.default
+            agenix.packages.${system}.default
+          ];
         };
       });
 
