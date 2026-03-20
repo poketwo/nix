@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
     agenix.url = "github:ryantm/agenix";
-    deploy-rs.url = "git+https://github.com/serokell/deploy-rs";
+    deploy-rs.url = "github:serokell/deploy-rs";
     transpire.url = "github:oliver-ni/transpire";
     # transpire.url = "path:/Users/oliver/Development/github.com/oliver-ni/transpire-nix";
 

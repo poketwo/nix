@@ -56,15 +56,15 @@
       "locked": {
         "lastModified": 1770019181,
         "narHash": "sha256-hwsYgDnby50JNVpTRYlF3UR/Rrpt01OrxVuryF40CFY=",
-        "ref": "refs/heads/master",
+        "owner": "serokell",
+        "repo": "deploy-rs",
         "rev": "77c906c0ba56aabdbc72041bf9111b565cdd6171",
-        "revCount": 348,
-        "type": "git",
-        "url": "https://github.com/serokell/deploy-rs"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "https://github.com/serokell/deploy-rs"
+        "owner": "serokell",
+        "repo": "deploy-rs",
+        "type": "github"
       }
     },
     "flake-compat": {
