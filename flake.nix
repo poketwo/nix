@@ -77,7 +77,6 @@
       colmenaHosts = builtins.mapAttrs
         (host: modules: {
           imports = commonModules ++ modules;
-          deployment.buildOnTarget = false;
           deployment.targetHost = "${host}.hfym.co";
           deployment.targetUser = "deploy";
           deployment.allowLocalDeployment = true;
