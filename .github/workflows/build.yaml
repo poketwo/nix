@@ -33,7 +33,7 @@ jobs:
       - name: List hosts
         id: list
         run: |
-          hosts=$(nix eval --json .#colmena --apply 'x: builtins.filter (n: n != "meta") (builtins.attrNames x)')
+          hosts=$(nix eval --json .#nixosConfigurations --apply 'x: builtins.attrNames x')
           echo "hosts=$hosts" >> "$GITHUB_OUTPUT"
 
   build:
@@ -56,4 +56,6 @@ jobs:
             nix-${{ matrix.host }}-
           gc-max-store-size-linux: 4000000000
       - name: Build ${{ matrix.host }}
-        run: nix develop -c colmena build --on ${{ matrix.host }}
+        run: nix build ".#nixosConfigurations.$HOST.config.system.build.toplevel"
+        env:
+          HOST: ${{ matrix.host }}

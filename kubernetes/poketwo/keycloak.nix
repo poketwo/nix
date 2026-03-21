@@ -145,6 +145,8 @@ in
         ingress = {
           enabled = true;
           annotations."cert-manager.io/cluster-issuer" = "letsencrypt";
+          annotations."nginx.ingress.kubernetes.io/proxy-buffer-size" = "128k";
+          annotations."nginx.ingress.kubernetes.io/proxy-buffers-number" = "4";
           hostname = "auth-dev.poketwo.io";
           tls = true;
         };

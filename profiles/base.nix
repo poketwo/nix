@@ -48,7 +48,7 @@
     systemPackages = with pkgs; [ vim htop dig wget curl ];
 
     etc."nixos/configuration.nix".text = ''
-      {}: builtins.abort "This machine is not managed by /etc/nixos. Please use colmena instead."
+      {}: builtins.abort "This machine is not managed by /etc/nixos. Please use deploy-rs instead."
     '';
   };
 }
