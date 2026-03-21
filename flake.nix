@@ -25,6 +25,7 @@
         agenix.nixosModules.default
         ./modules/poketwo/auth.nix
         ./modules/poketwo/cloudflare-warp.nix
+        ./modules/poketwo/deploy.nix
         ./modules/poketwo/kubernetes.nix
         ./modules/poketwo/locale.nix
         ./modules/poketwo/nat64.nix
@@ -85,7 +86,7 @@
           hostname = "${host}.hfym.co";
           profiles.system = {
             user = "root";
-            sshUser = "oliver";
+            sshUser = "deploy";
             path = deploy-rs.lib.x86_64-linux.activate.nixos nixosConfig;
           };
         })

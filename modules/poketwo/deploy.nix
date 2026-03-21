@@ -6,7 +6,7 @@ let
 in
 {
   options.poketwo.deploy = {
-    enable = lib.mkEnableOption "Enable dedicated deploy user for Colmena";
+    enable = lib.mkEnableOption "Enable dedicated deploy user for deploy-rs";
   };
 
   config = lib.mkIf cfg.enable {
