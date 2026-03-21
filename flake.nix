@@ -5,14 +5,16 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
     agenix.url = "github:ryantm/agenix";
+    deploy-rs.url = "github:serokell/deploy-rs";
     transpire.url = "github:oliver-ni/transpire";
     # transpire.url = "path:/Users/oliver/Development/github.com/oliver-ni/transpire-nix";
 
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+    deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
     transpire.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, systems, agenix, transpire, ... }@inputs:
+  outputs = { self, nixpkgs, systems, agenix, deploy-rs, transpire, ... }@inputs:
     let
       # ========================
       # NixOS Host Configuration
@@ -56,50 +58,49 @@
 
       openApiSpec = ./kube-openapi.json;
 
-      # =====================
-      # nixpkgs Configuration
-      # =====================
-
-      overlays = [
-        agenix.overlays.default
-      ];
-
-      pkgsFor = system: import nixpkgs {
-        inherit overlays system;
-        config = { allowUnfree = true; };
-      };
-
-      # =====================
-      # Colmena Configuration
-      # =====================
-
-      colmenaHosts = builtins.mapAttrs
-        (host: modules: {
-          imports = commonModules ++ modules;
-          deployment.buildOnTarget = true;
-          deployment.targetHost = "${host}.hfym.co";
-          deployment.targetUser = "oliver";
-          deployment.allowLocalDeployment = true;
-        })
-        hosts;
-
       forAllSystems = fn: nixpkgs.lib.genAttrs
         (import systems)
-        (system: fn system (pkgsFor system));
+        (system: fn system (import nixpkgs { inherit system; }));
     in
     {
       formatter = forAllSystems (system: pkgs: pkgs.nixpkgs-fmt);
 
-      colmena = colmenaHosts // {
-        meta = {
-          nixpkgs = pkgsFor "x86_64-linux";
+      nixosConfigurations = builtins.mapAttrs
+        (host: modules: nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
           specialArgs = { inherit inputs; };
-        };
-      };
+          modules = commonModules ++ modules ++ [{
+            nixpkgs.overlays = [ agenix.overlays.default ];
+            nixpkgs.config.allowUnfree = true;
+          }];
+        })
+        hosts;
+
+      # ========================
+      # deploy-rs Configuration
+      # ========================
+
+      deploy.nodes = builtins.mapAttrs
+        (host: nixosConfig: {
+          hostname = "${host}.hfym.co";
+          profiles.system = {
+            user = "root";
+            sshUser = "oliver";
+            path = deploy-rs.lib.x86_64-linux.activate.nixos nixosConfig;
+          };
+        })
+        self.nixosConfigurations;
+
+      checks = builtins.mapAttrs
+        (system: deployLib: deployLib.deployChecks self.deploy)
+        deploy-rs.lib;
 
       devShells = forAllSystems (system: pkgs: {
         default = pkgs.mkShell {
-          packages = [ pkgs.colmena pkgs.agenix ];
+          packages = [
+            deploy-rs.packages.${system}.default
+            agenix.packages.${system}.default
+          ];
         };
       });
 
