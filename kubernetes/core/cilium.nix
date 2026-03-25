@@ -6,8 +6,8 @@
       chart = transpire.fetchFromHelm {
         repo = "https://helm.cilium.io/";
         name = "cilium";
-        version = "1.16.1";
-        sha256 = "+51oGLnIAzeJd+yPTXOOhvcR5UNMOPAxd4Hu6LpvhbU=";
+        version = "1.18.8";
+        sha256 = "z1aDpWttEfQ+Af/l0Lxdafasm75QysRc8h7sPhWXr94=";
       };
 
       values = {
