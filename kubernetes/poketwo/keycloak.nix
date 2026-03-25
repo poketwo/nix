@@ -134,6 +134,10 @@ in
         metrics.enabled = true;
         postgresql.enabled = false;
         networkPolicy.enabled = false;
+        resources = {
+          limits = { cpu = "750m"; memory = "4Gi"; };
+          requests = { cpu = "500m"; memory = "2Gi"; };
+        };
         initContainers = [{
           name = "download-resources";
           image = "alpine/git";
