@@ -26,6 +26,19 @@
     fsType = "xfs";
   };
 
+  services.sanoid = {
+    enable = true;
+    datasets."mongo/mongo" = {
+      autosnap = true;
+      autoprune = true;
+      hourly = 0;
+      daily = 7;
+      weekly = 4;
+      monthly = 3;
+    };
+  };
+
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
