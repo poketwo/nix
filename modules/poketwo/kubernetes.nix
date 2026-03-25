@@ -19,7 +19,7 @@ let
   clusterConfiguration = yaml.generate "kubeadm-cluster.yaml" {
     apiVersion = "kubeadm.k8s.io/v1beta3";
     kind = "ClusterConfiguration";
-    kubernetesVersion = "v1.30.0";
+    kubernetesVersion = "v1.31.2";
     clusterName = "hfym-ds";
     controlPlaneEndpoint = "ds.hfym.co";
     networking.serviceSubnet = "2606:c2c0:5:1:2::/112";

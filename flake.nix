@@ -86,7 +86,7 @@
           hostname = "${host}.hfym.co";
           profiles.system = {
             user = "root";
-            sshUser = "deploy";
+            sshUser = "oliver";
             path = deploy-rs.lib.x86_64-linux.activate.nixos nixosConfig;
           };
         })
