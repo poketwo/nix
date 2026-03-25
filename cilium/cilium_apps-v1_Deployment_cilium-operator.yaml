@@ -65,7 +65,7 @@ spec:
           value: ds.hfym.co
         - name: KUBERNETES_SERVICE_PORT
           value: '443'
-        image: quay.io/cilium/operator-generic:v1.16.1@sha256:3bc7e7a43bc4a4d8989cb7936c5d96675dd2d02c306adf925ce0a7c35aa27dc4
+        image: quay.io/cilium/operator-generic:v1.18.8@sha256:f9d1715932751b1454d0f59b492497cb1636dea6335beab0f9026fa8b5a6f62f
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
@@ -92,6 +92,11 @@ spec:
           initialDelaySeconds: 0
           periodSeconds: 5
           timeoutSeconds: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
         terminationMessagePolicy: FallbackToLogsOnError
         volumeMounts:
         - mountPath: /tmp/cilium/config-map
@@ -102,9 +107,21 @@ spec:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
       restartPolicy: Always
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: cilium-operator
       tolerations:
-      - operator: Exists
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+      - key: node.kubernetes.io/not-ready
+        operator: Exists
+      - key: node.cloudprovider.kubernetes.io/uninitialized
+        operator: Exists
+      - key: node.cilium.io/agent-not-ready
+        operator: Exists
       volumes:
       - configMap:
           name: cilium-config
