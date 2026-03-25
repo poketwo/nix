@@ -50,7 +50,7 @@
       v1.ConfigMap.gateway-proxy.data = {
         "config.json" = builtins.toJSON {
           log_level = "info";
-          shards = 1856;
+          shards = 1600;
           intents = 32509;
           port = 7878;
           activity = { type = 0; name = "@Pokétwo help"; };
