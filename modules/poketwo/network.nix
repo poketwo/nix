@@ -72,5 +72,12 @@ in
         method = "static";
       };
     };
+
+    # ndppd needs inet0 to be up before it can bind; the upstream module only
+    # sets After=network-pre.target which fires before interfaces are configured.
+    systemd.services.ndppd = {
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+    };
   };
 }
