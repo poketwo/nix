@@ -120,11 +120,28 @@
         "type": "github"
       }
     },
+    "nixpkgs-k8s": {
+      "locked": {
+        "lastModified": 1732572308,
+        "narHash": "sha256-+HBffoSXLhuNJtjxHOZYIyY+PQirlwHKMrir+xIUu4A=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "882842d2a908700540d206baa79efb922ac1c33d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "882842d2a908700540d206baa79efb922ac1c33d",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
         "deploy-rs": "deploy-rs",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-k8s": "nixpkgs-k8s",
         "systems": "systems_3",
         "transpire": "transpire"
       }

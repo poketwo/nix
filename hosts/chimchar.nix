@@ -32,6 +32,10 @@
         { routeConfig.Gateway = "50.116.4.1"; }
         { routeConfig.Gateway = "fe80::1"; }
       ];
+      # Linode anti-spoofing drops packets from unknown source addresses,
+      # so disable IPv6 privacy extensions and accept RAs even with forwarding.
+      networkConfig.IPv6PrivacyExtensions = false;
+      networkConfig.IPv6AcceptRA = "yes";
       domains = [ ];
       linkConfig.RequiredForOnline = "routable";
     };

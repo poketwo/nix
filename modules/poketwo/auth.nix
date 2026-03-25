@@ -15,6 +15,12 @@ in
       openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGlViRB5HH1bTaS1S7TcqVBSuxKdrbdhL2CmhDqc/t6A oliver.ni@gmail.com" ];
     };
 
+    users.users.devin = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+      openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGOFMU3vhihesS446hblnuyPGD+P5qM674Ib+w1UG9ye devin@poketwo.net" ];
+    };
+
     security.sudo.extraRules = [
       {
         groups = [ "wheel" ];

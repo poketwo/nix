@@ -64,5 +64,13 @@ in
         };
       };
     };
+
+    # Proxy NDP for the Kubernetes pod CIDR so upstream router can reach pod IPs
+    services.ndppd = {
+      enable = true;
+      proxies.inet0.rules."2606:c2c0:5:1:${toString cfg.lastOctet}::/80" = {
+        method = "static";
+      };
+    };
   };
 }

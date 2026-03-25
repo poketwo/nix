@@ -1,4 +1,4 @@
-{ lib, config, pkgs, ... }:
+{ lib, config, pkgs, inputs, ... }:
 
 let
   cfg = config.poketwo.kubernetes;
@@ -46,6 +46,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # Pin kubernetes and cri-o packages to nixpkgs-k8s to keep k8s at 1.31.2
+    # while allowing the rest of the system to track nixos-unstable.
+    nixpkgs.overlays = [
+      (final: prev:
+        let k8sPkgs = import inputs.nixpkgs-k8s { inherit (prev) system; config = { allowUnfree = true; }; };
+        in {
+          kubernetes = k8sPkgs.kubernetes;
+          cri-o = k8sPkgs.cri-o;
+        })
+    ];
+
     boot = {
       kernel.sysctl = {
         "fs.inotify.max_user_instances" = 8192;
