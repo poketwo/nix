@@ -38,8 +38,8 @@
                 { name = "REDIS_URI"; value = "redis://redis-master"; }
                 { name = "REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; }; }
 
-                { name = "NUM_SHARDS"; value = "1600"; }
-                { name = "NUM_CLUSTERS"; value = "200"; }
+                { name = "NUM_SHARDS"; value = "1856"; }
+                { name = "NUM_CLUSTERS"; value = "232"; }
                 { name = "CLUSTER_NAME"; valueFrom.fieldRef.fieldPath = "metadata.name"; }
                 # { name = "CLUSTER_NAME"; value = "poketwo-199"; }
 
