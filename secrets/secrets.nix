@@ -9,7 +9,7 @@ let
     piplup = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKnlP7RudQkxHUglGO+zxa/Owi2gW0JeILF59ksvgRpC";
 
     vaporeon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBIlJzVVwoQc1sPYr1fEWumBrIPKjKYvYORmarx0ofDV";
-    jolteon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILwnAVJa18Nvwpx8L1r4qG3jpRr1aAJN/4HjHHUCnkun";
+    jolteon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFtHLQC3dE3wS7qzp6vPYn6DGa5sWDCbOQMCKc+NaoZY";
     flareon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFHiJuP5fYnqHxAAMi/F1nwVA/zKw0zFazvxgsx9obqC";
 
     glaceon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIhz8TgY7TI01qz7/5hIu6H36++ppJriNZfWySdDoMM1";
