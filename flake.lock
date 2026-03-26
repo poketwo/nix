@@ -67,6 +67,27 @@
         "type": "github"
       }
     },
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1773889306,
+        "narHash": "sha256-PAqwnsBSI9SVC2QugvQ3xeYCB0otOwCacB1ueQj2tgw=",
+        "ref": "refs/heads/master",
+        "rev": "5ad85c82cc52264f4beddc934ba57f3789f28347",
+        "revCount": 1352,
+        "type": "git",
+        "url": "https://github.com/nix-community/disko"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -140,6 +161,7 @@
       "inputs": {
         "agenix": "agenix",
         "deploy-rs": "deploy-rs",
+        "disko": "disko",
         "nixpkgs": "nixpkgs",
         "nixpkgs-k8s": "nixpkgs-k8s",
         "systems": "systems_3",
