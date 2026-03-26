@@ -36,9 +36,9 @@ spec:
               key: redis-password
               name: redis
         - name: NUM_SHARDS
-          value: '1856'
+          value: '1600'
         - name: NUM_CLUSTERS
-          value: '232'
+          value: '200'
         - name: CLUSTER_NAME
           valueFrom:
             fieldRef:
