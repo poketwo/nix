@@ -35,10 +35,16 @@
 
     zpool.nixos = {
       type = "zpool";
-      options.cachefile = "none";
+      options = {
+        ashift = "12";
+        cachefile = "none";
+      };
       rootFsOptions = {
+        acltype = "posix";
+        atime = "off";
         compression = "zstd";
         mountpoint = "legacy";
+        xattr = "sa";
       };
 
       datasets = {
