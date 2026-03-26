@@ -56,8 +56,8 @@ in
             "2606:c2c0:5::1:${toString cfg.lastOctet}/32"
           ];
           routes = [
-            { routeConfig.Gateway = "23.135.200.1"; }
-            { routeConfig.Gateway = "2606:c2c0::1"; }
+            { Gateway = "23.135.200.1"; }
+            { Gateway = "2606:c2c0::1"; }
           ];
           domains = [ ];
           linkConfig.RequiredForOnline = "routable";

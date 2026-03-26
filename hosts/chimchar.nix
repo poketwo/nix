@@ -29,8 +29,8 @@
         "2600:3c01::f03c:94ff:fe23:6eb3/64"
       ];
       routes = [
-        { routeConfig.Gateway = "50.116.4.1"; }
-        { routeConfig.Gateway = "fe80::1"; }
+        { Gateway = "50.116.4.1"; }
+        { Gateway = "fe80::1"; }
       ];
       # Linode anti-spoofing drops packets from unknown source addresses,
       # so disable IPv6 privacy extensions and accept RAs even with forwarding.
