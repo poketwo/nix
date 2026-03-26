@@ -78,7 +78,7 @@ in
         useAllDevices = false;
         nodes = [
           { name = "vaporeon"; devices = commonDevices; }
-          { name = "jolteon"; devices = commonDevices; }
+          { name = "jolteon"; devices = commonDevicesWithoutBootDrive; }
           { name = "flareon"; devices = commonDevicesWithoutBootDrive; }
         ];
       };
