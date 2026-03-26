@@ -73,6 +73,7 @@ in
       mgr.modules = [{ name = "rook"; enabled = true; }];
       dashboard.enabled = true;
       network.ipFamily = "IPv6";
+      removeOSDsIfOutAndSafeToRemove = true;
       storage = {
         useAllNodes = false;
         useAllDevices = false;
