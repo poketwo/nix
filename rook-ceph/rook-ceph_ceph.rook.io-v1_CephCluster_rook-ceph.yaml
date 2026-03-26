@@ -20,6 +20,7 @@ spec:
     count: 3
   network:
     ipFamily: IPv6
+  removeOSDsIfOutAndSafeToRemove: true
   storage:
     nodes:
     - devices:
