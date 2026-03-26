@@ -50,7 +50,7 @@ in
     # while allowing the rest of the system to track nixos-unstable.
     nixpkgs.overlays = [
       (final: prev:
-        let k8sPkgs = import inputs.nixpkgs-k8s { inherit (prev) system; config = { allowUnfree = true; }; };
+        let k8sPkgs = import inputs.nixpkgs-k8s { inherit (prev.stdenv.hostPlatform) system; config = { allowUnfree = true; }; };
         in {
           kubernetes = k8sPkgs.kubernetes;
           cri-o = k8sPkgs.cri-o;
@@ -114,7 +114,7 @@ in
 
       serviceConfig = {
         Restart = "always";
-        StartLimitInterval = 0;
+        StartLimitIntervalSec = 0;
         RestartSec = 10;
 
         # Provided by kubeadm drop-in file
