@@ -6,16 +6,18 @@
     nixpkgs-k8s.url = "github:nixos/nixpkgs/882842d2a908700540d206baa79efb922ac1c33d";
     systems.url = "github:nix-systems/default";
     agenix.url = "github:ryantm/agenix";
+    disko.url = "github:nix-community/disko";
     deploy-rs.url = "github:serokell/deploy-rs";
     transpire.url = "github:oliver-ni/transpire";
     # transpire.url = "path:/Users/oliver/Development/github.com/oliver-ni/transpire-nix";
 
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
     deploy-rs.inputs.nixpkgs.follows = "nixpkgs";
     transpire.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, systems, agenix, deploy-rs, transpire, ... }@inputs:
+  outputs = { self, nixpkgs, systems, agenix, disko, deploy-rs, transpire, ... }@inputs:
     let
       # ========================
       # NixOS Host Configuration
@@ -24,6 +26,7 @@
       # Put modules common to all hosts here.
       commonModules = [
         agenix.nixosModules.default
+        disko.nixosModules.default
         ./modules/poketwo/auth.nix
         ./modules/poketwo/cloudflare-warp.nix
         ./modules/poketwo/deploy.nix
