@@ -6,14 +6,14 @@
       chart = transpire.fetchFromHelm {
         repo = "https://charts.retool.com";
         name = "retool";
-        version = "6.0.2";
-        sha256 = "Gp2Zyffq9eDHPKIj2nznW4sEBqzZV8cFOmDRjeQwau0=";
+        version = "6.10.0";
+        sha256 = "4wMymp9VA8VdMGf5kdbelTsGXWx0r5GjKq0p/V5HCPA=";
       };
 
       values = {
         image = {
           repository = "tryretool/backend";
-          tag = "3.75.1-stable";
+          tag = "3.334.4-stable";
         };
 
         config = {
