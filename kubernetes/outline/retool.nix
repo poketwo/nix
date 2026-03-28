@@ -54,6 +54,8 @@
         persistentVolumeClaim.enabled = false;
         env.DEFAULT_GROUP_FOR_DOMAINS = "poketwo.net -> all-users";
         env.BASE_DOMAIN = "https://retool.poketwo.io";
+        codeExecutor.enabled = true;
+        codeExecutor.env.DISABLE_IPTABLES_SECURITY_CONFIGURATION = "true";
       };
     };
 
