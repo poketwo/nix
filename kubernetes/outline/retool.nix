@@ -53,6 +53,7 @@
         postgresql.enabled = false;
         persistentVolumeClaim.enabled = false;
         env.DEFAULT_GROUP_FOR_DOMAINS = "poketwo.net -> all-users";
+        env.BASE_DOMAIN = "https://retool.poketwo.io";
       };
     };
 
