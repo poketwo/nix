@@ -4,10 +4,8 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
   labels:
-    app.kubernetes.io/instance: retool
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: retool
-    helm.sh/chart: retool-6.0.2
+    helm.sh/chart: retool-6.10.0
   name: retool
   namespace: retool
 spec:

@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/instance: retool
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: retool
-    helm.sh/chart: retool-6.0.2
+    helm.sh/chart: retool-6.10.0
   name: retool
   namespace: retool
 spec:
@@ -19,7 +19,10 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/instance: retool
+        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: retool
+        helm.sh/chart: retool-6.10.0
+        telemetry.retool.com/service-name: main-backend
     spec:
       affinity:
         podAntiAffinity:
@@ -40,6 +43,10 @@ spec:
         - chmod -R +x ./docker_scripts; sync; ./docker_scripts/wait-for-it.sh -t 0
           "postgres-rw":"5432"; ./docker_scripts/start_api.sh
         env:
+        - name: DEPLOYMENT_TEMPLATE_TYPE
+          value: k8s-helm
+        - name: DEPLOYMENT_TEMPLATE_VERSION
+          value: 6.10.0
         - name: NODE_ENV
           value: production
         - name: SERVICE_TYPE
@@ -58,6 +65,12 @@ spec:
           value: retool
         - name: POSTGRES_SSL_ENABLED
           value: 'true'
+        - name: DBCONNECTOR_POSTGRES_POOL_MAX_SIZE
+          value: '10'
+        - name: WORKFLOW_BACKEND_HOST
+          value: http://retool-workflow-backend
+        - name: CODE_EXECUTOR_INGRESS_DOMAIN
+          value: http://retool-code-executor
         - name: LICENSE_KEY
           valueFrom:
             secretKeyRef:
@@ -85,19 +98,26 @@ spec:
               name: retool
         - name: DEFAULT_GROUP_FOR_DOMAINS
           value: poketwo.net -> all-users
-        image: tryretool/backend:3.75.1-stable
+        image: tryretool/backend:3.334.4-stable
         imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sleep
+              - '30'
         livenessProbe:
           failureThreshold: 3
           httpGet:
             path: /api/checkHealth
             port: 3000
           initialDelaySeconds: 30
+          periodSeconds: 10
           timeoutSeconds: 10
-        name: retool
+        name: main-backend
         ports:
         - containerPort: 3000
-          name: retool
+          name: http-server
           protocol: TCP
         readinessProbe:
           httpGet:
@@ -114,5 +134,7 @@ spec:
           requests:
             cpu: 2048m
             memory: 4096Mi
+      nodeSelector:
+        kubernetes.io/arch: amd64
       serviceAccountName: retool
       tolerations: []

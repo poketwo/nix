@@ -4,26 +4,31 @@ metadata:
   labels:
     app.kubernetes.io/instance: retool
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: retool-jobs-runner
+    app.kubernetes.io/name: retool-workflow-worker
     helm.sh/chart: retool-6.10.0
-    telemetry.retool.com/service-name: jobs-runner
-  name: retool-jobs-runner
+    retoolService: retool-workflow-worker
+    telemetry.retool.com/service-name: workflow-worker
+  name: retool-workflow-worker
   namespace: retool
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app.kubernetes.io/instance: retool
-      app.kubernetes.io/name: retool-jobs-runner
+      retoolService: retool-workflow-worker
   template:
     metadata:
+      annotations:
+        prometheus.io/job: retool-workflow-worker
+        prometheus.io/port: '9090'
+        prometheus.io/scrape: 'true'
       labels:
         app.kubernetes.io/instance: retool
         app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: retool-jobs-runner
+        app.kubernetes.io/name: retool-workflow-worker
         helm.sh/chart: retool-6.10.0
-        telemetry.retool.com/service-name: jobs-runner
+        retoolService: retool-workflow-worker
+        telemetry.retool.com/service-name: workflow-worker
     spec:
       affinity:
         podAntiAffinity:
@@ -50,8 +55,20 @@ spec:
           value: 6.10.0
         - name: NODE_ENV
           value: production
+        - name: NODE_OPTIONS
+          value: --max_old_space_size=1024
         - name: SERVICE_TYPE
-          value: JOBS_RUNNER
+          value: WORKFLOW_TEMPORAL_WORKER
+        - name: DBCONNECTOR_POSTGRES_POOL_MAX_SIZE
+          value: '100'
+        - name: DBCONNECTOR_QUERY_TIMEOUT_MS
+          value: '5400000'
+        - name: DISABLE_DATABASE_MIGRATIONS
+          value: 'true'
+        - name: WORKFLOW_WORKER_HEALTHCHECK_PORT
+          value: '3005'
+        - name: WORKFLOW_BACKEND_HOST
+          value: http://retool-workflow-backend
         - name: CLIENT_ID
           value: 997504863600-6nfvs9g5cbtovgnfjpq50h6r3p7jnr2l.apps.googleusercontent.com
         - name: COOKIE_INSECURE
@@ -66,6 +83,8 @@ spec:
           value: retool
         - name: POSTGRES_SSL_ENABLED
           value: 'true'
+        - name: CODE_EXECUTOR_INGRESS_DOMAIN
+          value: http://retool-code-executor
         - name: LICENSE_KEY
           valueFrom:
             secretKeyRef:
@@ -96,24 +115,32 @@ spec:
         image: tryretool/backend:3.334.4-stable
         imagePullPolicy: IfNotPresent
         livenessProbe:
+          failureThreshold: 3
           httpGet:
-            path: /api/checkJobsRunnerHealth
-            port: 3003
-          initialDelaySeconds: 120
-          periodSeconds: 30
-          timeoutSeconds: 3
-        name: jobs-runner
+            path: /api/checkHealth
+            port: 3005
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+        name: workflow-worker
+        ports:
+        - containerPort: 3005
+          name: http-server
+          protocol: TCP
+        - containerPort: 9090
+          name: http-metrics
+          protocol: TCP
         readinessProbe:
           httpGet:
-            path: /api/checkJobsRunnerHealth
-            port: 3003
-          initialDelaySeconds: 120
-          periodSeconds: 30
-          timeoutSeconds: 3
+            path: /api/checkHealth
+            port: 3005
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 5
+          timeoutSeconds: 10
         resources:
           limits:
             cpu: 2000m
-            memory: 4096Mi
+            memory: 8192Mi
           requests:
             cpu: 1000m
             memory: 2048Mi

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: retool-workflow-backend
+  namespace: retool
+spec:
+  ports:
+  - name: http-server
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    retoolService: retool-workflow-backend
