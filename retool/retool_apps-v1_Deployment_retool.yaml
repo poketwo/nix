@@ -96,6 +96,8 @@ spec:
             secretKeyRef:
               key: google-client-secret
               name: retool
+        - name: BASE_DOMAIN
+          value: https://retool.poketwo.io
         - name: DEFAULT_GROUP_FOR_DOMAINS
           value: poketwo.net -> all-users
         image: tryretool/backend:3.334.4-stable
