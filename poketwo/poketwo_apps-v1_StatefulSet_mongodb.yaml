@@ -238,7 +238,7 @@ spec:
           find  /bitnami/mongodb/ -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R 1001:1001
         command:
         - /bin/bash
-        image: docker.io/bitnamilegacy/os-shell:12-debian-12-r23
+        image: docker.io/bitnamilegacy/os-shell:latest
         imagePullPolicy: IfNotPresent
         name: volume-permissions
         resources:
