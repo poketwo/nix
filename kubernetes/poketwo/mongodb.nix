@@ -90,6 +90,7 @@ in
         volumePermissions = {
           enabled = true;
           image.repository = "bitnamilegacy/os-shell";
+          image.tag = "latest";
         };
         metrics = {
           enabled = true;
