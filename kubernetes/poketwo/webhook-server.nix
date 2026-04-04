@@ -8,8 +8,7 @@
       template = {
         metadata.labels.app = "webhook-server";
         spec = {
-          containers = [{
-            name = "server";
+          containers.server = {
             image = "ghcr.io/poketwo/webhook-server:latest";
             ports = [{ containerPort = 8000; }];
             resources = {
@@ -21,16 +20,16 @@
               initialDelaySeconds = 5;
               periodSeconds = 5;
             };
-            env = [
-              { name = "DATABASE_HOST"; value = "mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo"; }
-              { name = "DATABASE_USERNAME"; value = "root"; }
-              { name = "DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "mongodb"; key = "mongodb-root-password"; }; }
-              { name = "DATABASE_NAME"; value = "pokemon"; }
-              { name = "REDIS_URI"; value = "redis://redis-master"; }
-              { name = "REDIS_PASSWORD"; valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; }; }
-            ];
+            env = {
+              DATABASE_HOST.value = "mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo";
+              DATABASE_USERNAME.value = "root";
+              DATABASE_PASSWORD.valueFrom.secretKeyRef = { name = "mongodb"; key = "mongodb-root-password"; };
+              DATABASE_NAME.value = "pokemon";
+              REDIS_URI.value = "redis://redis-master";
+              REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; };
+            };
             envFrom = [{ secretRef.name = "webhook-server"; }];
-          }];
+          };
           imagePullSecrets = [{ name = "ghcr-auth"; }];
         };
       };

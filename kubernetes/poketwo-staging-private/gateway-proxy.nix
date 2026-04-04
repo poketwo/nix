@@ -8,8 +8,7 @@
       template = {
         metadata.labels.app = "gateway-proxy";
         spec = {
-          containers = [{
-            name = "server";
+          containers.server = {
             image = "ghcr.io/poketwo/gateway-proxy:sha-33fc97e";
             ports = [{ containerPort = 7878; }];
             resources = {
@@ -25,13 +24,12 @@
               name = "config";
               mountPath = "/config";
             }];
-            env = [{ name = "CONFIG"; value = "/config/config.json"; }];
+            env.CONFIG.value = "/config/config.json";
             envFrom = [{ secretRef = { name = "poketwo"; }; }];
-          }];
-          volumes = [{
-            name = "config";
+          };
+          volumes.config = {
             configMap = { name = "gateway-proxy"; };
-          }];
+          };
           imagePullSecrets = [{ name = "ghcr-auth"; }];
         };
       };

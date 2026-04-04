@@ -8,34 +8,33 @@
       template = {
         metadata.labels.app = "poketwo-forms";
         spec = {
-          containers = [{
-            name = "poketwo-forms";
+          containers.poketwo-forms = {
             image = "ghcr.io/poketwo/forms.poketwo.net:latest";
             imagePullPolicy = "Always";
-            env = [
-              { name = "DATABASE_HOST"; value = "mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc"; }
-              { name = "DATABASE_USERNAME"; value = "guiduck"; }
-              { name = "DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "mongodb-user"; key = "password"; }; }
-              { name = "DATABASE_NAME"; value = "support"; }
-              { name = "DATABASE_URI"; value = "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true"; }
+            env = {
+              DATABASE_HOST.value = "mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc";
+              DATABASE_USERNAME.value = "guiduck";
+              DATABASE_PASSWORD.valueFrom.secretKeyRef = { name = "mongodb-user"; key = "password"; };
+              DATABASE_NAME.value = "support";
+              DATABASE_URI.value = "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true";
 
-              { name = "POKETWO_DATABASE_HOST"; value = "mongodb-0-external.poketwo,mongodb-1-external.poketwo"; }
-              { name = "POKETWO_DATABASE_USERNAME"; value = "root"; }
-              { name = "POKETWO_DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-mongodb-password"; }; }
-              { name = "POKETWO_DATABASE_NAME"; value = "pokemon"; }
-              { name = "POKETWO_DATABASE_URI"; value = "mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)"; }
+              POKETWO_DATABASE_HOST.value = "mongodb-0-external.poketwo,mongodb-1-external.poketwo";
+              POKETWO_DATABASE_USERNAME.value = "root";
+              POKETWO_DATABASE_PASSWORD.valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-mongodb-password"; };
+              POKETWO_DATABASE_NAME.value = "pokemon";
+              POKETWO_DATABASE_URI.value = "mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)";
 
-              { name = "SECRET_KEY"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "secret-key"; }; }
-              { name = "SENDGRID_KEY"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "sendgrid-key"; }; }
-              { name = "NEXT_PUBLIC_FORMIUM_PROJECT_ID"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "formium-project-id"; }; }
-              { name = "FORMIUM_TOKEN"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "formium-token"; }; }
-              { name = "DISCORD_CLIENT_ID"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-id"; }; }
-              { name = "DISCORD_CLIENT_SECRET"; valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-secret"; }; }
+              SECRET_KEY.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "secret-key"; };
+              SENDGRID_KEY.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "sendgrid-key"; };
+              NEXT_PUBLIC_FORMIUM_PROJECT_ID.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "formium-project-id"; };
+              FORMIUM_TOKEN.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "formium-token"; };
+              DISCORD_CLIENT_ID.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-id"; };
+              DISCORD_CLIENT_SECRET.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-secret"; };
 
               # FIXME: Remove this when Formium fixes their site
-              { name = "NODE_TLS_REJECT_UNAUTHORIZED"; value = "0"; }
-            ];
-          }];
+              NODE_TLS_REJECT_UNAUTHORIZED.value = "0";
+            };
+          };
           imagePullSecrets = [{ name = "ghcr-auth"; }];
         };
       };

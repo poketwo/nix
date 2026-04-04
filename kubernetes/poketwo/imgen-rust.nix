@@ -9,15 +9,14 @@
         template = {
           metadata.labels.app = "imgen-rust";
           spec = {
-            containers = [{
-              name = "server";
+            containers.server = {
               image = "ghcr.io/poketwo/imgen-rust:latest";
               ports = [{ containerPort = 8000; }];
               resources = {
                 limits = { memory = "50Mi"; };
                 requests = { memory = "10Mi"; cpu = "50m"; };
               };
-            }];
+            };
             imagePullSecrets = [{ name = "ghcr-auth"; }];
             affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
               weight = 100;

@@ -9,8 +9,7 @@
         template = {
           metadata.labels.app = "image-server";
           spec = {
-            containers = [{
-              name = "server";
+            containers.server = {
               image = "ghcr.io/poketwo/image-server:latest";
               ports = [{ containerPort = 8080; }];
               resources = {
@@ -22,7 +21,7 @@
                 initialDelaySeconds = 5;
                 periodSeconds = 5;
               };
-            }];
+            };
             imagePullSecrets = [{ name = "ghcr-auth"; }];
             affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
               weight = 100;

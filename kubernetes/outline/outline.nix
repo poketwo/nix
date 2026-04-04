@@ -1,29 +1,29 @@
 { transpire, ... }:
 
 let
-  env = [
-    { name = "URL"; value = "https://outline.poketwo.io"; }
-    { name = "PORT"; value = "3000"; }
+  env = {
+    URL.value = "https://outline.poketwo.io";
+    PORT.value = "3000";
 
-    { name = "REDIS_PASS"; valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; }; }
-    { name = "REDIS_URL"; value = "redis://:$(REDIS_PASS)@redis-master:6379/?family=6"; }
+    REDIS_PASS.valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; };
+    REDIS_URL.value = "redis://:$(REDIS_PASS)@redis-master:6379/?family=6";
 
-    { name = "DB_USER"; valueFrom.secretKeyRef = { name = "postgres-app"; key = "username"; }; }
-    { name = "DB_PASS"; valueFrom.secretKeyRef = { name = "postgres-app"; key = "password"; }; }
-    { name = "DATABASE_URL"; value = "postgres://$(DB_USER):$(DB_PASS)@postgres-rw:5432/outline"; }
+    DB_USER.valueFrom.secretKeyRef = { name = "postgres-app"; key = "username"; };
+    DB_PASS.valueFrom.secretKeyRef = { name = "postgres-app"; key = "password"; };
+    DATABASE_URL.value = "postgres://$(DB_USER):$(DB_PASS)@postgres-rw:5432/outline";
 
-    { name = "AWS_ACCESS_KEY_ID"; valueFrom.secretKeyRef = { name = "outline-bucket"; key = "AWS_ACCESS_KEY_ID"; }; }
-    { name = "AWS_SECRET_ACCESS_KEY"; valueFrom.secretKeyRef = { name = "outline-bucket"; key = "AWS_SECRET_ACCESS_KEY"; }; }
-    { name = "AWS_S3_UPLOAD_BUCKET_NAME"; valueFrom.configMapKeyRef = { name = "outline-bucket"; key = "BUCKET_NAME"; }; }
-    { name = "AWS_S3_UPLOAD_BUCKET_URL"; value = "https://rgw.hfym.co"; }
-    { name = "AWS_S3_ACL"; value = "private"; }
+    AWS_ACCESS_KEY_ID.valueFrom.secretKeyRef = { name = "outline-bucket"; key = "AWS_ACCESS_KEY_ID"; };
+    AWS_SECRET_ACCESS_KEY.valueFrom.secretKeyRef = { name = "outline-bucket"; key = "AWS_SECRET_ACCESS_KEY"; };
+    AWS_S3_UPLOAD_BUCKET_NAME.valueFrom.configMapKeyRef = { name = "outline-bucket"; key = "BUCKET_NAME"; };
+    AWS_S3_UPLOAD_BUCKET_URL.value = "https://rgw.hfym.co";
+    AWS_S3_ACL.value = "private";
 
-    { name = "OIDC_CLIENT_ID"; value = "outline.poketwo.io"; }
-    { name = "OIDC_AUTH_URI"; value = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth"; }
-    { name = "OIDC_TOKEN_URI"; value = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token"; }
-    { name = "OIDC_USERINFO_URI"; value = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo"; }
-    { name = "OIDC_DISPLAY_NAME"; value = "Pokétwo"; }
-  ];
+    OIDC_CLIENT_ID.value = "outline.poketwo.io";
+    OIDC_AUTH_URI.value = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth";
+    OIDC_TOKEN_URI.value = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token";
+    OIDC_USERINFO_URI.value = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo";
+    OIDC_DISPLAY_NAME.value = "Pokétwo";
+  };
 
   envFrom = [{ secretRef.name = "outline"; }];
 in
@@ -61,8 +61,7 @@ in
       template = {
         metadata.labels.app = "outline";
         spec = {
-          containers = [{
-            name = "outline";
+          containers.outline = {
             image = "outlinewiki/outline:0.71.0";
             ports = [{ containerPort = 3000; }];
             resources = {
@@ -70,14 +69,13 @@ in
               requests = { memory = "1Gi"; cpu = "100m"; };
             };
             inherit env envFrom;
-          }];
-          initContainers = [{
-            name = "migrate";
+          };
+          initContainers.migrate = {
             image = "outlinewiki/outline:0.66.3";
             command = [ "yarn" ];
             args = [ "db:migrate" "--env=production" ];
             inherit env envFrom;
-          }];
+          };
         };
       };
     };

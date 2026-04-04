@@ -8,24 +8,23 @@
       template = {
         metadata.labels.app = "poketwo-admin";
         spec = {
-          containers = [{
-            name = "poketwo-admin";
+          containers.poketwo-admin = {
             image = "ghcr.io/poketwo/admin.poketwo.net:latest";
             imagePullPolicy = "Always";
-            env = [
-              { name = "NEXT_PUBLIC_BASE_URL"; value = "https://admin.poketwo.net"; }
+            env = {
+              NEXT_PUBLIC_BASE_URL.value = "https://admin.poketwo.net";
 
-              { name = "DATABASE_HOST"; value = "mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc"; }
-              { name = "DATABASE_USERNAME"; value = "guiduck"; }
-              { name = "DATABASE_PASSWORD"; valueFrom.secretKeyRef = { name = "mongodb-user"; key = "password"; }; }
-              { name = "DATABASE_NAME"; value = "support"; }
-              { name = "DATABASE_URI"; value = "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true"; }
+              DATABASE_HOST.value = "mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc";
+              DATABASE_USERNAME.value = "guiduck";
+              DATABASE_PASSWORD.valueFrom.secretKeyRef = { name = "mongodb-user"; key = "password"; };
+              DATABASE_NAME.value = "support";
+              DATABASE_URI.value = "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true";
 
-              { name = "SECRET_KEY"; valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "secret-key"; }; }
-              { name = "DISCORD_CLIENT_ID"; valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "discord-client-id"; }; }
-              { name = "DISCORD_CLIENT_SECRET"; valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "discord-client-secret"; }; }
-            ];
-          }];
+              SECRET_KEY.valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "secret-key"; };
+              DISCORD_CLIENT_ID.valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "discord-client-id"; };
+              DISCORD_CLIENT_SECRET.valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "discord-client-secret"; };
+            };
+          };
           imagePullSecrets = [{ name = "ghcr-auth"; }];
         };
       };
