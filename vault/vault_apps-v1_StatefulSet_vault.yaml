@@ -48,6 +48,12 @@ spec:
         - /bin/sh
         - -ec
         env:
+        - name: HOME
+          value: /home/vault
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: HOST_IP
           valueFrom:
             fieldRef:
@@ -56,34 +62,28 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-        - name: VAULT_K8S_POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: VAULT_K8S_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: VAULT_ADDR
-          value: http://127.0.0.1:8200
-        - name: VAULT_API_ADDR
-          value: http://$(POD_IP):8200
         - name: SKIP_CHOWN
           value: 'true'
         - name: SKIP_SETCAP
           value: 'true'
-        - name: HOSTNAME
+        - name: VAULT_ADDR
+          value: http://127.0.0.1:8200
+        - name: VAULT_K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: VAULT_K8S_POD_NAME
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name: VAULT_CLUSTER_ADDR
-          value: https://$(HOSTNAME).vault-internal:8201
         - name: VAULT_RAFT_NODE_ID
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name: HOME
-          value: /home/vault
+        - name: VAULT_API_ADDR
+          value: http://$(POD_IP):8200
+        - name: VAULT_CLUSTER_ADDR
+          value: https://$(HOSTNAME).vault-internal:8201
         image: hashicorp/vault:1.16.1
         imagePullPolicy: IfNotPresent
         lifecycle:

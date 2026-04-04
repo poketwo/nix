@@ -95,6 +95,8 @@ spec:
       serviceAccountName: mimir
       terminationGracePeriodSeconds: 60
       volumes:
+      - emptyDir: {}
+        name: active-queries
       - configMap:
           items:
           - key: mimir.yaml
@@ -106,5 +108,3 @@ spec:
         name: runtime-config
       - emptyDir: {}
         name: storage
-      - emptyDir: {}
-        name: active-queries

@@ -17,10 +17,10 @@ spec:
   - args:
     - -test.v
     env:
-    - name: CANARY_SERVICE_ADDRESS
-      value: http://loki-canary:3500/metrics
     - name: CANARY_PROMETHEUS_ADDRESS
       value: ''
+    - name: CANARY_SERVICE_ADDRESS
+      value: http://loki-canary:3500/metrics
     - name: CANARY_TEST_TIMEOUT
       value: 1m
     image: docker.io/grafana/loki-helm-test:ewelch-distributed-helm-chart-17db5ee

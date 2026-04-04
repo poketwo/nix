@@ -16,28 +16,28 @@ spec:
     spec:
       containers:
       - env:
+        - name: API_GATEWAY
+          value: ws://gateway-proxy
+        - name: DATABASE_NAME
+          value: pokemon_dev
         - name: DATABASE_URI
           valueFrom:
             secretKeyRef:
               key: connectionString.standard
               name: mongodb-admin-poketwo
-        - name: DATABASE_NAME
-          value: pokemon_dev
-        - name: REDIS_URI
-          value: redis://redis-master
+        - name: EXT_SERVER_URL
+          value: https://server.poketwo.io
+        - name: IMGEN_URL
+          value: http://imgen-rust.poketwo
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               key: redis-password
               name: redis
+        - name: REDIS_URI
+          value: redis://redis-master
         - name: SERVER_URL
           value: http://image-server.poketwo
-        - name: EXT_SERVER_URL
-          value: https://server.poketwo.io
-        - name: IMGEN_URL
-          value: http://imgen-rust.poketwo
-        - name: API_GATEWAY
-          value: ws://gateway-proxy
         envFrom:
         - secretRef:
             name: poketwo

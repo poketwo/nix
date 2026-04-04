@@ -77,6 +77,6 @@ spec:
           name: loki-gateway
         name: config
       - emptyDir: {}
-        name: tmp
-      - emptyDir: {}
         name: docker-entrypoint-d-override
+      - emptyDir: {}
+        name: tmp

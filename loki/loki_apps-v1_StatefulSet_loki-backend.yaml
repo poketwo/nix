@@ -43,27 +43,6 @@ spec:
             topologyKey: kubernetes.io/hostname
       automountServiceAccountToken: true
       containers:
-      - env:
-        - name: METHOD
-          value: WATCH
-        - name: LABEL
-          value: loki_rule
-        - name: FOLDER
-          value: /rules
-        - name: RESOURCE
-          value: both
-        - name: WATCH_SERVER_TIMEOUT
-          value: '60'
-        - name: WATCH_CLIENT_TIMEOUT
-          value: '60'
-        - name: LOG_LEVEL
-          value: INFO
-        image: kiwigrid/k8s-sidecar:1.24.3
-        imagePullPolicy: IfNotPresent
-        name: loki-sc-rules
-        volumeMounts:
-        - mountPath: /rules
-          name: sc-rules-volume
       - args:
         - -config.file=/etc/loki/config/config.yaml
         - -target=backend
@@ -109,6 +88,27 @@ spec:
           name: data
         - mountPath: /rules
           name: sc-rules-volume
+      - env:
+        - name: FOLDER
+          value: /rules
+        - name: LABEL
+          value: loki_rule
+        - name: LOG_LEVEL
+          value: INFO
+        - name: METHOD
+          value: WATCH
+        - name: RESOURCE
+          value: both
+        - name: WATCH_CLIENT_TIMEOUT
+          value: '60'
+        - name: WATCH_SERVER_TIMEOUT
+          value: '60'
+        image: kiwigrid/k8s-sidecar:1.24.3
+        imagePullPolicy: IfNotPresent
+        name: loki-sc-rules
+        volumeMounts:
+        - mountPath: /rules
+          name: sc-rules-volume
       securityContext:
         fsGroup: 10001
         runAsGroup: 10001
@@ -117,8 +117,6 @@ spec:
       serviceAccountName: loki
       terminationGracePeriodSeconds: 300
       volumes:
-      - emptyDir: {}
-        name: tmp
       - configMap:
           items:
           - key: config.yaml
@@ -130,6 +128,8 @@ spec:
         name: runtime-config
       - emptyDir: {}
         name: sc-rules-volume
+      - emptyDir: {}
+        name: tmp
   updateStrategy:
     rollingUpdate:
       partition: 0

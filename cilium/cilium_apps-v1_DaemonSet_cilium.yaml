@@ -38,23 +38,23 @@ spec:
         command:
         - cilium-agent
         env:
-        - name: K8S_NODE_NAME
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: spec.nodeName
+        - name: CILIUM_CLUSTERMESH_CONFIG
+          value: /var/lib/cilium/clustermesh/
         - name: CILIUM_K8S_NAMESPACE
           valueFrom:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-        - name: CILIUM_CLUSTERMESH_CONFIG
-          value: /var/lib/cilium/clustermesh/
         - name: GOMEMLIMIT
           valueFrom:
             resourceFieldRef:
               divisor: '1'
               resource: limits.memory
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
         - name: KUBERNETES_SERVICE_HOST
           value: ds.hfym.co
         - name: KUBERNETES_SERVICE_PORT
@@ -202,63 +202,6 @@ spec:
       hostNetwork: true
       initContainers:
       - command:
-        - cilium-dbg
-        - build-config
-        env:
-        - name: K8S_NODE_NAME
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: spec.nodeName
-        - name: CILIUM_K8S_NAMESPACE
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.namespace
-        - name: KUBERNETES_SERVICE_HOST
-          value: ds.hfym.co
-        - name: KUBERNETES_SERVICE_PORT
-          value: '443'
-        image: quay.io/cilium/cilium:v1.18.8@sha256:070a63cc414869cf6c53202cb50929a87adb7d5b25de0f2f40ab39eb6434b706
-        imagePullPolicy: IfNotPresent
-        name: config
-        terminationMessagePolicy: FallbackToLogsOnError
-        volumeMounts:
-        - mountPath: /tmp
-          name: tmp
-      - command:
-        - sh
-        - -ec
-        - |
-          cp /usr/bin/cilium-mount /hostbin/cilium-mount;
-          nsenter --cgroup=/hostproc/1/ns/cgroup --mount=/hostproc/1/ns/mnt "${BIN_PATH}/cilium-mount" $CGROUP_ROOT;
-          rm /hostbin/cilium-mount
-        env:
-        - name: CGROUP_ROOT
-          value: /run/cilium/cgroupv2
-        - name: BIN_PATH
-          value: /opt/cni/bin
-        image: quay.io/cilium/cilium:v1.18.8@sha256:070a63cc414869cf6c53202cb50929a87adb7d5b25de0f2f40ab39eb6434b706
-        imagePullPolicy: IfNotPresent
-        name: mount-cgroup
-        securityContext:
-          capabilities:
-            add:
-            - SYS_ADMIN
-            - SYS_CHROOT
-            - SYS_PTRACE
-            drop:
-            - ALL
-          seLinuxOptions:
-            level: s0
-            type: spc_t
-        terminationMessagePolicy: FallbackToLogsOnError
-        volumeMounts:
-        - mountPath: /hostproc
-          name: hostproc
-        - mountPath: /hostbin
-          name: cni-path
-      - command:
         - sh
         - -ec
         - |
@@ -288,22 +231,6 @@ spec:
           name: hostproc
         - mountPath: /hostbin
           name: cni-path
-      - args:
-        - mount | grep "/sys/fs/bpf type bpf" || mount -t bpf bpf /sys/fs/bpf
-        command:
-        - /bin/bash
-        - -c
-        - --
-        image: quay.io/cilium/cilium:v1.18.8@sha256:070a63cc414869cf6c53202cb50929a87adb7d5b25de0f2f40ab39eb6434b706
-        imagePullPolicy: IfNotPresent
-        name: mount-bpf-fs
-        securityContext:
-          privileged: true
-        terminationMessagePolicy: FallbackToLogsOnError
-        volumeMounts:
-        - mountPath: /sys/fs/bpf
-          mountPropagation: Bidirectional
-          name: bpf-maps
       - command:
         - /init-container.sh
         env:
@@ -319,16 +246,16 @@ spec:
               key: clean-cilium-bpf-state
               name: cilium-config
               optional: true
+        - name: KUBERNETES_SERVICE_HOST
+          value: ds.hfym.co
+        - name: KUBERNETES_SERVICE_PORT
+          value: '443'
         - name: WRITE_CNI_CONF_WHEN_READY
           valueFrom:
             configMapKeyRef:
               key: write-cni-conf-when-ready
               name: cilium-config
               optional: true
-        - name: KUBERNETES_SERVICE_HOST
-          value: ds.hfym.co
-        - name: KUBERNETES_SERVICE_PORT
-          value: '443'
         image: quay.io/cilium/cilium:v1.18.8@sha256:070a63cc414869cf6c53202cb50929a87adb7d5b25de0f2f40ab39eb6434b706
         imagePullPolicy: IfNotPresent
         name: clean-cilium-state
@@ -354,6 +281,31 @@ spec:
         - mountPath: /var/run/cilium
           name: cilium-run
       - command:
+        - cilium-dbg
+        - build-config
+        env:
+        - name: CILIUM_K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: KUBERNETES_SERVICE_HOST
+          value: ds.hfym.co
+        - name: KUBERNETES_SERVICE_PORT
+          value: '443'
+        image: quay.io/cilium/cilium:v1.18.8@sha256:070a63cc414869cf6c53202cb50929a87adb7d5b25de0f2f40ab39eb6434b706
+        imagePullPolicy: IfNotPresent
+        name: config
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+      - command:
         - /install-plugin.sh
         image: quay.io/cilium/cilium:v1.18.8@sha256:070a63cc414869cf6c53202cb50929a87adb7d5b25de0f2f40ab39eb6434b706
         imagePullPolicy: IfNotPresent
@@ -373,6 +325,54 @@ spec:
         volumeMounts:
         - mountPath: /host/opt/cni/bin
           name: cni-path
+      - args:
+        - mount | grep "/sys/fs/bpf type bpf" || mount -t bpf bpf /sys/fs/bpf
+        command:
+        - /bin/bash
+        - -c
+        - --
+        image: quay.io/cilium/cilium:v1.18.8@sha256:070a63cc414869cf6c53202cb50929a87adb7d5b25de0f2f40ab39eb6434b706
+        imagePullPolicy: IfNotPresent
+        name: mount-bpf-fs
+        securityContext:
+          privileged: true
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /sys/fs/bpf
+          mountPropagation: Bidirectional
+          name: bpf-maps
+      - command:
+        - sh
+        - -ec
+        - |
+          cp /usr/bin/cilium-mount /hostbin/cilium-mount;
+          nsenter --cgroup=/hostproc/1/ns/cgroup --mount=/hostproc/1/ns/mnt "${BIN_PATH}/cilium-mount" $CGROUP_ROOT;
+          rm /hostbin/cilium-mount
+        env:
+        - name: BIN_PATH
+          value: /opt/cni/bin
+        - name: CGROUP_ROOT
+          value: /run/cilium/cgroupv2
+        image: quay.io/cilium/cilium:v1.18.8@sha256:070a63cc414869cf6c53202cb50929a87adb7d5b25de0f2f40ab39eb6434b706
+        imagePullPolicy: IfNotPresent
+        name: mount-cgroup
+        securityContext:
+          capabilities:
+            add:
+            - SYS_ADMIN
+            - SYS_CHROOT
+            - SYS_PTRACE
+            drop:
+            - ALL
+          seLinuxOptions:
+            level: s0
+            type: spc_t
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /hostproc
+          name: hostproc
+        - mountPath: /hostbin
+          name: cni-path
       nodeSelector:
         kubernetes.io/os: linux
       priorityClassName: system-node-critical
@@ -387,43 +387,22 @@ spec:
       tolerations:
       - operator: Exists
       volumes:
-      - emptyDir: {}
-        name: tmp
-      - hostPath:
-          path: /var/run/cilium
-          type: DirectoryOrCreate
-        name: cilium-run
-      - hostPath:
-          path: /var/run/netns
-          type: DirectoryOrCreate
-        name: cilium-netns
       - hostPath:
           path: /sys/fs/bpf
           type: DirectoryOrCreate
         name: bpf-maps
       - hostPath:
-          path: /proc
-          type: Directory
-        name: hostproc
-      - hostPath:
           path: /run/cilium/cgroupv2
           type: DirectoryOrCreate
         name: cilium-cgroup
       - hostPath:
-          path: /opt/cni/bin
+          path: /var/run/netns
           type: DirectoryOrCreate
-        name: cni-path
+        name: cilium-netns
       - hostPath:
-          path: /etc/cni/net.d
+          path: /var/run/cilium
           type: DirectoryOrCreate
-        name: etc-cni-netd
-      - hostPath:
-          path: /lib/modules
-        name: lib-modules
-      - hostPath:
-          path: /run/xtables.lock
-          type: FileOrCreate
-        name: xtables-lock
+        name: cilium-run
       - name: clustermesh-secrets
         projected:
           defaultMode: 256
@@ -452,13 +431,25 @@ spec:
               name: clustermesh-apiserver-local-cert
               optional: true
       - hostPath:
-          path: /proc/sys/net
-          type: Directory
-        name: host-proc-sys-net
+          path: /opt/cni/bin
+          type: DirectoryOrCreate
+        name: cni-path
+      - hostPath:
+          path: /etc/cni/net.d
+          type: DirectoryOrCreate
+        name: etc-cni-netd
       - hostPath:
           path: /proc/sys/kernel
           type: Directory
         name: host-proc-sys-kernel
+      - hostPath:
+          path: /proc/sys/net
+          type: Directory
+        name: host-proc-sys-net
+      - hostPath:
+          path: /proc
+          type: Directory
+        name: hostproc
       - name: hubble-tls
         projected:
           defaultMode: 256
@@ -473,6 +464,15 @@ spec:
                 path: client-ca.crt
               name: hubble-server-certs
               optional: true
+      - hostPath:
+          path: /lib/modules
+        name: lib-modules
+      - emptyDir: {}
+        name: tmp
+      - hostPath:
+          path: /run/xtables.lock
+          type: FileOrCreate
+        name: xtables-lock
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 2

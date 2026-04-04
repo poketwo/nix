@@ -17,50 +17,15 @@ spec:
       - env:
         - name: DATABASE_HOST
           value: mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc
-        - name: DATABASE_USERNAME
-          value: guiduck
+        - name: DATABASE_NAME
+          value: support
         - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
               name: mongodb-user
-        - name: DATABASE_NAME
-          value: support
-        - name: DATABASE_URI
-          value: mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true
-        - name: POKETWO_DATABASE_HOST
-          value: mongodb-0-external.poketwo,mongodb-1-external.poketwo
-        - name: POKETWO_DATABASE_USERNAME
-          value: root
-        - name: POKETWO_DATABASE_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: poketwo-mongodb-password
-              name: guiduck
-        - name: POKETWO_DATABASE_NAME
-          value: pokemon
-        - name: POKETWO_DATABASE_URI
-          value: mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)
-        - name: SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              key: secret-key
-              name: poketwo-forms
-        - name: SENDGRID_KEY
-          valueFrom:
-            secretKeyRef:
-              key: sendgrid-key
-              name: poketwo-forms
-        - name: NEXT_PUBLIC_FORMIUM_PROJECT_ID
-          valueFrom:
-            secretKeyRef:
-              key: formium-project-id
-              name: poketwo-forms
-        - name: FORMIUM_TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: formium-token
-              name: poketwo-forms
+        - name: DATABASE_USERNAME
+          value: guiduck
         - name: DISCORD_CLIENT_ID
           valueFrom:
             secretKeyRef:
@@ -71,8 +36,43 @@ spec:
             secretKeyRef:
               key: discord-client-secret
               name: poketwo-forms
+        - name: FORMIUM_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: formium-token
+              name: poketwo-forms
+        - name: NEXT_PUBLIC_FORMIUM_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              key: formium-project-id
+              name: poketwo-forms
         - name: NODE_TLS_REJECT_UNAUTHORIZED
           value: '0'
+        - name: POKETWO_DATABASE_HOST
+          value: mongodb-0-external.poketwo,mongodb-1-external.poketwo
+        - name: POKETWO_DATABASE_NAME
+          value: pokemon
+        - name: POKETWO_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: poketwo-mongodb-password
+              name: guiduck
+        - name: POKETWO_DATABASE_USERNAME
+          value: root
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: secret-key
+              name: poketwo-forms
+        - name: SENDGRID_KEY
+          valueFrom:
+            secretKeyRef:
+              key: sendgrid-key
+              name: poketwo-forms
+        - name: DATABASE_URI
+          value: mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true
+        - name: POKETWO_DATABASE_URI
+          value: mongodb://$(POKETWO_DATABASE_USERNAME):$(POKETWO_DATABASE_PASSWORD)@$(POKETWO_DATABASE_HOST)
         image: ghcr.io/poketwo/forms.poketwo.net:latest
         imagePullPolicy: Always
         name: poketwo-forms

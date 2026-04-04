@@ -17,40 +17,40 @@ spec:
     spec:
       containers:
       - env:
+        - name: API_GATEWAY
+          value: ws://gateway-proxy
+        - name: CLUSTER_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: DATABASE_HOST
           value: mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo
-        - name: DATABASE_USERNAME
-          value: root
+        - name: DATABASE_NAME
+          value: pokemon
         - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
               key: mongodb-root-password
               name: mongodb
-        - name: DATABASE_NAME
-          value: pokemon
-        - name: REDIS_URI
-          value: redis://redis-master
+        - name: DATABASE_USERNAME
+          value: root
+        - name: EXT_SERVER_URL
+          value: https://server.poketwo.io
+        - name: IMGEN_URL
+          value: http://imgen-rust
+        - name: NUM_CLUSTERS
+          value: '200'
+        - name: NUM_SHARDS
+          value: '1600'
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               key: redis-password
               name: redis
-        - name: NUM_SHARDS
-          value: '1600'
-        - name: NUM_CLUSTERS
-          value: '200'
-        - name: CLUSTER_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
+        - name: REDIS_URI
+          value: redis://redis-master
         - name: SERVER_URL
           value: http://image-server
-        - name: EXT_SERVER_URL
-          value: https://server.poketwo.io
-        - name: IMGEN_URL
-          value: http://imgen-rust
-        - name: API_GATEWAY
-          value: ws://gateway-proxy
         envFrom:
         - secretRef:
             name: poketwo

@@ -25,6 +25,20 @@ spec:
     spec:
       automountServiceAccountToken: true
       containers:
+      - env:
+        - name: EVENTS_SERVER_PORT
+          value: '8090'
+        - name: FLOWS_API_ADDR
+          value: hubble-relay:80
+        image: quay.io/cilium/hubble-ui-backend:v0.13.3@sha256:db1454e45dc39ca41fbf7cad31eec95d99e5b9949c39daaad0fa81ef29d56953
+        imagePullPolicy: IfNotPresent
+        name: backend
+        ports:
+        - containerPort: 8090
+          name: grpc
+        securityContext:
+          allowPrivilegeEscalation: false
+        terminationMessagePolicy: FallbackToLogsOnError
       - image: quay.io/cilium/hubble-ui:v0.13.3@sha256:661d5de7050182d495c6497ff0b007a7a1e379648e60830dd68c4d78ae21761d
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -48,20 +62,6 @@ spec:
           subPath: nginx.conf
         - mountPath: /tmp
           name: tmp-dir
-      - env:
-        - name: EVENTS_SERVER_PORT
-          value: '8090'
-        - name: FLOWS_API_ADDR
-          value: hubble-relay:80
-        image: quay.io/cilium/hubble-ui-backend:v0.13.3@sha256:db1454e45dc39ca41fbf7cad31eec95d99e5b9949c39daaad0fa81ef29d56953
-        imagePullPolicy: IfNotPresent
-        name: backend
-        ports:
-        - containerPort: 8090
-          name: grpc
-        securityContext:
-          allowPrivilegeEscalation: false
-        terminationMessagePolicy: FallbackToLogsOnError
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:

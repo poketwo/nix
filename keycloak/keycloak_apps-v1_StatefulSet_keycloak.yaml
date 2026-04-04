@@ -45,13 +45,12 @@ spec:
       automountServiceAccountToken: true
       containers:
       - env:
-        - name: KUBERNETES_NAMESPACE
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.namespace
         - name: BITNAMI_DEBUG
           value: 'false'
+        - name: KC_HOSTNAME_URL
+          value: https://auth-dev.poketwo.io
+        - name: KC_SPI_ADMIN_REALM
+          value: master
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -64,10 +63,11 @@ spec:
               name: keycloak-postgres-app
         - name: KEYCLOAK_HTTP_RELATIVE_PATH
           value: /
-        - name: KC_HOSTNAME_URL
-          value: https://auth-dev.poketwo.io
-        - name: KC_SPI_ADMIN_REALM
-          value: master
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
         envFrom:
         - configMapRef:
             name: keycloak-env-vars
@@ -139,6 +139,20 @@ spec:
       enableServiceLinks: true
       initContainers:
       - args:
+        - |
+          mkdir -p /keycloak/providers /keycloak/themes/keywind \
+          && wget -nc -O /keycloak/providers/keycloak-discord-0.4.0.jar \
+            https://github.com/wadahiro/keycloak-discord/releases/download/v0.4.1/keycloak-discord-0.4.1.jar \
+          && (git -C /keycloak/themes/keywind pull || git clone https://github.com/lukin/keywind /keycloak/themes/keywind)
+        command:
+        - /bin/sh
+        - -c
+        image: alpine/git
+        name: download-resources
+        volumeMounts:
+        - mountPath: /keycloak
+          name: keycloak
+      - args:
         - -ec
         - |
           #!/bin/bash
@@ -175,20 +189,6 @@ spec:
         - mountPath: /quarkus
           name: empty-dir
           subPath: app-quarkus-dir
-      - args:
-        - |
-          mkdir -p /keycloak/providers /keycloak/themes/keywind \
-          && wget -nc -O /keycloak/providers/keycloak-discord-0.4.0.jar \
-            https://github.com/wadahiro/keycloak-discord/releases/download/v0.4.1/keycloak-discord-0.4.1.jar \
-          && (git -C /keycloak/themes/keywind pull || git clone https://github.com/lukin/keywind /keycloak/themes/keywind)
-        command:
-        - /bin/sh
-        - -c
-        image: alpine/git
-        name: download-resources
-        volumeMounts:
-        - mountPath: /keycloak
-          name: keycloak
       securityContext:
         fsGroup: 1001
         fsGroupChangePolicy: Always

@@ -58,27 +58,6 @@ webhooks:
     service:
       name: cnpg-webhook-service
       namespace: cloudnative-pg
-      path: /validate-postgresql-cnpg-io-v1-scheduledbackup
-      port: 443
-  failurePolicy: Fail
-  name: vscheduledbackup.cnpg.io
-  rules:
-  - apiGroups:
-    - postgresql.cnpg.io
-    apiVersions:
-    - v1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - scheduledbackups
-  sideEffects: None
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: cnpg-webhook-service
-      namespace: cloudnative-pg
       path: /validate-postgresql-cnpg-io-v1-pooler
       port: 443
   failurePolicy: Fail
@@ -93,4 +72,25 @@ webhooks:
     - UPDATE
     resources:
     - poolers
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: cnpg-webhook-service
+      namespace: cloudnative-pg
+      path: /validate-postgresql-cnpg-io-v1-scheduledbackup
+      port: 443
+  failurePolicy: Fail
+  name: vscheduledbackup.cnpg.io
+  rules:
+  - apiGroups:
+    - postgresql.cnpg.io
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - scheduledbackups
   sideEffects: None

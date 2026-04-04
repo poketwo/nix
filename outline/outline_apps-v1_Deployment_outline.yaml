@@ -15,39 +15,13 @@ spec:
     spec:
       containers:
       - env:
-        - name: URL
-          value: https://outline.poketwo.io
-        - name: PORT
-          value: '3000'
-        - name: REDIS_PASS
-          valueFrom:
-            secretKeyRef:
-              key: redis-password
-              name: redis
-        - name: REDIS_URL
-          value: redis://:$(REDIS_PASS)@redis-master:6379/?family=6
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              key: username
-              name: postgres-app
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: postgres-app
-        - name: DATABASE_URL
-          value: postgres://$(DB_USER):$(DB_PASS)@postgres-rw:5432/outline
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
               key: AWS_ACCESS_KEY_ID
               name: outline-bucket
-        - name: AWS_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              key: AWS_SECRET_ACCESS_KEY
-              name: outline-bucket
+        - name: AWS_S3_ACL
+          value: private
         - name: AWS_S3_UPLOAD_BUCKET_NAME
           valueFrom:
             configMapKeyRef:
@@ -55,18 +29,44 @@ spec:
               name: outline-bucket
         - name: AWS_S3_UPLOAD_BUCKET_URL
           value: https://rgw.hfym.co
-        - name: AWS_S3_ACL
-          value: private
-        - name: OIDC_CLIENT_ID
-          value: outline.poketwo.io
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: outline-bucket
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: postgres-app
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: postgres-app
         - name: OIDC_AUTH_URI
           value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth
+        - name: OIDC_CLIENT_ID
+          value: outline.poketwo.io
+        - name: OIDC_DISPLAY_NAME
+          value: Pokétwo
         - name: OIDC_TOKEN_URI
           value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token
         - name: OIDC_USERINFO_URI
           value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo
-        - name: OIDC_DISPLAY_NAME
-          value: Pokétwo
+        - name: PORT
+          value: '3000'
+        - name: REDIS_PASS
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis
+        - name: URL
+          value: https://outline.poketwo.io
+        - name: DATABASE_URL
+          value: postgres://$(DB_USER):$(DB_PASS)@postgres-rw:5432/outline
+        - name: REDIS_URL
+          value: redis://:$(REDIS_PASS)@redis-master:6379/?family=6
         envFrom:
         - secretRef:
             name: outline
@@ -87,39 +87,13 @@ spec:
         command:
         - yarn
         env:
-        - name: URL
-          value: https://outline.poketwo.io
-        - name: PORT
-          value: '3000'
-        - name: REDIS_PASS
-          valueFrom:
-            secretKeyRef:
-              key: redis-password
-              name: redis
-        - name: REDIS_URL
-          value: redis://:$(REDIS_PASS)@redis-master:6379/?family=6
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              key: username
-              name: postgres-app
-        - name: DB_PASS
-          valueFrom:
-            secretKeyRef:
-              key: password
-              name: postgres-app
-        - name: DATABASE_URL
-          value: postgres://$(DB_USER):$(DB_PASS)@postgres-rw:5432/outline
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
               key: AWS_ACCESS_KEY_ID
               name: outline-bucket
-        - name: AWS_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              key: AWS_SECRET_ACCESS_KEY
-              name: outline-bucket
+        - name: AWS_S3_ACL
+          value: private
         - name: AWS_S3_UPLOAD_BUCKET_NAME
           valueFrom:
             configMapKeyRef:
@@ -127,18 +101,44 @@ spec:
               name: outline-bucket
         - name: AWS_S3_UPLOAD_BUCKET_URL
           value: https://rgw.hfym.co
-        - name: AWS_S3_ACL
-          value: private
-        - name: OIDC_CLIENT_ID
-          value: outline.poketwo.io
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: AWS_SECRET_ACCESS_KEY
+              name: outline-bucket
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: postgres-app
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: postgres-app
         - name: OIDC_AUTH_URI
           value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth
+        - name: OIDC_CLIENT_ID
+          value: outline.poketwo.io
+        - name: OIDC_DISPLAY_NAME
+          value: Pokétwo
         - name: OIDC_TOKEN_URI
           value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token
         - name: OIDC_USERINFO_URI
           value: https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo
-        - name: OIDC_DISPLAY_NAME
-          value: Pokétwo
+        - name: PORT
+          value: '3000'
+        - name: REDIS_PASS
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis
+        - name: URL
+          value: https://outline.poketwo.io
+        - name: DATABASE_URL
+          value: postgres://$(DB_USER):$(DB_PASS)@postgres-rw:5432/outline
+        - name: REDIS_URL
+          value: redis://:$(REDIS_PASS)@redis-master:6379/?family=6
         envFrom:
         - secretRef:
             name: outline

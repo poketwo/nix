@@ -43,6 +43,8 @@ spec:
         - --validating-webhook-certificate=/usr/local/certificates/cert
         - --validating-webhook-key=/usr/local/certificates/key
         env:
+        - name: LD_PRELOAD
+          value: /usr/local/lib/libmimalloc.so
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -51,8 +53,6 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: LD_PRELOAD
-          value: /usr/local/lib/libmimalloc.so
         image: registry.k8s.io/ingress-nginx/controller:v1.10.1@sha256:e24f39d3eed6bcc239a56f20098878845f62baa34b9f2be2fd2c38ce9fb0f29e
         imagePullPolicy: IfNotPresent
         lifecycle:

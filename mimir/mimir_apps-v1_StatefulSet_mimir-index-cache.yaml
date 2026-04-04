@@ -32,6 +32,24 @@ spec:
     spec:
       containers:
       - args:
+        - --memcached.address=localhost:11211
+        - --web.listen-address=0.0.0.0:9150
+        image: prom/memcached-exporter:v0.14.3
+        imagePullPolicy: IfNotPresent
+        name: exporter
+        ports:
+        - containerPort: 9150
+          name: http-metrics
+        resources:
+          limits: {}
+          requests: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+      - args:
         - -m 2048
         - --extended=modern,track_sizes
         - -I 5m
@@ -53,24 +71,6 @@ spec:
           requests:
             cpu: 500m
             memory: 2458Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-      - args:
-        - --memcached.address=localhost:11211
-        - --web.listen-address=0.0.0.0:9150
-        image: prom/memcached-exporter:v0.14.3
-        imagePullPolicy: IfNotPresent
-        name: exporter
-        ports:
-        - containerPort: 9150
-          name: http-metrics
-        resources:
-          limits: {}
-          requests: {}
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

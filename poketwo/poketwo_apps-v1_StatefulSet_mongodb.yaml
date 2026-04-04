@@ -42,13 +42,112 @@ spec:
             weight: 1
       automountServiceAccountToken: true
       containers:
+      - args:
+        - "/bin/mongodb_exporter  --collector.diagnosticdata --collector.replicasetstatus
+          --compatible-mode --mongodb.direct-connect --mongodb.global-conn-pool --web.listen-address
+          \":9216\" --mongodb.uri \"mongodb://$MONGODB_ROOT_USER:$(echo $MONGODB_ROOT_PASSWORD
+          | sed -r \"s/@/%40/g;s/:/%3A/g\")@localhost:27017/admin?\" \n"
+        command:
+        - /bin/bash
+        - -ec
+        env:
+        - name: MONGODB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-root-password
+              name: mongodb
+        - name: MONGODB_ROOT_USER
+          value: root
+        image: docker.io/bitnamilegacy/mongodb-exporter:0.40.0-debian-12-r30
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: metrics
+          timeoutSeconds: 10
+        name: metrics
+        ports:
+        - containerPort: 9216
+          name: metrics
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: metrics
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: 150m
+            ephemeral-storage: 1024Mi
+            memory: 192Mi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 50Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1001
+          runAsNonRoot: true
+          runAsUser: 1001
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /tmp
+          name: empty-dir
+          subPath: tmp-dir
       - command:
         - /scripts/setup.sh
         env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: 'no'
         - name: BITNAMI_DEBUG
           value: 'false'
-        - name: SHARED_FILE
-          value: /shared/info.txt
+        - name: K8S_SERVICE_NAME
+          value: mongodb-headless
+        - name: MONGODB_DISABLE_JAVASCRIPT
+          value: 'no'
+        - name: MONGODB_DISABLE_SYSTEM_LOG
+          value: 'no'
+        - name: MONGODB_ENABLE_DIRECTORY_PER_DB
+          value: 'no'
+        - name: MONGODB_ENABLE_IPV6
+          value: 'yes'
+        - name: MONGODB_ENABLE_JOURNAL
+          value: 'yes'
+        - name: MONGODB_PORT_NUMBER
+          value: '27017'
+        - name: MONGODB_REPLICA_SET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-replica-set-key
+              name: mongodb
+        - name: MONGODB_REPLICA_SET_NAME
+          value: poketwo
+        - name: MONGODB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-root-password
+              name: mongodb
+        - name: MONGODB_ROOT_USER
+          value: root
+        - name: MONGODB_SYSTEM_LOG_VERBOSITY
+          value: '0'
+        - name: MY_POD_HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
         - name: MY_POD_NAME
           valueFrom:
             fieldRef:
@@ -57,44 +156,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: MY_POD_HOST_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.hostIP
-        - name: K8S_SERVICE_NAME
-          value: mongodb-headless
+        - name: SHARED_FILE
+          value: /shared/info.txt
         - name: MONGODB_INITIAL_PRIMARY_HOST
           value: mongodb-0.$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
-        - name: MONGODB_REPLICA_SET_NAME
-          value: poketwo
-        - name: MONGODB_ROOT_USER
-          value: root
-        - name: MONGODB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: mongodb-root-password
-              name: mongodb
-        - name: MONGODB_REPLICA_SET_KEY
-          valueFrom:
-            secretKeyRef:
-              key: mongodb-replica-set-key
-              name: mongodb
-        - name: ALLOW_EMPTY_PASSWORD
-          value: 'no'
-        - name: MONGODB_SYSTEM_LOG_VERBOSITY
-          value: '0'
-        - name: MONGODB_DISABLE_SYSTEM_LOG
-          value: 'no'
-        - name: MONGODB_DISABLE_JAVASCRIPT
-          value: 'no'
-        - name: MONGODB_ENABLE_JOURNAL
-          value: 'yes'
-        - name: MONGODB_PORT_NUMBER
-          value: '27017'
-        - name: MONGODB_ENABLE_IPV6
-          value: 'yes'
-        - name: MONGODB_ENABLE_DIRECTORY_PER_DB
-          value: 'no'
         image: docker.io/bitnamilegacy/mongodb:7.0.12-debian-12-r0
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -163,102 +228,8 @@ spec:
           subPath: setup.sh
         - mountPath: /shared
           name: shared
-      - args:
-        - "/bin/mongodb_exporter  --collector.diagnosticdata --collector.replicasetstatus
-          --compatible-mode --mongodb.direct-connect --mongodb.global-conn-pool --web.listen-address
-          \":9216\" --mongodb.uri \"mongodb://$MONGODB_ROOT_USER:$(echo $MONGODB_ROOT_PASSWORD
-          | sed -r \"s/@/%40/g;s/:/%3A/g\")@localhost:27017/admin?\" \n"
-        command:
-        - /bin/bash
-        - -ec
-        env:
-        - name: MONGODB_ROOT_USER
-          value: root
-        - name: MONGODB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: mongodb-root-password
-              name: mongodb
-        image: docker.io/bitnamilegacy/mongodb-exporter:0.40.0-debian-12-r30
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          successThreshold: 1
-          tcpSocket:
-            port: metrics
-          timeoutSeconds: 10
-        name: metrics
-        ports:
-        - containerPort: 9216
-          name: metrics
-        readinessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /
-            port: metrics
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          successThreshold: 1
-          timeoutSeconds: 10
-        resources:
-          limits:
-            cpu: 150m
-            ephemeral-storage: 1024Mi
-            memory: 192Mi
-          requests:
-            cpu: 100m
-            ephemeral-storage: 50Mi
-            memory: 128Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-          runAsGroup: 1001
-          runAsNonRoot: true
-          runAsUser: 1001
-          seLinuxOptions: {}
-          seccompProfile:
-            type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /tmp
-          name: empty-dir
-          subPath: tmp-dir
       enableServiceLinks: true
       initContainers:
-      - args:
-        - -ec
-        - |
-          mkdir -p /bitnami/mongodb/
-          chown 1001:1001 /bitnami/mongodb/
-          find  /bitnami/mongodb/ -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R 1001:1001
-        command:
-        - /bin/bash
-        image: docker.io/bitnamilegacy/os-shell:latest
-        imagePullPolicy: IfNotPresent
-        name: volume-permissions
-        resources:
-          limits:
-            cpu: 150m
-            ephemeral-storage: 1024Mi
-            memory: 192Mi
-          requests:
-            cpu: 100m
-            ephemeral-storage: 50Mi
-            memory: 128Mi
-        securityContext:
-          runAsUser: 0
-          seLinuxOptions: {}
-        volumeMounts:
-        - mountPath: /tmp
-          name: empty-dir
-          subPath: tmp-dir
-        - mountPath: /bitnami/mongodb
-          name: datadir
       - command:
         - /scripts/auto-discovery.sh
         env:
@@ -321,6 +292,35 @@ spec:
         - mountPath: /opt/bitnami/mongodb/logs
           name: empty-dir
           subPath: app-logs-dir
+      - args:
+        - -ec
+        - |
+          mkdir -p /bitnami/mongodb/
+          chown 1001:1001 /bitnami/mongodb/
+          find  /bitnami/mongodb/ -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | xargs -r chown -R 1001:1001
+        command:
+        - /bin/bash
+        image: docker.io/bitnamilegacy/os-shell:latest
+        imagePullPolicy: IfNotPresent
+        name: volume-permissions
+        resources:
+          limits:
+            cpu: 150m
+            ephemeral-storage: 1024Mi
+            memory: 192Mi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 50Mi
+            memory: 128Mi
+        securityContext:
+          runAsUser: 0
+          seLinuxOptions: {}
+        volumeMounts:
+        - mountPath: /tmp
+          name: empty-dir
+          subPath: tmp-dir
+        - mountPath: /bitnami/mongodb
+          name: datadir
       securityContext:
         fsGroup: 1001
         fsGroupChangePolicy: Always
@@ -328,18 +328,18 @@ spec:
         sysctls: []
       serviceAccountName: mongodb
       volumes:
-      - emptyDir: {}
-        name: empty-dir
       - configMap:
           defaultMode: 360
           name: mongodb-common-scripts
         name: common-scripts
       - emptyDir: {}
-        name: shared
+        name: empty-dir
       - configMap:
           defaultMode: 493
           name: mongodb-scripts
         name: scripts
+      - emptyDir: {}
+        name: shared
   updateStrategy:
     type: RollingUpdate
   volumeClaimTemplates:

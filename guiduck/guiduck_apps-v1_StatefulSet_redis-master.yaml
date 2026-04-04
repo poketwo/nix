@@ -25,7 +25,7 @@ spec:
         checksum/configmap: 2a9ab4a5432825504d910f022638674ce88eaefe9f9f595ad8bc107377d104fb
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
         checksum/scripts: 0717e77fd3bb941f602860e9be4f2ed87b481cddeadf37be463f8512ecde0c3e
-        checksum/secret: 56480be12b1b43c4375eb9d659dc8135ebd81a1cb4f925d6eab1dff9e3059833
+        checksum/secret: 706f302e8bf565bf462e2ffcea6d5263563de4eca310f9a330d8d765e5bbc80e
         prometheus.io/port: '9121'
         prometheus.io/scrape: 'true'
       labels:
@@ -49,24 +49,89 @@ spec:
             weight: 1
       automountServiceAccountToken: false
       containers:
+      - command:
+        - /bin/bash
+        - -ec
+        - |
+          export REDIS_PASSWORD="$(< $REDIS_PASSWORD_FILE)"
+          redis_exporter
+        env:
+        - name: REDIS_ALIAS
+          value: redis
+        - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
+          value: :9121
+        - name: REDIS_PASSWORD_FILE
+          value: /secrets/redis-password
+        - name: REDIS_USER
+          value: default
+        image: docker.io/bitnamilegacy/redis-exporter:1.72.1-debian-12-r0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: metrics
+          timeoutSeconds: 5
+        name: metrics
+        ports:
+        - containerPort: 9121
+          name: metrics
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: metrics
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 150m
+            ephemeral-storage: 2Gi
+            memory: 192Mi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 50Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1001
+          runAsNonRoot: true
+          runAsUser: 1001
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /tmp
+          name: empty-dir
+          subPath: app-tmp-dir
+        - mountPath: /secrets/
+          name: redis-password
       - args:
         - -ec
         - /opt/bitnami/scripts/start-scripts/start-master.sh
         command:
         - /bin/bash
         env:
-        - name: BITNAMI_DEBUG
-          value: 'false'
-        - name: REDIS_REPLICATION_MODE
-          value: master
         - name: ALLOW_EMPTY_PASSWORD
           value: 'no'
+        - name: BITNAMI_DEBUG
+          value: 'false'
         - name: REDIS_PASSWORD_FILE
           value: /opt/bitnami/redis/secrets/redis-password
-        - name: REDIS_TLS_ENABLED
-          value: 'no'
         - name: REDIS_PORT
           value: '6379'
+        - name: REDIS_REPLICATION_MODE
+          value: master
+        - name: REDIS_TLS_ENABLED
+          value: 'no'
         image: docker.io/bitnamilegacy/redis:8.0.1-debian-12-r2
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -130,71 +195,6 @@ spec:
         - mountPath: /tmp
           name: empty-dir
           subPath: tmp-dir
-      - command:
-        - /bin/bash
-        - -ec
-        - |
-          export REDIS_PASSWORD="$(< $REDIS_PASSWORD_FILE)"
-          redis_exporter
-        env:
-        - name: REDIS_ALIAS
-          value: redis
-        - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
-          value: :9121
-        - name: REDIS_USER
-          value: default
-        - name: REDIS_PASSWORD_FILE
-          value: /secrets/redis-password
-        image: docker.io/bitnamilegacy/redis-exporter:1.72.1-debian-12-r0
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 5
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          successThreshold: 1
-          tcpSocket:
-            port: metrics
-          timeoutSeconds: 5
-        name: metrics
-        ports:
-        - containerPort: 9121
-          name: metrics
-        readinessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /
-            port: metrics
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 1
-        resources:
-          limits:
-            cpu: 150m
-            ephemeral-storage: 2Gi
-            memory: 192Mi
-          requests:
-            cpu: 100m
-            ephemeral-storage: 50Mi
-            memory: 128Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 1001
-          runAsNonRoot: true
-          runAsUser: 1001
-          seLinuxOptions: {}
-          seccompProfile:
-            type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /tmp
-          name: empty-dir
-          subPath: app-tmp-dir
-        - mountPath: /secrets/
-          name: redis-password
       enableServiceLinks: true
       securityContext:
         fsGroup: 1001
@@ -205,9 +205,10 @@ spec:
       terminationGracePeriodSeconds: 30
       volumes:
       - configMap:
-          defaultMode: 493
-          name: redis-scripts
-        name: start-scripts
+          name: redis-configuration
+        name: config
+      - emptyDir: {}
+        name: empty-dir
       - configMap:
           defaultMode: 493
           name: redis-health
@@ -219,10 +220,9 @@ spec:
             path: redis-password
           secretName: redis
       - configMap:
-          name: redis-configuration
-        name: config
-      - emptyDir: {}
-        name: empty-dir
+          defaultMode: 493
+          name: redis-scripts
+        name: start-scripts
   updateStrategy:
     type: RollingUpdate
   volumeClaimTemplates:

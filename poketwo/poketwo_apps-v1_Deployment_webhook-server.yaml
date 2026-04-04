@@ -17,22 +17,22 @@ spec:
       - env:
         - name: DATABASE_HOST
           value: mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo
-        - name: DATABASE_USERNAME
-          value: root
+        - name: DATABASE_NAME
+          value: pokemon
         - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
               key: mongodb-root-password
               name: mongodb
-        - name: DATABASE_NAME
-          value: pokemon
-        - name: REDIS_URI
-          value: redis://redis-master
+        - name: DATABASE_USERNAME
+          value: root
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               key: redis-password
               name: redis
+        - name: REDIS_URI
+          value: redis://redis-master
         envFrom:
         - secretRef:
             name: webhook-server

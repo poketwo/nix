@@ -31,12 +31,12 @@ spec:
         - --log-level=info
         - --tls-min-version=VersionTLS12
         env:
-        - name: METALLB_ML_SECRET_NAME
-          value: metallb-memberlist
-        - name: METALLB_DEPLOYMENT
-          value: metallb-controller
         - name: METALLB_BGP_TYPE
           value: frr
+        - name: METALLB_DEPLOYMENT
+          value: metallb-controller
+        - name: METALLB_ML_SECRET_NAME
+          value: metallb-memberlist
         image: quay.io/metallb/controller:v0.14.5
         livenessProbe:
           failureThreshold: 3

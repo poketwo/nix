@@ -51,10 +51,10 @@ spec:
         - --argocd-repo-server=argocd-repo-server:8081
         - --secret-name=argocd-notifications-secret
         env:
-        - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGLEVEL
+        - name: ARGOCD_APPLICATION_NAMESPACES
           valueFrom:
             configMapKeyRef:
-              key: notificationscontroller.log.level
+              key: application.namespaces
               name: argocd-cmd-params-cm
               optional: true
         - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGFORMAT
@@ -63,10 +63,10 @@ spec:
               key: notificationscontroller.log.format
               name: argocd-cmd-params-cm
               optional: true
-        - name: ARGOCD_APPLICATION_NAMESPACES
+        - name: ARGOCD_NOTIFICATIONS_CONTROLLER_LOGLEVEL
           valueFrom:
             configMapKeyRef:
-              key: application.namespaces
+              key: notificationscontroller.log.level
               name: argocd-cmd-params-cm
               optional: true
         - name: ARGOCD_NOTIFICATION_CONTROLLER_SELF_SERVICE_NOTIFICATION_ENABLED
@@ -102,9 +102,6 @@ spec:
       serviceAccountName: argocd-notifications-controller
       terminationGracePeriodSeconds: 30
       volumes:
-      - configMap:
-          name: argocd-tls-certs-cm
-        name: tls-certs
       - name: argocd-repo-server-tls
         secret:
           items:
@@ -116,3 +113,6 @@ spec:
             path: ca.crt
           optional: true
           secretName: argocd-repo-server-tls
+      - configMap:
+          name: argocd-tls-certs-cm
+        name: tls-certs

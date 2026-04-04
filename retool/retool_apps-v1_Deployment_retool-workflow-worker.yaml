@@ -49,71 +49,71 @@ spec:
         - chmod -R +x ./docker_scripts; sync; ./docker_scripts/wait-for-it.sh -t 0
           "postgres-rw":"5432"; ./docker_scripts/start_api.sh
         env:
-        - name: DEPLOYMENT_TEMPLATE_TYPE
-          value: k8s-helm
-        - name: DEPLOYMENT_TEMPLATE_VERSION
-          value: 6.10.0
-        - name: NODE_ENV
-          value: production
-        - name: NODE_OPTIONS
-          value: --max_old_space_size=1024
-        - name: SERVICE_TYPE
-          value: WORKFLOW_TEMPORAL_WORKER
+        - name: BASE_DOMAIN
+          value: https://retool.poketwo.io
+        - name: CLIENT_ID
+          value: 997504863600-6nfvs9g5cbtovgnfjpq50h6r3p7jnr2l.apps.googleusercontent.com
+        - name: CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: google-client-secret
+              name: retool
+        - name: CODE_EXECUTOR_INGRESS_DOMAIN
+          value: http://retool-code-executor
+        - name: COOKIE_INSECURE
+          value: 'false'
         - name: DBCONNECTOR_POSTGRES_POOL_MAX_SIZE
           value: '100'
         - name: DBCONNECTOR_QUERY_TIMEOUT_MS
           value: '5400000'
+        - name: DEFAULT_GROUP_FOR_DOMAINS
+          value: poketwo.net -> all-users
+        - name: DEPLOYMENT_TEMPLATE_TYPE
+          value: k8s-helm
+        - name: DEPLOYMENT_TEMPLATE_VERSION
+          value: 6.10.0
         - name: DISABLE_DATABASE_MIGRATIONS
           value: 'true'
-        - name: WORKFLOW_WORKER_HEALTHCHECK_PORT
-          value: '3005'
-        - name: WORKFLOW_BACKEND_HOST
-          value: http://retool-workflow-backend
-        - name: CLIENT_ID
-          value: 997504863600-6nfvs9g5cbtovgnfjpq50h6r3p7jnr2l.apps.googleusercontent.com
-        - name: COOKIE_INSECURE
-          value: 'false'
-        - name: POSTGRES_HOST
-          value: postgres-rw
-        - name: POSTGRES_PORT
-          value: '5432'
-        - name: POSTGRES_DB
-          value: retool
-        - name: POSTGRES_USER
-          value: retool
-        - name: POSTGRES_SSL_ENABLED
-          value: 'true'
-        - name: CODE_EXECUTOR_INGRESS_DOMAIN
-          value: http://retool-code-executor
-        - name: LICENSE_KEY
+        - name: ENCRYPTION_KEY
           valueFrom:
             secretKeyRef:
-              key: license-key
+              key: encryption-key
               name: retool
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
               key: jwt-secret
               name: retool
-        - name: ENCRYPTION_KEY
+        - name: LICENSE_KEY
           valueFrom:
             secretKeyRef:
-              key: encryption-key
+              key: license-key
               name: retool
+        - name: NODE_ENV
+          value: production
+        - name: NODE_OPTIONS
+          value: --max_old_space_size=1024
+        - name: POSTGRES_DB
+          value: retool
+        - name: POSTGRES_HOST
+          value: postgres-rw
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
               name: postgres-app
-        - name: CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              key: google-client-secret
-              name: retool
-        - name: BASE_DOMAIN
-          value: https://retool.poketwo.io
-        - name: DEFAULT_GROUP_FOR_DOMAINS
-          value: poketwo.net -> all-users
+        - name: POSTGRES_PORT
+          value: '5432'
+        - name: POSTGRES_SSL_ENABLED
+          value: 'true'
+        - name: POSTGRES_USER
+          value: retool
+        - name: SERVICE_TYPE
+          value: WORKFLOW_TEMPORAL_WORKER
+        - name: WORKFLOW_BACKEND_HOST
+          value: http://retool-workflow-backend
+        - name: WORKFLOW_WORKER_HEALTHCHECK_PORT
+          value: '3005'
         image: tryretool/backend:3.334.4-stable
         imagePullPolicy: IfNotPresent
         livenessProbe:

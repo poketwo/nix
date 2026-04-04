@@ -93,13 +93,13 @@ spec:
             path: mimir.yaml
           name: mimir-config
         name: config
-      - configMap:
-          name: mimir-runtime
-        name: runtime-config
+      - emptyDir: {}
+        name: docker-entrypoint-d-override
       - configMap:
           name: mimir-gateway-nginx
         name: nginx-config
-      - emptyDir: {}
-        name: docker-entrypoint-d-override
+      - configMap:
+          name: mimir-runtime
+        name: runtime-config
       - emptyDir: {}
         name: tmp

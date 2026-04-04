@@ -94,16 +94,16 @@ spec:
       serviceAccountName: loki
       terminationGracePeriodSeconds: 30
       volumes:
-      - emptyDir: {}
-        name: tmp
-      - emptyDir: {}
-        name: data
       - configMap:
           items:
           - key: config.yaml
             path: config.yaml
           name: loki
         name: config
+      - emptyDir: {}
+        name: data
       - configMap:
           name: loki-runtime
         name: runtime-config
+      - emptyDir: {}
+        name: tmp

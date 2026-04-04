@@ -28,6 +28,10 @@ spec:
     spec:
       containers:
       - env:
+        - name: BASE_DOMAIN
+          value: https://retool.poketwo.io
+        - name: DEFAULT_GROUP_FOR_DOMAINS
+          value: poketwo.net -> all-users
         - name: DEPLOYMENT_TEMPLATE_TYPE
           value: k8s-helm
         - name: DEPLOYMENT_TEMPLATE_VERSION
@@ -36,10 +40,6 @@ spec:
           value: production
         - name: NODE_OPTIONS
           value: --max_old_space_size=1024
-        - name: BASE_DOMAIN
-          value: https://retool.poketwo.io
-        - name: DEFAULT_GROUP_FOR_DOMAINS
-          value: poketwo.net -> all-users
         image: tryretool/code-executor-service:3.334.4-stable
         imagePullPolicy: IfNotPresent
         livenessProbe:

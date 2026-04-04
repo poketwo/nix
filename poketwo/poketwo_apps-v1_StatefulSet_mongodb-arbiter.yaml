@@ -42,8 +42,32 @@ spec:
       automountServiceAccountToken: false
       containers:
       - env:
+        - name: ALLOW_EMPTY_PASSWORD
+          value: 'no'
         - name: BITNAMI_DEBUG
           value: 'false'
+        - name: K8S_SERVICE_NAME
+          value: mongodb-arbiter-headless
+        - name: MONGODB_ENABLE_IPV6
+          value: 'yes'
+        - name: MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-root-password
+              name: mongodb
+        - name: MONGODB_INITIAL_PRIMARY_ROOT_USER
+          value: root
+        - name: MONGODB_PORT_NUMBER
+          value: '27017'
+        - name: MONGODB_REPLICA_SET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: mongodb-replica-set-key
+              name: mongodb
+        - name: MONGODB_REPLICA_SET_MODE
+          value: arbiter
+        - name: MONGODB_REPLICA_SET_NAME
+          value: poketwo
         - name: MY_POD_NAME
           valueFrom:
             fieldRef:
@@ -52,34 +76,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        - name: K8S_SERVICE_NAME
-          value: mongodb-arbiter-headless
-        - name: MONGODB_REPLICA_SET_MODE
-          value: arbiter
-        - name: MONGODB_INITIAL_PRIMARY_HOST
-          value: mongodb-0.$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
-        - name: MONGODB_REPLICA_SET_NAME
-          value: poketwo
         - name: MONGODB_ADVERTISED_HOSTNAME
           value: $(MY_POD_NAME).$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
-        - name: MONGODB_PORT_NUMBER
-          value: '27017'
-        - name: MONGODB_ENABLE_IPV6
-          value: 'yes'
-        - name: MONGODB_INITIAL_PRIMARY_ROOT_USER
-          value: root
-        - name: MONGODB_INITIAL_PRIMARY_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: mongodb-root-password
-              name: mongodb
-        - name: MONGODB_REPLICA_SET_KEY
-          valueFrom:
-            secretKeyRef:
-              key: mongodb-replica-set-key
-              name: mongodb
-        - name: ALLOW_EMPTY_PASSWORD
-          value: 'no'
+        - name: MONGODB_INITIAL_PRIMARY_HOST
+          value: mongodb-0.$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
         image: docker.io/bitnamilegacy/mongodb:7.0.12-debian-12-r0
         imagePullPolicy: IfNotPresent
         livenessProbe:

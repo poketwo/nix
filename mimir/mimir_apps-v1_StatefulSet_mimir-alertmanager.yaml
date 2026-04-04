@@ -105,6 +105,11 @@ spec:
         topologyKey: kubernetes.io/hostname
         whenUnsatisfiable: ScheduleAnyway
       volumes:
+      - emptyDir: {}
+        name: active-queries
+      - configMap:
+          name: mimir-alertmanager-fallback-config
+        name: alertmanager-fallback-config
       - configMap:
           items:
           - key: mimir.yaml
@@ -116,11 +121,6 @@ spec:
         name: runtime-config
       - emptyDir: {}
         name: tmp
-      - emptyDir: {}
-        name: active-queries
-      - configMap:
-          name: mimir-alertmanager-fallback-config
-        name: alertmanager-fallback-config
   updateStrategy:
     type: RollingUpdate
   volumeClaimTemplates:

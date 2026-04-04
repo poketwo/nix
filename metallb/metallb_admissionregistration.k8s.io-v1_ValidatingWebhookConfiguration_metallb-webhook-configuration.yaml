@@ -16,29 +16,9 @@ webhooks:
     service:
       name: metallb-webhook-service
       namespace: metallb
-      path: /validate-metallb-io-v1beta2-bgppeer
+      path: /validate-metallb-io-v1beta1-bfdprofile
   failurePolicy: Fail
-  name: bgppeervalidationwebhook.metallb.io
-  rules:
-  - apiGroups:
-    - metallb.io
-    apiVersions:
-    - v1beta2
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - bgppeers
-  sideEffects: None
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: metallb-webhook-service
-      namespace: metallb
-      path: /validate-metallb-io-v1beta1-ipaddresspool
-  failurePolicy: Fail
-  name: ipaddresspoolvalidationwebhook.metallb.io
+  name: bfdprofilevalidationwebhook.metallb.io
   rules:
   - apiGroups:
     - metallb.io
@@ -46,9 +26,9 @@ webhooks:
     - v1beta1
     operations:
     - CREATE
-    - UPDATE
+    - DELETE
     resources:
-    - ipaddresspools
+    - bfdprofiles
   sideEffects: None
 - admissionReviewVersions:
   - v1
@@ -76,6 +56,26 @@ webhooks:
     service:
       name: metallb-webhook-service
       namespace: metallb
+      path: /validate-metallb-io-v1beta2-bgppeer
+  failurePolicy: Fail
+  name: bgppeervalidationwebhook.metallb.io
+  rules:
+  - apiGroups:
+    - metallb.io
+    apiVersions:
+    - v1beta2
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - bgppeers
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: metallb-webhook-service
+      namespace: metallb
       path: /validate-metallb-io-v1beta1-community
   failurePolicy: Fail
   name: communityvalidationwebhook.metallb.io
@@ -96,9 +96,9 @@ webhooks:
     service:
       name: metallb-webhook-service
       namespace: metallb
-      path: /validate-metallb-io-v1beta1-bfdprofile
+      path: /validate-metallb-io-v1beta1-ipaddresspool
   failurePolicy: Fail
-  name: bfdprofilevalidationwebhook.metallb.io
+  name: ipaddresspoolvalidationwebhook.metallb.io
   rules:
   - apiGroups:
     - metallb.io
@@ -106,9 +106,9 @@ webhooks:
     - v1beta1
     operations:
     - CREATE
-    - DELETE
+    - UPDATE
     resources:
-    - bfdprofiles
+    - ipaddresspools
   sideEffects: None
 - admissionReviewVersions:
   - v1

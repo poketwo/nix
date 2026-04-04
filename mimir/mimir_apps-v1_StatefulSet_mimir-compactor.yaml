@@ -101,6 +101,8 @@ spec:
         topologyKey: kubernetes.io/hostname
         whenUnsatisfiable: ScheduleAnyway
       volumes:
+      - emptyDir: {}
+        name: active-queries
       - configMap:
           items:
           - key: mimir.yaml
@@ -110,8 +112,6 @@ spec:
       - configMap:
           name: mimir-runtime
         name: runtime-config
-      - emptyDir: {}
-        name: active-queries
   updateStrategy:
     type: RollingUpdate
   volumeClaimTemplates:

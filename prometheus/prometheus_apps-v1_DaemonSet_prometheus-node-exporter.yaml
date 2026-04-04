@@ -99,11 +99,11 @@ spec:
           path: /proc
         name: proc
       - hostPath:
-          path: /sys
-        name: sys
-      - hostPath:
           path: /
         name: root
+      - hostPath:
+          path: /sys
+        name: sys
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1

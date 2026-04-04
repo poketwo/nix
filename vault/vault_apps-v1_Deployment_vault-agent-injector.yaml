@@ -36,36 +36,36 @@ spec:
         - agent-inject
         - 2>&1
         env:
+        - name: AGENT_INJECT_CPU_LIMIT
+          value: 500m
+        - name: AGENT_INJECT_CPU_REQUEST
+          value: 250m
+        - name: AGENT_INJECT_DEFAULT_TEMPLATE
+          value: map
         - name: AGENT_INJECT_LISTEN
           value: :8080
+        - name: AGENT_INJECT_LOG_FORMAT
+          value: standard
         - name: AGENT_INJECT_LOG_LEVEL
           value: info
+        - name: AGENT_INJECT_MEM_LIMIT
+          value: 128Mi
+        - name: AGENT_INJECT_MEM_REQUEST
+          value: 64Mi
+        - name: AGENT_INJECT_REVOKE_ON_SHUTDOWN
+          value: 'false'
+        - name: AGENT_INJECT_TEMPLATE_CONFIG_EXIT_ON_RETRY_FAILURE
+          value: 'true'
+        - name: AGENT_INJECT_TLS_AUTO
+          value: vault-agent-injector-cfg
+        - name: AGENT_INJECT_TLS_AUTO_HOSTS
+          value: vault-agent-injector-svc,vault-agent-injector-svc.vault,vault-agent-injector-svc.vault.svc
         - name: AGENT_INJECT_VAULT_ADDR
           value: http://vault.vault.svc:8200
         - name: AGENT_INJECT_VAULT_AUTH_PATH
           value: auth/kubernetes
         - name: AGENT_INJECT_VAULT_IMAGE
           value: hashicorp/vault:1.16.1
-        - name: AGENT_INJECT_TLS_AUTO
-          value: vault-agent-injector-cfg
-        - name: AGENT_INJECT_TLS_AUTO_HOSTS
-          value: vault-agent-injector-svc,vault-agent-injector-svc.vault,vault-agent-injector-svc.vault.svc
-        - name: AGENT_INJECT_LOG_FORMAT
-          value: standard
-        - name: AGENT_INJECT_REVOKE_ON_SHUTDOWN
-          value: 'false'
-        - name: AGENT_INJECT_CPU_REQUEST
-          value: 250m
-        - name: AGENT_INJECT_CPU_LIMIT
-          value: 500m
-        - name: AGENT_INJECT_MEM_REQUEST
-          value: 64Mi
-        - name: AGENT_INJECT_MEM_LIMIT
-          value: 128Mi
-        - name: AGENT_INJECT_DEFAULT_TEMPLATE
-          value: map
-        - name: AGENT_INJECT_TEMPLATE_CONFIG_EXIT_ON_RETRY_FAILURE
-          value: 'true'
         - name: POD_NAME
           valueFrom:
             fieldRef:
