@@ -12,8 +12,11 @@
 
       values = {
         operatorConfig = {
-          defaultTags = [ "tag:k8s-operator" ];
+          defaultTags = [ "tag:hfym-ds-operator" ];
           hostname = "hfym-ds-operator";
+        };
+        proxyConfig = {
+          defaultTags = [ "tag:hfym-ds" ];
         };
       };
 

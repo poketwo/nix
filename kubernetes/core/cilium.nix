@@ -27,6 +27,14 @@
         loadBalancer.mode = "hybrid";
         endpointRoutes.enabled = true;
 
+        # Bypass socket LB in pod namespaces so Tailscale operator's
+        # netfilter-based firewall rules work correctly.
+        # https://tailscale.com/kb/1236/kubernetes-operator#cilium-in-kube-proxy-replacement-mode
+        socketLB = {
+          enabled = true;
+          hostNamespaceOnly = true;
+        };
+
         # We use globally routable addresses for IPv6, so no NAT is needed.
         # We're running IPv6-only, but Discord still needs IPv4...
         # For now, that is accomplished with NAT64 on the host. :)
