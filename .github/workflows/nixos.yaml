@@ -7,7 +7,7 @@ on:
       - main
 
 concurrency:
-  group: build-${{ github.ref }}
+  group: nixos-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
