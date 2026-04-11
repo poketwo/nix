@@ -64,7 +64,10 @@
 
     resources."cilium.io/v2".CiliumClusterwideNetworkPolicy.deny-external.spec = {
       endpointSelector = { };
-      ingress = [{ fromEntities = [ "cluster" ]; }];
+      ingress = [
+        { fromEntities = [ "cluster" ]; }
+        { fromCIDR = [ "fd7a:115c:a1e0::/48" ]; } # Tailscale IPv6 range
+      ];
       egress = [{ toEntities = [ "all" ]; }];
     };
   };
