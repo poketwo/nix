@@ -6,12 +6,6 @@ in
 {
   options.poketwo.tailscale = {
     enable = lib.mkEnableOption "Enable Tailscale configuration";
-
-    advertiseRoutes = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-      description = "List of CIDRs to advertise as subnet routes via Tailscale";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -33,8 +27,6 @@ in
         "--advertise-exit-node"
         "--ssh"
         "--stateful-filtering"
-      ] ++ lib.optionals (cfg.advertiseRoutes != [ ]) [
-        "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"
       ];
     };
   };

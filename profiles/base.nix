@@ -22,7 +22,6 @@
     nat64.enable = lib.mkDefault true;
     shell.enable = lib.mkDefault true;
     tailscale.enable = lib.mkDefault true;
-    tailscale.advertiseRoutes = lib.mkDefault [ "2606:c2c0:5:1:2::/112" ];
   };
 
   boot = {
