@@ -21,7 +21,7 @@ in
       openFirewall = true;
       authKeyFile = config.age.secrets.tailscale-auth-key.path;
       extraUpFlags = [
-        "--accept-dns"
+        "--accept-dns=false"
         "--accept-routes"
         "--advertise-connector"
         "--advertise-exit-node"
