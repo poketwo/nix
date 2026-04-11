@@ -16,7 +16,9 @@
           hostname = "hfym-ds-operator";
         };
         proxyConfig = {
-          defaultTags = [ "tag:hfym-ds" ];
+          # Must be a string, not a list — chart template doesn't join it
+          # https://github.com/tailscale/tailscale/issues/16773
+          defaultTags = "tag:hfym-ds";
         };
       };
 
