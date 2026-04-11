@@ -1,0 +1,9 @@
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: k8s-subnet-router
+  namespace: tailscale
+spec:
+  subnetRouter:
+    advertiseRoutes:
+    - 2606:c2c0:5:1:2::/112
