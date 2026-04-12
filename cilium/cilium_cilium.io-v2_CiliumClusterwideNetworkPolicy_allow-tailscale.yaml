@@ -6,6 +6,5 @@ metadata:
 spec:
   endpointSelector: {}
   ingress:
-  - fromEndpoints:
-    - matchLabels:
-        k8s:io.kubernetes.pod.namespace: tailscale
+  - fromCIDRSet:
+    - cidr: fd7a:115c:a1e0::/48
