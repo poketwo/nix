@@ -12,6 +12,16 @@ data:
   grafana.ini: |
     [analytics]
     check_for_updates = true
+    [auth.generic_oauth]
+    allow_sign_up = true
+    api_url = https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo
+    auth_url = https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth
+    auto_login = true
+    client_id = grafana.hfym.co
+    enabled = true
+    name = Pokétwo
+    scopes = openid email profile
+    token_url = https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token
     [grafana_net]
     url = https://grafana.net
     [log]
@@ -23,6 +33,7 @@ data:
     provisioning = /etc/grafana/provisioning
     [server]
     domain = grafana.hfym.co
+    root_url = https://grafana.hfym.co
 kind: ConfigMap
 metadata:
   labels:

@@ -21,7 +21,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: a0e539a59172aea080169b51847de6250412d802c9ed29dc42f837b47d9985ab
+        checksum/config: ce1ffe075944f1f98baeed06617db6eb050efc7a24c4dbd51d14402948ffe37a
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
         kubectl.kubernetes.io/default-container: grafana
       labels:
@@ -53,6 +53,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
+        envFrom:
+        - secretRef:
+            name: grafana-oidc
+            optional: false
         image: docker.io/grafana/grafana:11.0.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
