@@ -76,15 +76,15 @@
       egress = [{ toEntities = [ "all" ]; }];
     };
 
-    # Allow ingress from the Tailscale subnet router so traffic routed
-    # through the tailnet can reach cluster services.
+    # Allow ingress from Tailscale IPs so traffic routed through the
+    # tailnet can reach cluster services. The Connector forwards packets
+    # without SNAT, so the source IP is the client's Tailscale address
+    # (fd7a:115c:a1e0::/48), not the Connector pod's IP.
     resources."cilium.io/v2".CiliumClusterwideNetworkPolicy.allow-tailscale.spec = {
       endpointSelector = { };
       ingress = [{
-        fromEndpoints = [{
-          matchLabels = {
-            "k8s:io.kubernetes.pod.namespace" = "tailscale";
-          };
+        fromCIDRSet = [{
+          cidr = "fd7a:115c:a1e0::/48";
         }];
       }];
     };
