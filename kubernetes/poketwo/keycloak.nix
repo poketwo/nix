@@ -54,6 +54,15 @@ let
         protocol = "openid-connect";
         enabled = true;
       }
+      {
+        clientId = "grafana.hfym.co";
+        name = "Grafana";
+        redirectUris = [ "https://grafana.hfym.co/login/generic_oauth" ];
+        clientAuthenticatorType = "client-secret";
+        publicClient = false;
+        protocol = "openid-connect";
+        enabled = true;
+      }
     ];
 
     # Override this to turn creating users off

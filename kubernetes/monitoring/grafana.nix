@@ -30,6 +30,26 @@
           ];
         };
 
+        "grafana.ini" = {
+          server.root_url = "https://grafana.hfym.co";
+          "auth.generic_oauth" = {
+            enabled = true;
+            name = "Pokétwo";
+            allow_sign_up = true;
+            auto_login = true;
+            client_id = "grafana.hfym.co";
+            scopes = "openid email profile";
+            auth_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth";
+            token_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token";
+            api_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo";
+          };
+        };
+
+        envFromSecrets = [{
+          name = "grafana-oidc";
+          optional = false;
+        }];
+
         ingress = {
           enabled = true;
           annotations."cert-manager.io/cluster-issuer" = "letsencrypt";
@@ -47,6 +67,13 @@
       stringData = {
         admin-user = "admin";
         admin-password = "";
+      };
+    };
+
+    resources.v1.Secret.grafana-oidc = {
+      type = "Opaque";
+      stringData = {
+        GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET = "";
       };
     };
   };
