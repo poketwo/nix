@@ -27,6 +27,7 @@ spec:
         automated: {}
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
   syncPolicy:
     applicationsSync: create-update
   ignoreApplicationDifferences:
