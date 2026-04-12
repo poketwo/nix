@@ -75,6 +75,7 @@ in
               { "external-dns.alpha.kubernetes.io/hostname" = "mongodb-1-external.poketwo.ds.hfym.co"; }
             ];
             type = "LoadBalancer";
+            externalTrafficPolicy = "Cluster";
             ports.mongodb = 27017;
           };
         };
