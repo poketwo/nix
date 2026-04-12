@@ -75,5 +75,18 @@
       ingress = [{ fromEntities = [ "cluster" ]; }];
       egress = [{ toEntities = [ "all" ]; }];
     };
+
+    # Allow ingress from the Tailscale subnet router so traffic routed
+    # through the tailnet can reach cluster services.
+    resources."cilium.io/v2".CiliumClusterwideNetworkPolicy.allow-tailscale.spec = {
+      endpointSelector = { };
+      ingress = [{
+        fromEndpoints = [{
+          matchLabels = {
+            "k8s:io.kubernetes.pod.namespace" = "tailscale";
+          };
+        }];
+      }];
+    };
   };
 }
