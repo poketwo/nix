@@ -16,7 +16,7 @@ metadata:
   namespace: poketwo
 spec:
   allocateLoadBalancerNodePorts: true
-  externalTrafficPolicy: Local
+  externalTrafficPolicy: Cluster
   ports:
   - name: mongodb
     port: 27017
