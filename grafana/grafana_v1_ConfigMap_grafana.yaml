@@ -20,6 +20,7 @@ data:
     client_id = grafana.hfym.co
     enabled = true
     name = Pokétwo
+    role_attribute_path = 'Editor'
     scopes = openid email profile
     token_url = https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token
     [grafana_net]
