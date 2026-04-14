@@ -6,8 +6,8 @@
       chart = transpire.fetchFromHelm {
         repo = "https://helm.cilium.io/";
         name = "cilium";
-        version = "1.18.8";
-        sha256 = "PYjQNrDqLgy0nSqa499xz3rrn0ynKnn7vu2cZLlZP0w=";
+        version = "1.19.2";
+        sha256 = "dOd46T4+iKTIWAhr6f/yciIQM2jz/tvwP9AnA8uqX2Q=";
       };
 
       values = {
@@ -52,8 +52,8 @@
           ui.enabled = true;
         };
 
-        # Cilium L2 Announcements doesn't currently support IPv6/NDP.
-        # When it does, we can consider using this instead of MetalLB.
+        # Cilium L2 Announcements now supports IPv6/NDP (as of 1.19).
+        # Consider using this instead of MetalLB.
         # https://docs.cilium.io/en/stable/network/l2-announcements/
         # l2announcements.enabled = true;
 
@@ -64,6 +64,10 @@
         #   enabled = true;
         #   default = true;
         # };
+
+        # Override cni init container resource limits to use string values
+        # (chart defaults cpu to integer 1, but Kubernetes API expects strings)
+        cni.resources.limits.cpu = "1";
 
         # breaks for some reason
         envoy.enabled = false;

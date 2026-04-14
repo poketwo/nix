@@ -123,11 +123,7 @@ Each `.nix` file under `kubernetes/` defines resources for a namespace. Helm cha
 }
 ```
 
-When upgrading a Helm chart, update `version` and `sha256`. To get the new hash:
-```bash
-curl -sLO <repo-url>/<name>-<version>.tgz
-nix hash file --base32 --type sha256 <name>-<version>.tgz | xargs nix hash convert --hash-algo sha256 --to sri
-```
+When upgrading a Helm chart, update `version` and `sha256`. To get the new hash, set `sha256` to an empty string (`""`), run `nix build .#kubernetes`, and copy the correct hash from the error message.
 
 ### Secrets
 
