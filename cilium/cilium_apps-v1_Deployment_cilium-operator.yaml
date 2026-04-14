@@ -65,19 +65,22 @@ spec:
           value: ds.hfym.co
         - name: KUBERNETES_SERVICE_PORT
           value: '443'
-        image: quay.io/cilium/operator-generic:v1.18.8@sha256:f9d1715932751b1454d0f59b492497cb1636dea6335beab0f9026fa8b5a6f62f
+        image: quay.io/cilium/operator-generic:v1.19.2@sha256:e363f4f634c2a66a36e01618734ea17e7b541b949b9a5632f9c180ab16de23f0
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
             host: ::1
             path: /healthz
-            port: 9234
+            port: health
             scheme: HTTP
           initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 3
         name: cilium-operator
         ports:
+        - containerPort: 9234
+          hostPort: 9234
+          name: health
         - containerPort: 9963
           hostPort: 9963
           name: prometheus
@@ -87,7 +90,7 @@ spec:
           httpGet:
             host: ::1
             path: /healthz
-            port: 9234
+            port: health
             scheme: HTTP
           initialDelaySeconds: 0
           periodSeconds: 5
