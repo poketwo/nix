@@ -21,7 +21,7 @@
               periodSeconds = 5;
             };
             env = {
-              DATABASE_HOST.value = "mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo";
+              DATABASE_HOST.value = "mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo&w=1";
               DATABASE_USERNAME.value = "root";
               DATABASE_PASSWORD.valueFrom.secretKeyRef = { name = "mongodb"; key = "mongodb-root-password"; };
               DATABASE_NAME.value = "pokemon";
