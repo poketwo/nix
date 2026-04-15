@@ -162,15 +162,6 @@ spec:
           value: mongodb-0.$(K8S_SERVICE_NAME).$(MY_POD_NAMESPACE).svc.cluster.local
         image: docker.io/bitnamilegacy/mongodb:7.0.12-debian-12-r0
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          exec:
-            command:
-            - /bitnami/scripts/ping-mongodb.sh
-          failureThreshold: 6
-          initialDelaySeconds: 30
-          periodSeconds: 20
-          successThreshold: 1
-          timeoutSeconds: 10
         name: mongodb
         ports:
         - containerPort: 27017
