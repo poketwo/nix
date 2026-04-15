@@ -80,6 +80,9 @@ in
           };
         };
 
+        livenessProbe.enabled = false;
+        startupProbe.enabled = false;
+
         arbiter = {
           enabled = true;
           resources = {
