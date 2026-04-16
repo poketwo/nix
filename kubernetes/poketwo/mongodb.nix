@@ -80,8 +80,20 @@ in
           };
         };
 
-        livenessProbe.enabled = false;
-        startupProbe.enabled = false;
+        livenessProbe = {
+          enabled = true;
+          initialDelaySeconds = 120;
+          periodSeconds = 30;
+          timeoutSeconds = 30;
+          failureThreshold = 10;
+        };
+        startupProbe = {
+          enabled = true;
+          initialDelaySeconds = 120;
+          periodSeconds = 30;
+          timeoutSeconds = 30;
+          failureThreshold = 60;
+        };
 
         arbiter = {
           enabled = true;
