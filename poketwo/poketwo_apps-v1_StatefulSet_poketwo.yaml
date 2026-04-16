@@ -24,7 +24,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: DATABASE_HOST
-          value: mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo&w=1&maxPoolSize=10
+          value: mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo&w=1
         - name: DATABASE_NAME
           value: pokemon
         - name: DATABASE_PASSWORD
