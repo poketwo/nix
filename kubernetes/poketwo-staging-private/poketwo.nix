@@ -15,7 +15,7 @@
         metadata.labels.app = "poketwo";
         spec = {
           containers.poketwo = {
-            image = "ghcr.io/poketwo/poketwo:production";
+            image = "ghcr.io/poketwo/poketwo:feature-spring_2026";
             imagePullPolicy = "Always";
             resources = {
               limits = { memory = "4Gi"; };
