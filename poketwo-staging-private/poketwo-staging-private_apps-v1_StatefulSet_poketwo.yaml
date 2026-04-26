@@ -41,7 +41,7 @@ spec:
         envFrom:
         - secretRef:
             name: poketwo
-        image: ghcr.io/poketwo/poketwo:production
+        image: ghcr.io/poketwo/poketwo:feature-spring_2026
         imagePullPolicy: Always
         name: poketwo
         resources:
