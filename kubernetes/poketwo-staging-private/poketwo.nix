@@ -8,7 +8,7 @@
     };
 
     "apps/v1".StatefulSet.poketwo.spec = {
-      replicas = 1;
+      replicas = 0;
       selector.matchLabels.app = "poketwo";
       serviceName = "poketwo";
       template = {
