@@ -15,8 +15,8 @@ in
       chart = transpire.fetchFromHelm {
         repo = "https://grafana.github.io/helm-charts";
         name = "loki";
-        version = "6.6.3";
-        sha256 = "lsfiXnoZRf8rSmAeyD5BzpPOEGdCj79hFxzmCa9ae6A=";
+        version = "6.55.0";
+        sha256 = "5IgdiiPetXqJy4+sycIeauTEWq8TOg0XkQ1vGDhSXrY=";
       };
 
       values = {
