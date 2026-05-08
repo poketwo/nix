@@ -55,6 +55,7 @@ data:
         kvstore:
           store: memberlist
     frontend:
+      instance_enable_ipv6: true
       scheduler_address: ""
       tail_proxy_url: ""
     frontend_worker:
