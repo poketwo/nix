@@ -11,6 +11,8 @@
       };
 
       values = {
+        image.tag = "13.0.1";
+
         deploymentStrategy = {
           type = "Recreate";
           rollingUpdate = null;
