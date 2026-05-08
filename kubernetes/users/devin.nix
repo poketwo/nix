@@ -6,9 +6,9 @@
 
     "rbac.authorization.k8s.io/v1".Role.devin-restart = {
       rules = [{
-        apiGroups = [ "" ];
-        resources = [ "pods" ];
-        verbs = [ "get" "list" "delete" ];
+        apiGroups = [ "apps" ];
+        resources = [ "statefulsets" ];
+        verbs = [ "get" "patch" ];
       }];
     };
 
