@@ -72,6 +72,7 @@ in
           query_scheduler.scheduler_ring.instance_enable_ipv6 = true;
           query_scheduler.scheduler_ring.kvstore.store = "memberlist";
           ruler.ring.kvstore.store = "memberlist";
+          frontend.instance_enable_ipv6 = true;
           memberlist.bind_addr = [ "::" ];
         };
 
