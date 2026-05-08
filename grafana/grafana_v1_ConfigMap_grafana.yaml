@@ -20,9 +20,11 @@ data:
     client_id = grafana.hfym.co
     enabled = true
     name = Pokétwo
-    role_attribute_path = 'Editor'
+    role_attribute_path = to_string('Editor')
     scopes = openid email profile
     token_url = https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token
+    [explore]
+    enabled = true
     [grafana_net]
     url = https://grafana.net
     [log]
@@ -35,6 +37,7 @@ data:
     [server]
     domain = grafana.hfym.co
     root_url = https://grafana.hfym.co
+  plugins: grafana-lokiexplore-app
 kind: ConfigMap
 metadata:
   labels:

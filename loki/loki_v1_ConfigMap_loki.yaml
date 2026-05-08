@@ -65,6 +65,8 @@ data:
           kvstore:
             store: memberlist
     limits_config:
+      allow_structured_metadata: true
+      discover_log_levels: true
       ingestion_burst_size_mb: 50
       ingestion_rate_mb: 20
       max_cache_freshness_per_query: 10m
