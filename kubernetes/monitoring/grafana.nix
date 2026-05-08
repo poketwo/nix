@@ -7,7 +7,7 @@
         repo = "https://grafana-community.github.io/helm-charts";
         name = "grafana";
         version = "12.0.0";
-        sha256 = "";
+        sha256 = "eqSidrI/OWupasKaL9a9npgwjtB3jCocHBIVjL0SnlM=";
       };
 
       values = {
