@@ -37,6 +37,7 @@ data:
     [server]
     domain = grafana.hfym.co
     root_url = https://grafana.hfym.co
+  plugins: grafana-lokiexplore-app
 kind: ConfigMap
 metadata:
   labels:

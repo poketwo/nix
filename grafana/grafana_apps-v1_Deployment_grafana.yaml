@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: e335a0c1061c9e4d7c2ad5b3cccc4371509d34f4315618bcda2ba8e17d2832fa
+        checksum/config: f46e92a4869d9c055f321c81eb449f955bdda1e9a82362500c032ec08b0b82fd
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
         kubectl.kubernetes.io/default-container: grafana
       labels:
@@ -32,6 +32,11 @@ spec:
       automountServiceAccountToken: true
       containers:
       - env:
+        - name: GF_INSTALL_PLUGINS
+          valueFrom:
+            configMapKeyRef:
+              key: plugins
+              name: grafana
         - name: GF_PATHS_DATA
           value: /var/lib/grafana/
         - name: GF_PATHS_LOGS
