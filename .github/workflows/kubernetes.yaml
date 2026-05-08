@@ -63,10 +63,13 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const commits = JSON.parse(process.env.COMMITS);
+            const commits = JSON.parse(process.env.COMMITS) || [];
             const lines = [];
             for (const commit of commits) {
               lines.push(`${commit.id.substring(0, 7)} ${commit.message.split("\n")[0]}`);
+            }
+            if (lines.length == 0) {
+              return `[rebuild] ${context.sha.substring(0, 7)}`;
             }
             if (lines.length == 1) {
               return `[rebuild] ${lines[0]}`;
