@@ -11,6 +11,8 @@
       };
 
       values = {
+        plugins = [ "grafana-lokiexplore-app" ];
+
         admin = {
           existingSecret = "grafana-admin";
           userKey = "admin-user";
@@ -32,6 +34,7 @@
 
         "grafana.ini" = {
           server.root_url = "https://grafana.hfym.co";
+          explore.enabled = true;
           "auth.generic_oauth" = {
             enabled = true;
             name = "Pokétwo";
@@ -42,7 +45,7 @@
             auth_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth";
             token_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token";
             api_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo";
-            role_attribute_path = "'Editor'";
+            role_attribute_path = "to_string('Editor')";
           };
         };
 

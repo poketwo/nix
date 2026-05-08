@@ -52,6 +52,9 @@ in
           limits_config = {
             ingestion_rate_mb = 20;
             ingestion_burst_size_mb = 50;
+            volume_enabled = true;
+            discover_log_levels = true;
+            allow_structured_metadata = true;
           };
 
           analytics.reporting_enabled = false;
