@@ -6,8 +6,8 @@
       chart = transpire.fetchFromHelm {
         repo = "https://grafana.github.io/helm-charts";
         name = "grafana";
-        version = "8.0.2";
-        sha256 = "ZavFvU7bKimvNOwCsIi5deO78UXdlWzkMp/6YTPgII4=";
+        version = "8.13.1";
+        sha256 = "";
       };
 
       values = {
