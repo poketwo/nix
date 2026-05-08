@@ -16,6 +16,8 @@
           rollingUpdate = null;
         };
 
+        plugins = [ "grafana-lokiexplore-app" ];
+
         admin = {
           existingSecret = "grafana-admin";
           userKey = "admin-user";
