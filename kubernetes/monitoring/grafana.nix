@@ -35,7 +35,6 @@
         "grafana.ini" = {
           server.root_url = "https://grafana.hfym.co";
           explore.enabled = true;
-          users.auto_assign_org_role = "Editor";
           "auth.generic_oauth" = {
             enabled = true;
             name = "Pokétwo";
@@ -46,8 +45,7 @@
             auth_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth";
             token_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token";
             api_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo";
-            role_attribute_path = "'Editor'";
-            skip_org_role_sync = false;
+            role_attribute_path = "\"'Editor'\"";
           };
         };
 
