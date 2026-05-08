@@ -45,7 +45,7 @@
             auth_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/auth";
             token_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/token";
             api_url = "https://auth-dev.poketwo.io/realms/poketwo/protocol/openid-connect/userinfo";
-            role_attribute_path = "\"'Editor'\"";
+            role_attribute_path = "to_string('Editor')";
           };
         };
 
