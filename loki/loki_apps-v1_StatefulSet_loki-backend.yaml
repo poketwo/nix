@@ -4,11 +4,10 @@ metadata:
   labels:
     app.kubernetes.io/component: backend
     app.kubernetes.io/instance: loki
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: loki
     app.kubernetes.io/part-of: memberlist
-    app.kubernetes.io/version: 3.0.0
-    helm.sh/chart: loki-6.6.3
+    app.kubernetes.io/version: 3.6.7
+    helm.sh/chart: loki-6.55.0
   name: loki-backend
   namespace: loki
 spec:
@@ -27,12 +26,15 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: c38d0180957164aa8eb08755f78fab356a135a20fb36644e48855d79d86666d0
+        checksum/config: c3a5a29d86b29ed17b7a856f3b17558b02d4c410d7c9ffcbfce6f5f941823e54
+        kubectl.kubernetes.io/default-container: loki
       labels:
         app.kubernetes.io/component: backend
         app.kubernetes.io/instance: loki
         app.kubernetes.io/name: loki
         app.kubernetes.io/part-of: memberlist
+        app.kubernetes.io/version: 3.6.7
+        helm.sh/chart: loki-6.55.0
     spec:
       affinity:
         podAntiAffinity:
@@ -40,6 +42,8 @@ spec:
           - labelSelector:
               matchLabels:
                 app.kubernetes.io/component: backend
+                app.kubernetes.io/instance: loki
+                app.kubernetes.io/name: loki
             topologyKey: kubernetes.io/hostname
       automountServiceAccountToken: true
       containers:
@@ -51,7 +55,7 @@ spec:
         envFrom:
         - secretRef:
             name: backblaze-b2-credentials
-        image: docker.io/grafana/loki:3.0.0
+        image: docker.io/grafana/loki:3.6.7
         imagePullPolicy: IfNotPresent
         name: loki
         ports:
@@ -65,10 +69,13 @@ spec:
           name: http-memberlist
           protocol: TCP
         readinessProbe:
+          failureThreshold: 3
           httpGet:
             path: /ready
             port: http-metrics
-          initialDelaySeconds: 30
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          successThreshold: 1
           timeoutSeconds: 1
         resources: {}
         securityContext:
@@ -103,14 +110,23 @@ spec:
           value: '60'
         - name: WATCH_SERVER_TIMEOUT
           value: '60'
-        image: kiwigrid/k8s-sidecar:1.24.3
+        image: docker.io/kiwigrid/k8s-sidecar:2.5.0
         imagePullPolicy: IfNotPresent
         name: loki-sc-rules
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
         volumeMounts:
+        - mountPath: /tmp
+          name: tmp
         - mountPath: /rules
           name: sc-rules-volume
       securityContext:
         fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
         runAsGroup: 10001
         runAsNonRoot: true
         runAsUser: 10001

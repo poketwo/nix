@@ -5,6 +5,14 @@ data:
     analytics:
       reporting_enabled: false
     auth_enabled: false
+    bloom_build:
+      builder:
+        planner_address: loki-backend-headless.loki.svc.cluster.local:9095
+      enabled: false
+    bloom_gateway:
+      client:
+        addresses: dnssrvnoa+_grpc._tcp.loki-backend-headless.loki.svc.cluster.local
+      enabled: false
     chunk_store_config:
       chunk_cache_config:
         background:
@@ -16,12 +24,12 @@ data:
           batch_size: 4
           parallelism: 5
         memcached_client:
-          addresses: dnssrvnoa+_memcached-client._tcp.loki-chunks-cache.loki.svc
+          addresses: dnssrvnoa+_memcached-client._tcp.loki-chunks-cache.loki.svc.cluster.local
           consistent_hash: true
           max_idle_conns: 72
           timeout: 2000ms
     common:
-      compactor_address: 'http://loki-backend:3100'
+      compactor_grpc_address: 'loki-backend.loki.svc.cluster.local:9095'
       path_prefix: /var/loki
       replication_factor: 3
       ring:
@@ -48,7 +56,7 @@ data:
           store: memberlist
     frontend:
       scheduler_address: ""
-      tail_proxy_url: http://loki-querier.loki.svc.cluster.local:3100
+      tail_proxy_url: ""
     frontend_worker:
       scheduler_address: ""
     index_gateway:
@@ -79,7 +87,7 @@ data:
       bind_addr:
       - '::'
       join_members:
-      - loki-memberlist
+      - loki-memberlist.loki.svc.cluster.local
     pattern_ingester:
       enabled: false
     querier:
@@ -95,7 +103,7 @@ data:
             writeback_size_limit: 500MB
           default_validity: 12h
           memcached_client:
-            addresses: dnssrvnoa+_memcached-client._tcp.loki-results-cache.loki.svc
+            addresses: dnssrvnoa+_memcached-client._tcp.loki-results-cache.loki.svc.cluster.local
             consistent_hash: true
             timeout: 500ms
             update_interval: 1m
@@ -117,6 +125,8 @@ data:
           s3forcepathstyle: false
           secret_access_key: ${AWS_SECRET_ACCESS_KEY}
         type: s3
+      wal:
+        dir: /var/loki/ruler-wal
     runtime_config:
       file: /etc/loki/runtime-config/runtime-config.yaml
     schema_config:
@@ -134,6 +144,8 @@ data:
       http_server_read_timeout: 600s
       http_server_write_timeout: 600s
     storage_config:
+      bloom_shipper:
+        working_directory: /var/loki/data/bloomshipper
       boltdb_shipper:
         index_gateway_client:
           server_address: dns+loki-backend-headless.loki.svc.cluster.local:9095
@@ -144,15 +156,15 @@ data:
       tsdb_shipper:
         index_gateway_client:
           server_address: dns+loki-backend-headless.loki.svc.cluster.local:9095
+      use_thanos_objstore: false
     tracing:
       enabled: true
 kind: ConfigMap
 metadata:
   labels:
     app.kubernetes.io/instance: loki
-    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: loki
-    app.kubernetes.io/version: 3.0.0
-    helm.sh/chart: loki-6.6.3
+    app.kubernetes.io/version: 3.6.7
+    helm.sh/chart: loki-6.55.0
   name: loki
   namespace: loki
