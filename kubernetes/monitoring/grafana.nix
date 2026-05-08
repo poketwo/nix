@@ -11,6 +11,8 @@
       };
 
       values = {
+        deploymentStrategy.type = "Recreate";
+
         plugins = [ "grafana-lokiexplore-app" ];
 
         admin = {
