@@ -54,8 +54,24 @@ data:
 
     loki.source.kubernetes "pods" {
       targets = discovery.relabel.pods.output
-      forward_to = [loki.write.default.receiver]
+      forward_to = [loki.process.default.receiver]
       clustering { enabled = true }
+    }
+
+    loki.process "default" {
+      stage.json {
+        expressions = {
+          level = "level",
+          event = "event",
+        }
+      }
+      stage.structured_metadata {
+        values = {
+          level = "",
+          event = "",
+        }
+      }
+      forward_to = [loki.write.default.receiver]
     }
 
     loki.source.kubernetes_events "default" {
