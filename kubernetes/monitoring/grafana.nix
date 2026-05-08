@@ -11,7 +11,10 @@
       };
 
       values = {
-        deploymentStrategy.type = "Recreate";
+        deploymentStrategy = {
+          type = "Recreate";
+          rollingUpdate = null;
+        };
 
         admin = {
           existingSecret = "grafana-admin";
