@@ -13,8 +13,6 @@
       values = {
         deploymentStrategy.type = "Recreate";
 
-        plugins = [ "grafana-lokiexplore-app" ];
-
         admin = {
           existingSecret = "grafana-admin";
           userKey = "admin-user";
