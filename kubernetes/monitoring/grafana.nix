@@ -34,6 +34,7 @@
 
         "grafana.ini" = {
           server.root_url = "https://grafana.hfym.co";
+          explore.enabled = true;
           "auth.generic_oauth" = {
             enabled = true;
             name = "Pokétwo";
