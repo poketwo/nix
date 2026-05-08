@@ -4,10 +4,10 @@
   namespaces.grafana = {
     helmReleases.grafana = {
       chart = transpire.fetchFromHelm {
-        repo = "https://grafana.github.io/helm-charts";
+        repo = "https://grafana-community.github.io/helm-charts";
         name = "grafana";
-        version = "8.13.1";
-        sha256 = "3fWO2K+nB3qDyAONRm4LI7hdo6YYk+wOfhHCO1Wl7vU=";
+        version = "12.0.0";
+        sha256 = "eqSidrI/OWupasKaL9a9npgwjtB3jCocHBIVjL0SnlM=";
       };
 
       values = {
@@ -15,8 +15,6 @@
           type = "Recreate";
           rollingUpdate = null;
         };
-
-        plugins = [ "grafana-lokiexplore-app" ];
 
         admin = {
           existingSecret = "grafana-admin";
