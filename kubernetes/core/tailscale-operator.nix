@@ -38,8 +38,13 @@
     resources."tailscale.com/v1alpha1".Connector.k8s-subnet-router.spec = {
       subnetRouter = {
         advertiseRoutes = [
-          "2606:c2c0:5:1:2::/112"
-          "2606:c2c0:5:1:3::/112"
+          "2606:c2c0:5:1:2::/112" # Service CIDR
+          "2606:c2c0:5:1:3::/112" # MetalLB CIDR
+          "2606:c2c0:5:1:128::/80" # Pod CIDR (vaporeon)
+          "2606:c2c0:5:1:129::/80" # Pod CIDR (jolteon)
+          "2606:c2c0:5:1:130::/80" # Pod CIDR (flareon)
+          "2606:c2c0:5:1:131::/80" # Pod CIDR (glaceon)
+          "2606:c2c0:5:1:132::/80" # Pod CIDR (sylveon)
         ];
       };
     };
