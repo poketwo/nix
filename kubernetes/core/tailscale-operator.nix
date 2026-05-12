@@ -34,10 +34,13 @@
       };
     };
 
-    # Subnet router for Kubernetes service CIDR
+    # Subnet router for Kubernetes service + MetalLB CIDRs
     resources."tailscale.com/v1alpha1".Connector.k8s-subnet-router.spec = {
       subnetRouter = {
-        advertiseRoutes = [ "2606:c2c0:5:1:2::/112" ];
+        advertiseRoutes = [
+          "2606:c2c0:5:1:2::/112"
+          "2606:c2c0:5:1:3::/112"
+        ];
       };
     };
   };
