@@ -7,3 +7,4 @@ spec:
   subnetRouter:
     advertiseRoutes:
     - 2606:c2c0:5:1:2::/112
+    - 2606:c2c0:5:1:3::/112
