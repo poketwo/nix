@@ -56,6 +56,7 @@
     };
 
     resources.v1.Secret.webhook-server.stringData = {
+      ACCOUNT_SECRET = "";
       CAPTCHA_SECRET = "";
       DBL_SECRET = "";
       STRIPE_KEY = "";
