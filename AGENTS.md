@@ -53,9 +53,13 @@ secrets/         # agenix-encrypted secrets (.age files)
 | chimchar | Control plane | Linode | `2600:3c01::...` |
 | piplup | Control plane | Linode | `2600:3c01::...` |
 | vaporeon | Worker | Self-hosted | `2606:c2c0:5::1:128` |
+| jolteon | Worker | Self-hosted | `2606:c2c0:5::1:129` |
 | flareon | Worker | Self-hosted | `2606:c2c0:5::1:130` |
 | glaceon | Worker | Self-hosted | `2606:c2c0:5::1:131` |
 | sylveon | Worker | Self-hosted | `2606:c2c0:5::1:132` |
+
+> jolteon also terminates a WireGuard VPN (`wg0` on UDP/51820) for personal/team
+> client devices on `10.0.0.0/16`. Peers are declared inline in `hosts/jolteon.nix`.
 
 ### Networking
 
@@ -70,9 +74,9 @@ secrets/         # agenix-encrypted secrets (.age files)
 
 ### NixOS changes (hosts, modules, hardware)
 
-Deploy to a specific host:
+Deploy to a specific host (running from a Linux box that matches the target arch):
 ```bash
-nixos-rebuild switch --target-host <host>.hfym.co --flake .#<host>
+nixos-rebuild switch --target-host <host>.hfym.co --build-host <host>.hfym.co --sudo --flake .#<host>
 ```
 
 Or use deploy-rs:
@@ -80,10 +84,58 @@ Or use deploy-rs:
 deploy .#<host>
 ```
 
+#### From macOS
+
+`nixos-rebuild` is not on PATH and an aarch64-darwin box cannot build the
+x86_64-linux closure locally, so you must (a) invoke it via `nix run`, and
+(b) build on the target itself with `--build-host`:
+
+```bash
+nix run nixpkgs#nixos-rebuild -- switch \
+  --target-host <host>.hfym.co \
+  --build-host  <host>.hfym.co \
+  --sudo \
+  --flake .#<host>
+```
+
+Notes:
+- `--sudo` replaces the deprecated `--use-remote-sudo`. The hosts have
+  passwordless sudo for the deploy user; add `--ask-sudo-password` if that
+  ever changes.
+- The target host needs to be able to fetch from substituters (cache.nixos.org,
+  determinate cache, etc.) since the build happens there.
+
+#### `switch` vs `boot` + reboot
+
+`nixos-rebuild switch` runs pre-switch inhibitor checks and will refuse to
+activate live if certain critical components change (observed: `dbus`
+implementation flipping from `dbus` ↔ `broker`, kernel ABI changes, etc.).
+When that happens:
+
+```bash
+# Stage the new generation for next boot.
+nix run nixpkgs#nixos-rebuild -- boot \
+  --target-host <host>.hfym.co --build-host <host>.hfym.co --sudo --flake .#<host>
+
+# Then reboot the host to activate it.
+ssh <host>.hfym.co 'sudo systemctl reboot'
+```
+
+You can override with `NIXOS_NO_CHECK=1` but the docs explicitly warn this
+can leave the system unstable — prefer the reboot route.
+
 ### Kubernetes changes
 
 1. Edit files under `kubernetes/` on the `main` branch.
-2. Commit and push to `main`.
+2. Commit and push to `main`. If the push is rejected because `main` moved
+   upstream (a PR was merged while you were working), fetch and rebase onto
+   the new tip — never force-push over someone else's commit:
+   ```bash
+   jj git fetch
+   jj rebase -s <your-change> -d <new-main-tip>
+   jj bookmark set main -r <your-change>
+   jj git push
+   ```
 3. GitHub Actions runs `nix build .#kubernetes`, renders YAML, and pushes to `cluster` branch.
 4. ArgoCD auto-syncs from `cluster` branch.
 
