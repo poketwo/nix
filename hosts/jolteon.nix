@@ -106,6 +106,7 @@
           (makePeer "UJMUnlABs/tN2w1U/aXDNCH8ziFv+vJ8z9znwjSO33Y=" [ "10.0.1.51/32" ]) # hannah
           (makePeer "xiRBO03NsfXwWKVeHAKcM4ihAn1F8zw4Heocy7NPiWo=" [ "10.0.1.52/32" ]) # stephanie
           (makePeer "TC0Eg+JBERjTWPlfbOSoazt9fHD8eSTPFw8My7cdekg=" [ "10.0.1.53/32" ]) # stephanie
+          (makePeer "kOvvHg3/2ab+0RdGVR/Av62nevFQRCz07YkHyc5OcVc=" [ "10.0.1.54/32" ]) # dario
         ];
     };
 
