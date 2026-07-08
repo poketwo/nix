@@ -108,6 +108,7 @@
           (makePeer "TC0Eg+JBERjTWPlfbOSoazt9fHD8eSTPFw8My7cdekg=" [ "10.0.1.53/32" ]) # stephanie
           (makePeer "kOvvHg3/2ab+0RdGVR/Av62nevFQRCz07YkHyc5OcVc=" [ "10.0.1.54/32" ]) # dario
           (makePeer "B5uS/5vMYUWEmBigfIcY45a3X7p+cc+mwsoyAIhXjT0=" [ "10.0.1.55/32" ]) # Moor
+          (makePeer "Dfric/ik93KSePKXBK2gU9PJJpGHQHLnaRt+rSdBrQs=" [ "10.0.1.56/32" ]) # Golden
         ];
     };
 
