@@ -12,7 +12,7 @@ let
         {
           apiGroups = [ "" ];
           resources = [ "pods" ];
-          verbs = [ "get" "list" "delete" ];
+          verbs = [ "get" "list" "watch" "delete" ];
         }
         {
           apiGroups = [ "" ];
