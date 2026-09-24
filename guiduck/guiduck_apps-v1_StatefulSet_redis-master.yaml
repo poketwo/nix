@@ -25,7 +25,7 @@ spec:
         checksum/configmap: 2a9ab4a5432825504d910f022638674ce88eaefe9f9f595ad8bc107377d104fb
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
         checksum/scripts: 0717e77fd3bb941f602860e9be4f2ed87b481cddeadf37be463f8512ecde0c3e
-        checksum/secret: df5655b4599666b777a7340163dee343822963053f27a307429742111bf1087b
+        checksum/secret: 340a099b0e5b6f85ca6e58e5781a3eaa9aaa4c984d1371af0a319070889f8775
         prometheus.io/port: '9121'
         prometheus.io/scrape: 'true'
       labels:
