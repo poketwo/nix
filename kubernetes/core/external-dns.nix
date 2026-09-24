@@ -21,6 +21,8 @@
           "--domain-filter=poketwo.net"
           "--domain-filter=berkeley.mt"
           "--domain-filter=contestdojo.com"
+          "--domain-filter=sfbanorcalarml.org"
+          "--domain-filter=lemniscate.education"
           "--cloudflare-proxied"
         ];
         policy = "sync";
