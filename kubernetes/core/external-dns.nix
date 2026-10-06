@@ -23,7 +23,7 @@
           "--domain-filter=contestdojo.com"
           "--domain-filter=sfbanorcalarml.org"
           "--domain-filter=lemniscate.education"
-          "--domain-filter="tora.dev"
+          "--domain-filter=tora.dev"
           "--cloudflare-proxied"
         ];
         policy = "sync";
