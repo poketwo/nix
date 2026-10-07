@@ -24,6 +24,8 @@
           "--domain-filter=sfbanorcalarml.org"
           "--domain-filter=lemniscate.education"
           "--domain-filter=tora.dev"
+          "--domain-filter=intercollegiatemathtournament.org"
+          "--domain-filter=ic.mt"
           "--cloudflare-proxied"
         ];
         policy = "sync";
