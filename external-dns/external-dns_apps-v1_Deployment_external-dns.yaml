@@ -41,6 +41,8 @@ spec:
         - --domain-filter=sfbanorcalarml.org
         - --domain-filter=lemniscate.education
         - --domain-filter=tora.dev
+        - --domain-filter=intercollegiatemathtournament.org
+        - --domain-filter=ic.mt
         - --cloudflare-proxied
         env:
         - name: CF_API_TOKEN
