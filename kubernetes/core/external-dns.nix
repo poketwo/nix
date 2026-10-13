@@ -26,6 +26,7 @@
           "--domain-filter=tora.dev"
           "--domain-filter=intercollegiatemathtournament.org"
           "--domain-filter=ic.mt"
+          "--domain-filter=atomicgrader.com"
           "--cloudflare-proxied"
         ];
         policy = "sync";
