@@ -43,6 +43,7 @@ spec:
         - --domain-filter=tora.dev
         - --domain-filter=intercollegiatemathtournament.org
         - --domain-filter=ic.mt
+        - --domain-filter=atomicgrader.com
         - --cloudflare-proxied
         env:
         - name: CF_API_TOKEN
