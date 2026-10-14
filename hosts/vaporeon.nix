@@ -31,10 +31,10 @@
     datasets."mongo/mongo" = {
       autosnap = true;
       autoprune = true;
-      hourly = 0;
-      daily = 7;
-      weekly = 4;
-      monthly = 3;
+      hourly = 24;
+      daily = 3;
+      weekly = 0;
+      monthly = 0;
     };
   };
 
