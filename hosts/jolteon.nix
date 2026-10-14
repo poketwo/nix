@@ -26,6 +26,18 @@
     fsType = "xfs";
   };
 
+  services.sanoid = {
+    enable = true;
+    datasets."mongo/mongo" = {
+      autosnap = true;
+      autoprune = true;
+      hourly = 24;
+      daily = 3;
+      weekly = 0;
+      monthly = 0;
+    };
+  };
+
   # WIREGUARD
 
   age.secrets.jolteon-wireguard-private-key = {
