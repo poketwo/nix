@@ -19,7 +19,7 @@
           };
           readinessProbe = {
             httpGet = { path = "/readyz"; port = "metrics"; };
-            periodSeconds = 10;
+            periodSeconds = 2;
           };
           resources = {
             requests = { memory = "128Mi"; cpu = "50m"; };
