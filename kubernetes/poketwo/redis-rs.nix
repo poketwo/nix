@@ -17,10 +17,10 @@
       architecture = "standalone";
       usePassword = true;
       master = {
-        persistence.size = "16Gi";
+        persistence.size = "40Gi";
         resources = {
-          requests = { memory = "8Gi"; };
-          limits = { memory = "8Gi"; cpu = "500m"; };
+          requests = { memory = "20Gi"; };
+          limits = { memory = "20Gi"; cpu = "1000m"; };
         };
       };
       metrics = {
