@@ -13,12 +13,12 @@
           imagePullPolicy = "Always";
           ports = [{ name = "metrics"; containerPort = 9000; }];
           livenessProbe = {
-            httpGet = { path = "/metrics"; port = "metrics"; };
+            httpGet = { path = "/livez"; port = "metrics"; };
             periodSeconds = 30;
             timeoutSeconds = 5;
           };
           readinessProbe = {
-            httpGet = { path = "/ready"; port = "metrics"; };
+            httpGet = { path = "/readyz"; port = "metrics"; };
             periodSeconds = 10;
           };
           resources = {
