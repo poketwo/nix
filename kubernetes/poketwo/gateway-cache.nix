@@ -19,21 +19,21 @@
             passwordKey = "redis-password";
           };
         };
-        extraConfig = ''
+        valkeyConfig = ''
           save 60 1
           appendonly no
           maxmemory-policy noeviction
         '';
-        persistence = {
+        dataStorage = {
           enabled = true;
-          size = "40Gi";
-          storageClass = "rbd-nvme";
+          requestedSize = "40Gi";
+          className = "rbd-nvme";
         };
         resources = {
           requests = { memory = "20Gi"; };
           limits = { memory = "20Gi"; cpu = "1000m"; };
         };
-        terminationGracePeriodSeconds = 120;
+        deploymentStrategy = "Recreate";
         metrics.enabled = true;
       };
     };
