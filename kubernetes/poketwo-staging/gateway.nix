@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  namespaces.poketwo-rs.resources."apps/v1".StatefulSet.gateway.spec = {
+  namespaces.poketwo-staging.resources."apps/v1".StatefulSet.gateway.spec = {
     replicas = 1;
     selector.matchLabels.app = "gateway";
     serviceName = "gateway";
@@ -18,8 +18,8 @@
           };
           env = {
             BOT_TOKEN.valueFrom.secretKeyRef = { name = "poketwo"; key = "TOKEN"; };
-            REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; };
-            REDIS_URL.value = "redis://:$(REDIS_PASSWORD)@redis-master";
+            REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "redis-rs"; key = "redis-password"; };
+            REDIS_URL.value = "redis://:$(REDIS_PASSWORD)@redis-rs-master";
             SHARDS_TOTAL.value = "1";
             SHARDS_PER_REPLICA.value = "1";
             WORKERS.value = "1";

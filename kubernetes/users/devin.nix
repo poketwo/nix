@@ -48,6 +48,5 @@ in
 
   namespaces.poketwo-staging.resources = devinRoleAndBinding "poketwo-staging";
   namespaces.poketwo-staging-private.resources = devinRoleAndBinding "poketwo-staging-private";
-  namespaces.poketwo-rs.resources = devinRoleAndBinding "poketwo-rs";
   namespaces.guiduck.resources = devinRoleAndBinding "guiduck";
 }
