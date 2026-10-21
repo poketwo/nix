@@ -23,7 +23,7 @@
             SHARDS_TOTAL.value = "1";
             SHARDS_PER_REPLICA.value = "1";
             WORKERS.value = "1";
-            METRICS_ADDR.value = "0.0.0.0:9000";
+            METRICS_ADDR.value = "[::]:9000";
             LOG_FORMAT.value = "json";
             RUST_LOG.value = "info";
           };
