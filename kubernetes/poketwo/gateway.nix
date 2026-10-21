@@ -12,6 +12,15 @@
           image = "ghcr.io/poketwo/poketwo-rs:production";
           imagePullPolicy = "Always";
           ports = [{ name = "metrics"; containerPort = 9000; }];
+          livenessProbe = {
+            httpGet = { path = "/livez"; port = "metrics"; };
+            periodSeconds = 30;
+            timeoutSeconds = 5;
+          };
+          readinessProbe = {
+            httpGet = { path = "/readyz"; port = "metrics"; };
+            periodSeconds = 10;
+          };
           resources = {
             requests = { memory = "1Gi"; cpu = "500m"; };
             limits = { memory = "4Gi"; cpu = "2000m"; };
