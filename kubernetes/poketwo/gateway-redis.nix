@@ -18,10 +18,10 @@
       usePassword = true;
       commonConfiguration = ''
         appendonly no
-        save ""
+        save 60 1
       '';
       master = {
-        persistence.enabled = false;
+        persistence.size = "40Gi";
         resources = {
           requests = { memory = "20Gi"; };
           limits = { memory = "20Gi"; cpu = "1000m"; };
