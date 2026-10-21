@@ -48,6 +48,18 @@ data:
       }
     }
 
+    // Only scrape container ports that look like metrics endpoints; the plain
+    // pod targets include every port (redis, mongodb, grpc, ...), which Alloy
+    // would otherwise probe with HTTP every interval.
+    discovery.relabel "pods_metrics" {
+      targets = discovery.relabel.pods.output
+      rule {
+        source_labels = ["__meta_kubernetes_pod_container_port_name"]
+        regex = "metrics|.*-metrics|metrics-port|monitoring|http-monitoring|prometheus|http|grafana|"
+        action = "keep"
+      }
+    }
+
     //////////
     // Loki //
     //////////
@@ -87,7 +99,7 @@ data:
     ////////////////
 
     prometheus.scrape "pods" {
-      targets = discovery.relabel.pods.output
+      targets = discovery.relabel.pods_metrics.output
       forward_to = [prometheus.remote_write.default.receiver]
       clustering { enabled = true }
     }
