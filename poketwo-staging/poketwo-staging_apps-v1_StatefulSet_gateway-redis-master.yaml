@@ -22,10 +22,10 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configmap: 86bcc953bb473748a3d3dc60b7c11f34e60c93519234d4c37f42e22ada559d47
+        checksum/configmap: 58a24598262f2b2394c60e1d20d4afef8bf01985ed0a17adebc374061b36d760
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
         checksum/scripts: 560c33ff34d845009b51830c332aa05fa211444d1877d3526d3599be7543aaa5
-        checksum/secret: a67e66eb74ef520875abdb07c473f471a7f1a5f2b0dec2cd259e744dbba04d34
+        checksum/secret: fc04effb7b4bd329a9667dc9021a445eeb79c7077acbaf0f793ee061b547cfca
         prometheus.io/port: '9121'
         prometheus.io/scrape: 'true'
       labels:
@@ -217,24 +217,11 @@ spec:
           defaultMode: 493
           name: gateway-redis-health
         name: health
+      - emptyDir: {}
+        name: redis-data
       - configMap:
           defaultMode: 493
           name: gateway-redis-scripts
         name: start-scripts
   updateStrategy:
     type: RollingUpdate
-  volumeClaimTemplates:
-  - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      labels:
-        app.kubernetes.io/component: master
-        app.kubernetes.io/instance: gateway-redis
-        app.kubernetes.io/name: redis
-      name: redis-data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 2Gi
