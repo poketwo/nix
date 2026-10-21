@@ -19,7 +19,7 @@
           env = {
             BOT_TOKEN.valueFrom.secretKeyRef = { name = "poketwo"; key = "TOKEN"; };
             REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "gateway-redis"; key = "redis-password"; };
-            REDIS_URL.value = "redis://:$(REDIS_PASSWORD)@gateway-redis-master";
+            REDIS_URL.value = "redis://:$(REDIS_PASSWORD)@gateway-redis";
             SHARDS_TOTAL.value = "1600";
             SHARDS_PER_REPLICA.value = "400";
             WORKERS.value = "1";
