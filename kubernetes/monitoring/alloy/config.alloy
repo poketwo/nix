@@ -57,7 +57,7 @@ discovery.relabel "pods_metrics" {
   }
   rule {
     source_labels = ["__meta_kubernetes_pod_container_port_name"]
-    regex = "metrics|.*-metrics|metrics-port|monitoring|http-monitoring|prometheus|http|grafana|"
+    regex = "metrics|.*-metrics|metrics-port|monitoring|http-monitoring|prometheus|http|grafana"
     action = "keep"
   }
 }
