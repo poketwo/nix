@@ -1,7 +1,7 @@
 { transpire, ... }:
 
 {
-  namespaces.poketwo-rs.helmReleases.redis = {
+  namespaces.poketwo-staging.helmReleases.redis-rs = {
     chart = transpire.fetchFromHelm {
       repo = "https://charts.bitnami.com/bitnami";
       name = "redis";
@@ -19,8 +19,8 @@
       master = {
         persistence.size = "2Gi";
         resources = {
-          requests = { memory = "1Gi"; };
-          limits = { memory = "1Gi"; cpu = "20m"; };
+          requests = { memory = "512Mi"; };
+          limits = { memory = "512Mi"; cpu = "50m"; };
         };
       };
       metrics = {
