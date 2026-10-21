@@ -16,8 +16,12 @@
       sentinel.image.repository = "bitnamilegacy/redis-sentinel";
       architecture = "standalone";
       usePassword = true;
+      commonConfiguration = ''
+        appendonly no
+        save ""
+      '';
       master = {
-        persistence.size = "40Gi";
+        persistence.enabled = false;
         resources = {
           requests = { memory = "20Gi"; };
           limits = { memory = "20Gi"; cpu = "1000m"; };
