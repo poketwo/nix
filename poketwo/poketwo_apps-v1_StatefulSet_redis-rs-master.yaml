@@ -25,7 +25,7 @@ spec:
         checksum/configmap: 86bcc953bb473748a3d3dc60b7c11f34e60c93519234d4c37f42e22ada559d47
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
         checksum/scripts: 560c33ff34d845009b51830c332aa05fa211444d1877d3526d3599be7543aaa5
-        checksum/secret: 1668cf3b5b00e26f3c041b328b22ed7cbf71c6b25c80a8ae8e9f7c08201f23a8
+        checksum/secret: 3544642a58ba83ad352098ecb41219edbecd0e5cdbcfdc9abfadfcfe68548c3f
         prometheus.io/port: '9121'
         prometheus.io/scrape: 'true'
       labels:
@@ -168,10 +168,10 @@ spec:
           timeoutSeconds: 2
         resources:
           limits:
-            cpu: 500m
-            memory: 8Gi
+            cpu: 1000m
+            memory: 20Gi
           requests:
-            memory: 8Gi
+            memory: 20Gi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -237,4 +237,4 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 16Gi
+          storage: 40Gi
