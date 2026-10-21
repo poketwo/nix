@@ -10,7 +10,7 @@
         spec = {
           containers.server = {
             image = "ghcr.io/poketwo/gateway-proxy:sha-33fc97e";
-            ports = [{ containerPort = 7878; }];
+            ports = [{ name = "metrics"; containerPort = 7878; }];
             resources = {
               limits = { memory = "2Gi"; };
               requests = { memory = "2Gi"; cpu = "50m"; };
