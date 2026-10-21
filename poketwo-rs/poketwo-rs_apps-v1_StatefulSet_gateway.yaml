@@ -24,7 +24,7 @@ spec:
         - name: LOG_FORMAT
           value: json
         - name: METRICS_ADDR
-          value: 0.0.0.0:9000
+          value: '[::]:9000'
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
