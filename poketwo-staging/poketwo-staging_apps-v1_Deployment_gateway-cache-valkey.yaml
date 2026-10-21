@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/instance: gateway-redis
+    app.kubernetes.io/instance: gateway-cache
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/version: 9.1.2
     helm.sh/chart: valkey-0.12.0
-  name: gateway-redis-valkey
+  name: gateway-cache-valkey
   namespace: poketwo-staging
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/instance: gateway-redis
+      app.kubernetes.io/instance: gateway-cache
       app.kubernetes.io/name: valkey
   strategy:
     type: RollingUpdate
   template:
     metadata:
       annotations:
-        checksum/initconfig: 41ca1e3772c45973fba1e44fbd6009a0
+        checksum/initconfig: 9964191f58f592ccf0ecc3c69f165c0b
       labels:
-        app.kubernetes.io/instance: gateway-redis
+        app.kubernetes.io/instance: gateway-cache
         app.kubernetes.io/name: valkey
     spec:
       automountServiceAccountToken: false
@@ -45,7 +45,7 @@ spec:
           initialDelaySeconds: 0
           periodSeconds: 10
           timeoutSeconds: 1
-        name: gateway-redis-valkey
+        name: gateway-cache-valkey
         ports:
         - containerPort: 6379
           name: tcp
@@ -80,12 +80,12 @@ spec:
           name: valkey-acl
       - env:
         - name: REDIS_ALIAS
-          value: gateway-redis-valkey
+          value: gateway-cache-valkey
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               key: redis-password
-              name: gateway-redis
+              name: gateway-cache
         image: ghcr.io/oliver006/redis_exporter:v1.79.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -107,7 +107,7 @@ spec:
         - /scripts/init.sh
         image: docker.io/valkey/valkey:9.1.2
         imagePullPolicy: IfNotPresent
-        name: gateway-redis-valkey-init
+        name: gateway-cache-valkey-init
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -132,11 +132,11 @@ spec:
         runAsUser: 1000
         seccompProfile:
           type: RuntimeDefault
-      serviceAccountName: gateway-redis-valkey
+      serviceAccountName: gateway-cache-valkey
       volumes:
       - configMap:
           defaultMode: 365
-          name: gateway-redis-valkey-init-scripts
+          name: gateway-cache-valkey-init-scripts
         name: scripts
       - emptyDir:
           medium: Memory
@@ -146,4 +146,4 @@ spec:
       - name: valkey-users-secret
         secret:
           defaultMode: 256
-          secretName: gateway-redis
+          secretName: gateway-cache

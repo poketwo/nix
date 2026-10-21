@@ -5,13 +5,13 @@ metadata:
     helm.sh/hook: test
     helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
   labels:
-    app.kubernetes.io/instance: gateway-redis
+    app.kubernetes.io/instance: gateway-cache
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: valkey
     app.kubernetes.io/version: 9.1.2
     helm.sh/chart: valkey-0.12.0
-  name: gateway-redis-valkey-test-auth-existing
-  namespace: poketwo
+  name: gateway-cache-valkey-test-auth-existing
+  namespace: poketwo-staging
 spec:
   containers:
   - command:
@@ -23,7 +23,7 @@ spec:
       TLS_FLAGS=""
 
       # Test basic connection (no auth - will fail if auth is properly configured)
-      PING_RESULT=$(valkey-cli -h gateway-redis-valkey -p 6379 $TLS_FLAGS PING 2>&1 || true)
+      PING_RESULT=$(valkey-cli -h gateway-cache-valkey -p 6379 $TLS_FLAGS PING 2>&1 || true)
       if [ "$PING_RESULT" = "PONG" ]; then
         echo "✗ Authentication test failed: server allows unauthenticated access"
         exit 1
@@ -43,4 +43,4 @@ spec:
   volumes:
   - name: valkey-users-secret
     secret:
-      secretName: gateway-redis
+      secretName: gateway-cache
