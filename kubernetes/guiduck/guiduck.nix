@@ -37,6 +37,7 @@
               POKETWO_REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-redis-password"; };
               OUTLINE_BASE_URL.value = "https://outline.poketwo.io";
               OUTLINE_API_TOKEN.valueFrom.secretKeyRef = { name = "guiduck"; key = "outline-api-token"; };
+              MESSAGE_LOG_KEY.valueFrom.secretKeyRef = { name = "guiduck"; key = "message-log-key"; };
             };
           };
           imagePullSecrets = [{ name = "ghcr-auth"; }];
@@ -53,6 +54,7 @@
         redis-password = "";
         poketwo-redis-password = "";
         outline-api-token = "";
+        message-log-key = "";
       };
     };
   };
