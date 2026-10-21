@@ -32,6 +32,11 @@ spec:
               name: mongodb-user
         - name: DATABASE_USERNAME
           value: guiduck
+        - name: MESSAGE_LOG_KEY
+          valueFrom:
+            secretKeyRef:
+              key: message-log-key
+              name: guiduck
         - name: OUTLINE_API_TOKEN
           valueFrom:
             secretKeyRef:
