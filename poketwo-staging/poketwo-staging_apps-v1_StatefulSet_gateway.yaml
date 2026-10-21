@@ -56,7 +56,7 @@ spec:
           httpGet:
             path: /readyz
             port: metrics
-          periodSeconds: 10
+          periodSeconds: 2
         resources:
           limits:
             cpu: 200m
