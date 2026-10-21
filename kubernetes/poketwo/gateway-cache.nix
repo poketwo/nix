@@ -2,7 +2,7 @@
 
 {
   namespaces.poketwo = {
-    helmReleases.gateway-redis = {
+    helmReleases.gateway-cache = {
       chart = transpire.fetchFromHelm {
         repo = "https://valkey.io/valkey-helm/";
         name = "valkey";
@@ -13,7 +13,7 @@
       values = {
         auth = {
           enabled = true;
-          usersExistingSecret = "gateway-redis";
+          usersExistingSecret = "gateway-cache";
           aclUsers.default = {
             permissions = "~* &* +@all";
             passwordKey = "redis-password";
@@ -38,7 +38,7 @@
       };
     };
 
-    resources.v1.Secret.gateway-redis.stringData = {
+    resources.v1.Secret.gateway-cache.stringData = {
       redis-password = "";
     };
   };
