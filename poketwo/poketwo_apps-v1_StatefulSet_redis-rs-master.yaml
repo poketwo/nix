@@ -3,34 +3,34 @@ kind: StatefulSet
 metadata:
   labels:
     app.kubernetes.io/component: master
-    app.kubernetes.io/instance: redis
+    app.kubernetes.io/instance: redis-rs
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
     app.kubernetes.io/version: 7.2.5
     helm.sh/chart: redis-19.6.1
-  name: redis-master
-  namespace: poketwo-rs
+  name: redis-rs-master
+  namespace: poketwo
 spec:
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
       app.kubernetes.io/component: master
-      app.kubernetes.io/instance: redis
+      app.kubernetes.io/instance: redis-rs
       app.kubernetes.io/name: redis
-  serviceName: redis-headless
+  serviceName: redis-rs-headless
   template:
     metadata:
       annotations:
         checksum/configmap: 86bcc953bb473748a3d3dc60b7c11f34e60c93519234d4c37f42e22ada559d47
         checksum/health: aff24913d801436ea469d8d374b2ddb3ec4c43ee7ab24663d5f8ff1a1b6991a9
         checksum/scripts: 560c33ff34d845009b51830c332aa05fa211444d1877d3526d3599be7543aaa5
-        checksum/secret: ff6599f5417ab458b4722659c8d5a340e1ea478ea2ad3d42d4f91a1181cfee08
+        checksum/secret: 1668cf3b5b00e26f3c041b328b22ed7cbf71c6b25c80a8ae8e9f7c08201f23a8
         prometheus.io/port: '9121'
         prometheus.io/scrape: 'true'
       labels:
         app.kubernetes.io/component: master
-        app.kubernetes.io/instance: redis
+        app.kubernetes.io/instance: redis-rs
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: redis
         app.kubernetes.io/version: 7.2.5
@@ -43,7 +43,7 @@ spec:
               labelSelector:
                 matchLabels:
                   app.kubernetes.io/component: master
-                  app.kubernetes.io/instance: redis
+                  app.kubernetes.io/instance: redis-rs
                   app.kubernetes.io/name: redis
               topologyKey: kubernetes.io/hostname
             weight: 1
@@ -59,14 +59,14 @@ spec:
           redis_exporter
         env:
         - name: REDIS_ALIAS
-          value: redis
+          value: redis-rs
         - name: REDIS_EXPORTER_WEB_LISTEN_ADDRESS
           value: :9121
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               key: redis-password
-              name: redis
+              name: redis-rs
         - name: REDIS_USER
           value: default
         image: docker.io/bitnamilegacy/redis-exporter:1.61.0-debian-12-r2
@@ -131,7 +131,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: redis-password
-              name: redis
+              name: redis-rs
         - name: REDIS_PORT
           value: '6379'
         - name: REDIS_REPLICATION_MODE
@@ -168,10 +168,10 @@ spec:
           timeoutSeconds: 2
         resources:
           limits:
-            cpu: 20m
-            memory: 1Gi
+            cpu: 500m
+            memory: 8Gi
           requests:
-            memory: 1Gi
+            memory: 8Gi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -205,21 +205,21 @@ spec:
         fsGroupChangePolicy: Always
         supplementalGroups: []
         sysctls: []
-      serviceAccountName: redis-master
+      serviceAccountName: redis-rs-master
       terminationGracePeriodSeconds: 30
       volumes:
       - configMap:
-          name: redis-configuration
+          name: redis-rs-configuration
         name: config
       - emptyDir: {}
         name: empty-dir
       - configMap:
           defaultMode: 493
-          name: redis-health
+          name: redis-rs-health
         name: health
       - configMap:
           defaultMode: 493
-          name: redis-scripts
+          name: redis-rs-scripts
         name: start-scripts
   updateStrategy:
     type: RollingUpdate
@@ -229,7 +229,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/component: master
-        app.kubernetes.io/instance: redis
+        app.kubernetes.io/instance: redis-rs
         app.kubernetes.io/name: redis
       name: redis-data
     spec:
@@ -237,4 +237,4 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 2Gi
+          storage: 16Gi

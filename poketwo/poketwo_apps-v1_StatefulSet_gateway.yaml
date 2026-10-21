@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: gateway
-  namespace: poketwo-rs
+  namespace: poketwo
 spec:
   replicas: 1
   selector:
@@ -29,17 +29,17 @@ spec:
           valueFrom:
             secretKeyRef:
               key: redis-password
-              name: redis
+              name: redis-rs
         - name: RUST_LOG
           value: info
         - name: SHARDS_PER_REPLICA
-          value: '1'
+          value: '400'
         - name: SHARDS_TOTAL
-          value: '1'
+          value: '1600'
         - name: WORKERS
           value: '1'
         - name: REDIS_URL
-          value: redis://:$(REDIS_PASSWORD)@redis-master
+          value: redis://:$(REDIS_PASSWORD)@redis-rs-master
         image: ghcr.io/poketwo/poketwo-rs:production
         imagePullPolicy: Always
         name: gateway
@@ -48,11 +48,11 @@ spec:
           name: metrics
         resources:
           limits:
-            cpu: 200m
-            memory: 256Mi
+            cpu: 2000m
+            memory: 4Gi
           requests:
-            cpu: 50m
-            memory: 128Mi
+            cpu: 500m
+            memory: 1Gi
       imagePullSecrets:
       - name: ghcr-auth
       terminationGracePeriodSeconds: 30

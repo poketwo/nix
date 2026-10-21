@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: gateway
+  namespace: poketwo-staging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  serviceName: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+      - env:
+        - name: BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: TOKEN
+              name: poketwo
+        - name: LOG_FORMAT
+          value: json
+        - name: METRICS_ADDR
+          value: '[::]:9000'
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: redis-rs
+        - name: RUST_LOG
+          value: info
+        - name: SHARDS_PER_REPLICA
+          value: '1'
+        - name: SHARDS_TOTAL
+          value: '1'
+        - name: WORKERS
+          value: '1'
+        - name: REDIS_URL
+          value: redis://:$(REDIS_PASSWORD)@redis-rs-master
+        image: ghcr.io/poketwo/poketwo-rs:production
+        imagePullPolicy: Always
+        name: gateway
+        ports:
+        - containerPort: 9000
+          name: metrics
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+      imagePullSecrets:
+      - name: ghcr-auth
+      terminationGracePeriodSeconds: 30
