@@ -36,6 +36,11 @@ spec:
             secretKeyRef:
               key: discord-client-secret
               name: poketwo-admin
+        - name: MESSAGE_LOG_KEY
+          valueFrom:
+            secretKeyRef:
+              key: message-log-key
+              name: guiduck
         - name: NEXT_PUBLIC_BASE_URL
           value: https://admin.poketwo.net
         - name: SECRET_KEY
