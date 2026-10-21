@@ -42,10 +42,21 @@ spec:
           value: redis://:$(REDIS_PASSWORD)@gateway-cache-valkey
         image: ghcr.io/poketwo/poketwo-rs:production
         imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: metrics
+          periodSeconds: 30
+          timeoutSeconds: 5
         name: gateway
         ports:
         - containerPort: 9000
           name: metrics
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: metrics
+          periodSeconds: 10
         resources:
           limits:
             cpu: 200m
