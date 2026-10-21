@@ -3,17 +3,17 @@ kind: PodDisruptionBudget
 metadata:
   labels:
     app.kubernetes.io/component: master
-    app.kubernetes.io/instance: redis-rs
+    app.kubernetes.io/instance: gateway-redis
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
     app.kubernetes.io/version: 7.2.5
     helm.sh/chart: redis-19.6.1
-  name: redis-rs-master
+  name: gateway-redis-master
   namespace: poketwo-staging
 spec:
   maxUnavailable: 1
   selector:
     matchLabels:
       app.kubernetes.io/component: master
-      app.kubernetes.io/instance: redis-rs
+      app.kubernetes.io/instance: gateway-redis
       app.kubernetes.io/name: redis

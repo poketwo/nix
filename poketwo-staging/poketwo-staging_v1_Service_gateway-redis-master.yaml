@@ -3,13 +3,13 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/component: master
-    app.kubernetes.io/instance: redis-rs
+    app.kubernetes.io/instance: gateway-redis
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
     app.kubernetes.io/version: 7.2.5
     helm.sh/chart: redis-19.6.1
-  name: redis-rs-master
-  namespace: poketwo
+  name: gateway-redis-master
+  namespace: poketwo-staging
 spec:
   internalTrafficPolicy: Cluster
   ports:
@@ -18,7 +18,7 @@ spec:
     targetPort: redis
   selector:
     app.kubernetes.io/component: master
-    app.kubernetes.io/instance: redis-rs
+    app.kubernetes.io/instance: gateway-redis
     app.kubernetes.io/name: redis
   sessionAffinity: None
   type: ClusterIP

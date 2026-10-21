@@ -3,13 +3,13 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/component: metrics
-    app.kubernetes.io/instance: redis-rs
+    app.kubernetes.io/instance: gateway-redis
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
     app.kubernetes.io/version: 7.2.5
     helm.sh/chart: redis-19.6.1
-  name: redis-rs-metrics
-  namespace: poketwo
+  name: gateway-redis-metrics
+  namespace: poketwo-staging
 spec:
   ports:
   - name: http-metrics
@@ -17,6 +17,6 @@ spec:
     protocol: TCP
     targetPort: metrics
   selector:
-    app.kubernetes.io/instance: redis-rs
+    app.kubernetes.io/instance: gateway-redis
     app.kubernetes.io/name: redis
   type: ClusterIP

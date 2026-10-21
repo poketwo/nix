@@ -19,10 +19,10 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    app.kubernetes.io/instance: redis-rs
+    app.kubernetes.io/instance: gateway-redis
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: redis
     app.kubernetes.io/version: 7.2.5
     helm.sh/chart: redis-19.6.1
-  name: redis-rs-scripts
+  name: gateway-redis-scripts
   namespace: poketwo-staging
