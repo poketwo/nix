@@ -9,7 +9,7 @@ data:
   redis.conf: |-
     # User-supplied common configuration:
     appendonly no
-    save ""
+    save 60 1
 
     # End of common configuration
   replica.conf: |-
