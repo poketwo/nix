@@ -26,12 +26,12 @@
         '';
         dataStorage = {
           enabled = true;
-          requestedSize = "40Gi";
+          requestedSize = "100Gi";
           className = "rbd-nvme";
         };
         resources = {
-          requests = { memory = "20Gi"; };
-          limits = { memory = "20Gi"; cpu = "1000m"; };
+          requests = { memory = "48Gi"; };
+          limits = { memory = "64Gi"; cpu = "1000m"; };
         };
         deploymentStrategy = "Recreate";
         metrics.enabled = true;
