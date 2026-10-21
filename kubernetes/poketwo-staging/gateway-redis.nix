@@ -7,7 +7,7 @@
         repo = "https://valkey.io/valkey-helm/";
         name = "valkey";
         version = "0.12.0";
-        sha256 = "";
+        sha256 = "9++qWjvvYyVnp9KfqLYd/bLdyqJG1v5DCFD+acWUBws=";
       };
 
       values = {
