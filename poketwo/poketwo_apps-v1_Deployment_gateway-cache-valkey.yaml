@@ -16,10 +16,11 @@ spec:
       app.kubernetes.io/instance: gateway-cache
       app.kubernetes.io/name: valkey
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       annotations:
+        checksum/config: bdead5f7b0003b8908dd46a6ca6e2f10
         checksum/initconfig: 9964191f58f592ccf0ecc3c69f165c0b
       labels:
         app.kubernetes.io/instance: gateway-cache
@@ -121,6 +122,9 @@ spec:
           name: valkey-data
         - mountPath: /scripts
           name: scripts
+        - mountPath: /usr/local/etc/valkey/valkey.conf
+          name: valkey-config
+          subPath: valkey.conf
         - mountPath: /etc/valkey
           name: valkey-acl
         - mountPath: /valkey-users-secret
@@ -141,8 +145,12 @@ spec:
       - emptyDir:
           medium: Memory
         name: valkey-acl
-      - emptyDir: {}
-        name: valkey-data
+      - configMap:
+          name: gateway-cache-valkey-config
+        name: valkey-config
+      - name: valkey-data
+        persistentVolumeClaim:
+          claimName: gateway-cache-valkey
       - name: valkey-users-secret
         secret:
           defaultMode: 256
