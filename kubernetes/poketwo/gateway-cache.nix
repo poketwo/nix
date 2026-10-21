@@ -31,7 +31,7 @@
         };
         resources = {
           requests = { memory = "48Gi"; };
-          limits = { memory = "64Gi"; cpu = "1000m"; };
+          limits = { memory = "96Gi"; cpu = "1000m"; };
         };
         deploymentStrategy = "Recreate";
         metrics.enabled = true;
