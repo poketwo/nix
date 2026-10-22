@@ -2,7 +2,7 @@
 
 {
   namespaces.poketwo.resources."apps/v1".StatefulSet.gateway.spec = {
-    replicas = 1;
+    replicas = 0;
     selector.matchLabels.app = "gateway";
     serviceName = "gateway";
     template = {
