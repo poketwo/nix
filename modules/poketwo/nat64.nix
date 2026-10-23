@@ -53,7 +53,17 @@ in
 
       jool = {
         enable = true;
-        nat64.default.framework = "netfilter";
+        nat64.default = {
+          framework = "netfilter";
+          # An empty pool4 makes Jool use ports 61001-65535 only (4535 per
+          # protocol), and a closed TCP session keeps its port for 4 minutes;
+          # 1600 gateway shards reconnecting at once ran out of ports.
+          pool4 = map (protocol: {
+            inherit protocol;
+            prefix = "10.100.64.2/32";
+            "port range" = "1024-65535";
+          }) [ "TCP" "UDP" "ICMP" ];
+        };
       };
 
       nat = {
