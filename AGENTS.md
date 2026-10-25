@@ -124,6 +124,43 @@ ssh <host>.hfym.co 'sudo systemctl reboot'
 You can override with `NIXOS_NO_CHECK=1` but the docs explicitly warn this
 can leave the system unstable — prefer the reboot route.
 
+#### Rolling a worker (reboot deploy)
+
+One worker at a time; wait for full recovery before the next.
+
+1. Pre-flight, on the host: build the toplevel and compare it with what runs.
+   ```bash
+   nix build --no-link --print-out-paths .#nixosConfigurations.<host>.config.system.build.toplevel
+   readlink -f /run/current-system
+   nix store diff-closures /run/current-system <built>
+   ```
+   Kernel, `dbus`, `glibc` or systemd in the diff means a reboot deploy, not
+   `switch`. Check `kubectl get nodes` (everything Ready, no other worker
+   degraded). If the host runs `gateway-proxy` (sylveon) or the Rust `gateway`
+   (glaceon), check the Discord session-start budget first: moving the proxy
+   re-identifies all 1600 shards.
+2. Stage, don't activate: `nixos-rebuild boot` (or
+   `<built>/bin/switch-to-configuration boot`), then confirm with
+   `bootctl list` that the new generation is the default entry. Don't set the
+   system profile with `nix-env --set` ahead of a `switch` that may be refused.
+3. Move the pods off first so they restart cleanly instead of dying mid-flight:
+   `kubectl cordon <host>`, then
+   `kubectl drain <host> --ignore-daemonsets --delete-emptydir-data --timeout=10m`
+   and wait for the evicted pods to be Running elsewhere. Bot pods reconnect
+   through the proxy (no identifies). Make sure the other workers have the
+   memory headroom for what moves (`kubectl describe node | grep -A6 Allocated`).
+4. `sudo systemctl reboot`; wait for the node to be Ready; verify
+   `ip netns exec jool jool pool4 display --tcp`, Cilium and ndppd are up; then
+   `kubectl uncordon <host>` and wait for everything to be Running.
+5. Rollback: pick the previous generation in the boot menu, or
+   `nixos-rebuild --rollback boot` + reboot.
+
+Jool's `ExecStop` is `instance remove`, so any restart of
+`jool-nat64-default.service` drops every NAT64 flow on that host (Discord API
+calls; the proxy's gateway connections on sylveon). A pool4 change can be
+applied live without a restart (`ip netns exec jool jool pool4 add ...`) until
+the next reboot makes the declared config effective.
+
 ### Kubernetes changes
 
 1. Edit files under `kubernetes/` on the `main` branch.
