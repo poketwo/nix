@@ -152,6 +152,10 @@ One worker at a time; wait for full recovery before the next.
    Exception: the prod MongoDB members on vaporeon/jolteon use local volumes,
    so after eviction they stay Pending until the node is back and uncordoned —
    that is expected; the replica set keeps serving from the other members.
+   Single-instance CNPG postgres clusters have a `<name>-primary` PDB with 0
+   allowed disruptions, so drain never evicts them: `kubectl delete pod` the
+   instance and CNPG recreates it on another node (rbd PVC). Bare pods without a
+   controller also block drain — delete them or use `--force`.
 4. `sudo systemctl reboot`; wait for the node to be Ready; verify
    `ip netns exec jool jool pool4 display --tcp`, Cilium and ndppd are up; then
    `kubectl uncordon <host>` and wait for everything to be Running.
