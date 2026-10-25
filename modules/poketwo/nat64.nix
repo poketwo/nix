@@ -48,6 +48,14 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # The host routes 64:ff9b::/96 into the Jool netns and masquerades its IPv4
+    # out of inet0; both directions need forwarding. (Cilium's native routing
+    # needs IPv6 forwarding too.) Used to come from the Tailscale module.
+    boot.kernel.sysctl = {
+      "net.ipv4.ip_forward" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
+    };
+
     networking = {
       nameservers = lib.mkForce [ "2606:4700:4700::64" "2606:4700:4700::6400" ];
 
