@@ -149,6 +149,9 @@ One worker at a time; wait for full recovery before the next.
    and wait for the evicted pods to be Running elsewhere. Bot pods reconnect
    through the proxy (no identifies). Make sure the other workers have the
    memory headroom for what moves (`kubectl describe node | grep -A6 Allocated`).
+   Exception: the prod MongoDB members on vaporeon/jolteon use local volumes,
+   so after eviction they stay Pending until the node is back and uncordoned —
+   that is expected; the replica set keeps serving from the other members.
 4. `sudo systemctl reboot`; wait for the node to be Ready; verify
    `ip netns exec jool jool pool4 display --tcp`, Cilium and ndppd are up; then
    `kubectl uncordon <host>` and wait for everything to be Running.
