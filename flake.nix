@@ -35,7 +35,6 @@
         ./modules/poketwo/nat64.nix
         ./modules/poketwo/network.nix
         ./modules/poketwo/shell.nix
-        ./modules/poketwo/tailscale.nix
         ./profiles/base.nix
       ];
 
