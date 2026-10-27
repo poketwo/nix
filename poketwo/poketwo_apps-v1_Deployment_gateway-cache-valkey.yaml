@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: bdead5f7b0003b8908dd46a6ca6e2f10
+        checksum/config: b259b914766a2d79dacde2738c54e640
         checksum/initconfig: 9964191f58f592ccf0ecc3c69f165c0b
       labels:
         app.kubernetes.io/instance: gateway-cache
@@ -53,7 +53,7 @@ spec:
           protocol: TCP
         resources:
           limits:
-            cpu: 1000m
+            cpu: 2000m
             memory: 128Gi
           requests:
             memory: 48Gi
@@ -148,9 +148,8 @@ spec:
       - configMap:
           name: gateway-cache-valkey-config
         name: valkey-config
-      - name: valkey-data
-        persistentVolumeClaim:
-          claimName: gateway-cache-valkey
+      - emptyDir: {}
+        name: valkey-data
       - name: valkey-users-secret
         secret:
           defaultMode: 256

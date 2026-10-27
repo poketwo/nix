@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   valkey.conf: |
-    save 60 1
+    save ""
     appendonly no
     maxmemory-policy noeviction
 kind: ConfigMap
