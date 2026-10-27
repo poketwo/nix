@@ -20,15 +20,10 @@
           };
         };
         valkeyConfig = ''
-          save 60 1
+          save ""
           appendonly no
           maxmemory-policy noeviction
         '';
-        dataStorage = {
-          enabled = true;
-          requestedSize = "2Gi";
-          className = "rbd-nvme";
-        };
         resources = {
           requests = { memory = "512Mi"; };
           limits = { memory = "512Mi"; cpu = "50m"; };
