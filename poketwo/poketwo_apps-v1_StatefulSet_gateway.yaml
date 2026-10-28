@@ -4,7 +4,7 @@ metadata:
   name: gateway
   namespace: poketwo
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: gateway
@@ -16,11 +16,15 @@ spec:
     spec:
       containers:
       - env:
+        - name: ACTIVITY
+          value: '@Pokétwo help'
         - name: BOT_TOKEN
           valueFrom:
             secretKeyRef:
               key: TOKEN
               name: poketwo
+        - name: BRIDGE_ADDR
+          value: '[::]:7878'
         - name: LOG_FORMAT
           value: json
         - name: METRICS_ADDR
@@ -52,6 +56,8 @@ spec:
         ports:
         - containerPort: 9000
           name: metrics
+        - containerPort: 7878
+          name: bridge
         readinessProbe:
           httpGet:
             path: /readyz
