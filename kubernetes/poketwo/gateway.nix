@@ -1,8 +1,13 @@
 { ... }:
 
 {
+  namespaces.poketwo.resources.v1.Service.gateway.spec = {
+    selector.app = "gateway";
+    ports = [{ port = 80; targetPort = "bridge"; }];
+  };
+
   namespaces.poketwo.resources."apps/v1".StatefulSet.gateway.spec = {
-    replicas = 0;
+    replicas = 1;
     selector.matchLabels.app = "gateway";
     serviceName = "gateway";
     template = {
@@ -11,7 +16,10 @@
         containers.gateway = {
           image = "ghcr.io/poketwo/poketwo-rs:production";
           imagePullPolicy = "Always";
-          ports = [{ name = "metrics"; containerPort = 9000; }];
+          ports = [
+            { name = "metrics"; containerPort = 9000; }
+            { name = "bridge"; containerPort = 7878; }
+          ];
           livenessProbe = {
             httpGet = { path = "/livez"; port = "metrics"; };
             periodSeconds = 30;
@@ -33,6 +41,8 @@
             SHARDS_PER_REPLICA.value = "1600";
             WORKERS.value = "1";
             METRICS_ADDR.value = "[::]:9000";
+            BRIDGE_ADDR.value = "[::]:7878";
+            ACTIVITY.value = "@Pokétwo help";
             LOG_FORMAT.value = "json";
             RUST_LOG.value = "info";
           };
