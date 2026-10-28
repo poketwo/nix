@@ -43,6 +43,12 @@
         routingMode = "native";
         enableIPv6Masquerade = false;
 
+        # The chart default ("blackhole") enables kernel PLPMTUD in every pod: three
+        # back-to-back RTOs halve the MSS (down to 48 bytes) and it only probes back
+        # up after 10 minutes, so brief loss leaves long-lived Cloudflare connections
+        # crawling. The path MTU is 1500, so we don't need it.
+        pmtuDiscovery.packetizationLayerPMTUDMode = "disabled";
+
         # Observability things
         prometheus.enabled = true;
         dashboards.enabled = true;
