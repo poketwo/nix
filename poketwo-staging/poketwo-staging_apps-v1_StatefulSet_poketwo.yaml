@@ -17,7 +17,7 @@ spec:
       containers:
       - env:
         - name: API_GATEWAY
-          value: ws://gateway-proxy
+          value: ws://gateway
         - name: DATABASE_NAME
           value: pokemon_dev
         - name: DATABASE_URI
