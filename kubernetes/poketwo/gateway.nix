@@ -30,8 +30,8 @@
             periodSeconds = 2;
           };
           resources = {
-            requests = { memory = "1Gi"; cpu = "500m"; };
-            limits = { memory = "2Gi"; cpu = "2000m"; };
+            requests = { memory = "4Gi"; cpu = "500m"; };
+            limits = { memory = "8Gi"; cpu = "2000m"; };
           };
           env = {
             BOT_TOKEN.valueFrom.secretKeyRef = { name = "poketwo"; key = "TOKEN"; };
