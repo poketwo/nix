@@ -32,6 +32,8 @@ spec:
               name: mongodb-user
         - name: DATABASE_USERNAME
           value: guiduck
+        - name: MESSAGE_CONTENT_INTENT
+          value: '1'
         - name: MESSAGE_LOG_KEY
           valueFrom:
             secretKeyRef:
