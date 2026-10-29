@@ -38,6 +38,8 @@ spec:
           value: https://server.poketwo.io
         - name: IMGEN_URL
           value: http://imgen-rust
+        - name: MALLOC_CONF
+          value: background_thread:true
         - name: NUM_CLUSTERS
           value: '200'
         - name: NUM_SHARDS
