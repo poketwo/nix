@@ -34,7 +34,7 @@
             limits = { memory = "8Gi"; cpu = "2000m"; };
           };
           env = {
-            BOT_TOKEN.valueFrom.secretKeyRef = { name = "poketwo"; key = "TOKEN"; };
+            BOT_TOKEN.valueFrom.secretKeyRef = { name = "poketwo"; key = "BOT_TOKEN"; };
             REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "gateway-cache"; key = "redis-password"; };
             REDIS_URL.value = "redis://:$(REDIS_PASSWORD)@gateway-cache-valkey";
             SHARDS_TOTAL.value = "1600";
