@@ -46,6 +46,7 @@
                 EXT_SERVER_URL.value = "https://server.poketwo.io";
                 IMGEN_URL.value = "http://imgen-rust";
                 API_GATEWAY.value = "ws://gateway";
+                MALLOC_CONF.value = "background_thread:true";
               };
             };
             imagePullSecrets = [{ name = "ghcr-auth"; }];
