@@ -6,7 +6,7 @@
     ports = [{ port = 80; targetPort = "bridge"; }];
   };
 
-  namespaces.poketwo-staging.resources.v1.Secret.poketwo.stringData.TOKEN = "";
+  namespaces.poketwo-staging.resources.v1.Secret.poketwo.stringData.BOT_TOKEN = "";
 
   namespaces.poketwo-staging.resources."apps/v1".StatefulSet.gateway.spec = {
     replicas = 1;
@@ -36,7 +36,7 @@
             limits = { memory = "256Mi"; cpu = "200m"; };
           };
           env = {
-            BOT_TOKEN.valueFrom.secretKeyRef = { name = "poketwo"; key = "TOKEN"; };
+            BOT_TOKEN.valueFrom.secretKeyRef = { name = "poketwo"; key = "BOT_TOKEN"; };
             REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "gateway-cache"; key = "redis-password"; };
             REDIS_URL.value = "redis://:$(REDIS_PASSWORD)@gateway-cache-valkey";
             SHARDS_TOTAL.value = "1";
