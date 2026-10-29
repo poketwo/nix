@@ -6,7 +6,9 @@
     ports = [{ port = 80; targetPort = "bridge"; }];
   };
 
-  namespaces.poketwo-staging.resources.v1.Secret.poketwo.stringData.BOT_TOKEN = "";
+  namespaces.poketwo-staging.resources.v1.Secret.poketwo.stringData = {
+    BOT_TOKEN = "";
+  };
 
   namespaces.poketwo-staging.resources."apps/v1".StatefulSet.gateway.spec = {
     replicas = 1;
