@@ -19,6 +19,7 @@
             env = {
               BOT_TOKEN.valueFrom.secretKeyRef = { name = "guiduck"; key = "token"; };
               PREFIX.value = "? >";
+              MESSAGE_CONTENT_INTENT.value = "1";
 
               DATABASE_HOST.value = "mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc";
               DATABASE_USERNAME.value = "guiduck";
