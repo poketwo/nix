@@ -28,6 +28,11 @@
                 limits = { memory = "4Gi"; };
                 requests = { memory = "2Gi"; cpu = "100m"; };
               };
+              # The bot writes /tmp/ready once all of its shards are ready.
+              readinessProbe = {
+                exec.command = [ "test" "-f" "/tmp/ready" ];
+                periodSeconds = 5;
+              };
               envFrom = [{ secretRef.name = "poketwo"; }];
               env = {
                 DATABASE_HOST.value = "mongodb-0.mongodb-headless,mongodb-1.mongodb-headless/?replicaSet=poketwo&w=1&maxPoolSize=10";
