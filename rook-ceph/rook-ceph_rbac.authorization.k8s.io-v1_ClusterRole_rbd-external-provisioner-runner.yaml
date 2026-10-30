@@ -172,3 +172,33 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - referencegrants
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - replication.storage.openshift.io
+  resources:
+  - volumegroupreplicationcontents
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - replication.storage.openshift.io
+  resources:
+  - volumegroupreplicationclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
