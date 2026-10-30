@@ -25,6 +25,12 @@ let
     "csi.storage.k8s.io/controller-expand-secret-namespace" = "rook-ceph";
     "csi.storage.k8s.io/node-stage-secret-namespace" = "rook-ceph";
   };
+  # Kernel modules and /nix for the CSI node plugins on NixOS
+  # https://rook.io/docs/rook/latest-release/Getting-Started/Prerequisites/prerequisites/#cephfs
+  nixosNodePluginVolumes = [
+    { volume = { name = "lib-modules"; hostPath.path = "/run/booted-system/kernel-modules/lib/modules/"; }; }
+    { volume = { name = "host-nix"; hostPath.path = "/nix"; }; mount = { name = "host-nix"; mountPath = "/nix"; readOnly = true; }; }
+  ];
 in
 {
   namespaces.rook-ceph = {
@@ -32,31 +38,37 @@ in
       chart = transpire.fetchFromHelm {
         repo = "https://charts.rook.io/release";
         name = "rook-ceph";
-        version = "1.19.12";
-        sha256 = "u9EseTRqGStp4cC+rMGD4AElaPdne1CJJsXpFt0DFAQ=";
+        version = "1.20.9";
+        sha256 = "WDJoeOsEy+vWK/4oedBpcEzwOkoR0rHO4lPol8tTUIQ=";
+      };
+
+      values.monitoring.enabled = true;
+    };
+
+    # Rook 1.20 no longer manages the CSI drivers; they are configured by this chart.
+    # https://rook.io/docs/rook/v1.20/Helm-Charts/csi-drivers-chart/
+    helmReleases.ceph-csi-drivers = {
+      chart = transpire.fetchFromHelm {
+        repo = "https://ceph.github.io/ceph-csi-operator";
+        name = "ceph-csi-drivers";
+        version = "1.0.4";
+        sha256 = "mrn2dAjJcAohxpf6HsgOsr4h2q+mnmoIM6uXKRB0dZE=";
       };
 
       values = {
-        monitoring.enabled = true;
-
-        # Specify NixOS kernel modules path
-        # https://rook.io/docs/rook/latest-release/Getting-Started/Prerequisites/prerequisites/#cephfs
-        # https://github.com/rook/rook/blob/v1.14.4/deploy/charts/rook-ceph/values.yaml#L189-L217
-        csi = {
-          csiRBDPluginVolume = [
-            { name = "lib-modules"; hostPath = { path = "/run/booted-system/kernel-modules/lib/modules/"; }; }
-            { name = "host-nix"; hostPath = { path = "/nix"; }; }
-          ];
-          csiRBDPluginVolumeMount = [
-            { name = "host-nix"; mountPath = "/nix"; readOnly = true; }
-          ];
-          csiCephFSPluginVolume = [
-            { name = "lib-modules"; hostPath = { path = "/run/booted-system/kernel-modules/lib/modules/"; }; }
-            { name = "host-nix"; hostPath = { path = "/nix"; }; }
-          ];
-          csiCephFSPluginVolumeMount = [
-            { name = "host-nix"; mountPath = "/nix"; readOnly = true; }
-          ];
+        # Rook's recommended values
+        # https://github.com/rook/rook/blob/v1.20.9/deploy/charts/ceph-csi-drivers/values.yaml
+        operatorConfig = {
+          namespace = "rook-ceph";
+          driverSpecDefaults = {
+            imageSet.name = "rook-csi-operator-image-set-configmap";
+            nodePlugin.priorityClassName = "system-node-critical";
+            controllerPlugin.priorityClassName = "system-cluster-critical";
+          };
+        };
+        drivers = {
+          rbd = { enabled = true; name = "rook-ceph.rbd.csi.ceph.com"; nodePlugin.volumes = nixosNodePluginVolumes; };
+          cephfs = { enabled = true; name = "rook-ceph.cephfs.csi.ceph.com"; nodePlugin.volumes = nixosNodePluginVolumes; };
         };
       };
     };
