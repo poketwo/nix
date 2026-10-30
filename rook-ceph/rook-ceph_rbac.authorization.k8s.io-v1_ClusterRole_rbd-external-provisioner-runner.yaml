@@ -96,9 +96,6 @@ rules:
   - get
   - list
   - watch
-  - update
-  - patch
-  - create
 - apiGroups:
   - snapshot.storage.k8s.io
   resources:
@@ -117,7 +114,6 @@ rules:
   - watch
   - patch
   - update
-  - create
 - apiGroups:
   - snapshot.storage.k8s.io
   resources:
