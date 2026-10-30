@@ -8,8 +8,8 @@ metadata:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: cert-manager
-    app.kubernetes.io/version: v1.16.5
-    helm.sh/chart: cert-manager-v1.16.5
+    app.kubernetes.io/version: v1.17.4
+    helm.sh/chart: cert-manager-v1.17.4
   name: challenges.acme.cert-manager.io
   namespace: cert-manager
 spec:
@@ -272,6 +272,10 @@ spec:
                                 description: |-
                                   resource ID of the managed identity, can not be used at the same time as clientID
                                   Cannot be used for Azure Managed Service Identity
+                                type: string
+                              tenantID:
+                                description: tenant ID of the managed identity, can
+                                  not be used at the same time as resourceID
                                 type: string
                             type: object
                           resourceGroupName:
