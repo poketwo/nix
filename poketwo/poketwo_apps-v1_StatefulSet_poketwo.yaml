@@ -59,6 +59,13 @@ spec:
         image: ghcr.io/poketwo/poketwo:production
         imagePullPolicy: Always
         name: poketwo
+        readinessProbe:
+          exec:
+            command:
+            - test
+            - -f
+            - /tmp/ready
+          periodSeconds: 5
         resources:
           limits:
             memory: 4Gi
