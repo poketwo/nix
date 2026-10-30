@@ -21,8 +21,8 @@ in
       chart = transpire.fetchFromHelm {
         repo = "https://charts.jetstack.io";
         name = "cert-manager";
-        version = "1.14.5";
-        sha256 = "n6nMYkxAGabXoE/sGZsrCFnqm0dTzAqkITA83+FQ8o8=";
+        version = "1.15.5";
+        sha256 = "Jjio/TLyyeengk7otQX2gkkFa5kyr9OrT7ktfnpqPbU=";
       };
 
       values = {
