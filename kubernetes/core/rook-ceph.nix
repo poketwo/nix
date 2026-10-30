@@ -66,7 +66,7 @@ in
     # ==========================
 
     resources."ceph.rook.io/v1".CephCluster.rook-ceph.spec = {
-      cephVersion.image = "quay.io/ceph/ceph:v18.2.2-20240521";
+      cephVersion.image = "quay.io/ceph/ceph:v19.2.5-20260709";
       dataDirHostPath = "/var/lib/rook";
       mon = { count = 3; allowMultiplePerNode = false; };
       mgr = { count = 2; allowMultiplePerNode = false; };
