@@ -32,8 +32,8 @@ in
       chart = transpire.fetchFromHelm {
         repo = "https://charts.rook.io/release";
         name = "rook-ceph";
-        version = "1.18.11";
-        sha256 = "6GuFlVBvPc/iB6rM0IOYRydiTtn+tA4NnMyjNGaJEKA=";
+        version = "1.19.12";
+        sha256 = "u9EseTRqGStp4cC+rMGD4AElaPdne1CJJsXpFt0DFAQ=";
       };
 
       values = {
