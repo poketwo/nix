@@ -42,7 +42,9 @@ in
         sha256 = "WDJoeOsEy+vWK/4oedBpcEzwOkoR0rHO4lPol8tTUIQ=";
       };
 
-      values.monitoring.enabled = true;
+      values = {
+        monitoring.enabled = true;
+      };
     };
 
     # Rook 1.20 no longer manages the CSI drivers; they are configured by this chart.
@@ -67,8 +69,20 @@ in
           };
         };
         drivers = {
-          rbd = { enabled = true; name = "rook-ceph.rbd.csi.ceph.com"; nodePlugin.volumes = nixosNodePluginVolumes; };
-          cephfs = { enabled = true; name = "rook-ceph.cephfs.csi.ceph.com"; nodePlugin.volumes = nixosNodePluginVolumes; };
+          rbd = {
+            enabled = true;
+            name = "rook-ceph.rbd.csi.ceph.com";
+            snapshotPolicy = "volumeSnapshot";
+            nodePlugin.volumes = nixosNodePluginVolumes;
+          };
+          cephfs = {
+            enabled = true;
+            name = "rook-ceph.cephfs.csi.ceph.com";
+            snapshotPolicy = "volumeSnapshot";
+            nodePlugin.volumes = nixosNodePluginVolumes;
+          };
+          nfs.enabled = false;
+          nvmeof.enabled = false;
         };
       };
     };
