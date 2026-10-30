@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: rook-ceph
     app.kubernetes.io/part-of: rook-ceph-operator
-    app.kubernetes.io/version: v1.19.12
-    helm.sh/chart: rook-ceph-v1.19.12
+    app.kubernetes.io/version: v1.20.9
+    helm.sh/chart: rook-ceph-v1.20.9
     operator: rook
     storage-backend: ceph
   name: rook-ceph-global
@@ -25,6 +25,7 @@ rules:
   - get
   - list
   - watch
+  - patch
 - apiGroups:
   - ''
   - discovery.k8s.io
@@ -84,6 +85,7 @@ rules:
   - cephnvmeofgateways
   - cephobjectstores
   - cephobjectstoreusers
+  - cephobjectstoreaccounts
   - cephobjectrealms
   - cephobjectzonegroups
   - cephobjectzones
@@ -99,6 +101,7 @@ rules:
   - list
   - watch
   - update
+  - patch
 - apiGroups:
   - ceph.rook.io
   resources:
@@ -110,6 +113,7 @@ rules:
   - cephnvmeofgateways/status
   - cephobjectstores/status
   - cephobjectstoreusers/status
+  - cephobjectstoreaccounts/status
   - cephobjectrealms/status
   - cephobjectzonegroups/status
   - cephobjectzones/status
@@ -132,6 +136,7 @@ rules:
   - cephnvmeofgateways/finalizers
   - cephobjectstores/finalizers
   - cephobjectstoreusers/finalizers
+  - cephobjectstoreaccounts/finalizers
   - cephobjectrealms/finalizers
   - cephobjectzonegroups/finalizers
   - cephobjectzones/finalizers

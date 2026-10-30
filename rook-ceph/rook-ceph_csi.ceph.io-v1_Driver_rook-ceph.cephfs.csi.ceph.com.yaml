@@ -1,0 +1,46 @@
+apiVersion: csi.ceph.io/v1
+kind: Driver
+metadata:
+  name: rook-ceph.cephfs.csi.ceph.com
+  namespace: rook-ceph
+spec:
+  attachRequired: true
+  cephFsClientType: kernel
+  controllerPlugin:
+    hostNetwork: false
+    privileged: false
+    replicas: 1
+    serviceAccountName: rook-ceph-cephfs-csi-ceph-com-ctrlplugin-sa
+    tolerations: []
+    volumes: []
+  deployCsiAddons: false
+  enableFencing: false
+  fsGroupPolicy: File
+  fuseMountOptions: {}
+  generateOMapInfo: false
+  grpcTimeout: 30
+  kernelMountOptions: {}
+  log:
+    rotation:
+      maxFiles: 7
+      maxLogSize: 10G
+      periodicity: daily
+    verbosity: 0
+  nodePlugin:
+    imagePullPolicy: IfNotPresent
+    serviceAccountName: rook-ceph-cephfs-csi-ceph-com-nodeplugin-sa
+    tolerations: []
+    volumes:
+    - volume:
+        hostPath:
+          path: /run/booted-system/kernel-modules/lib/modules/
+        name: lib-modules
+    - mount:
+        mountPath: /nix
+        name: host-nix
+        readOnly: true
+      volume:
+        hostPath:
+          path: /nix
+        name: host-nix
+  snapshotPolicy: volumeSnapshot

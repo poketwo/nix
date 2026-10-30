@@ -818,6 +818,31 @@ spec:
                     type: array
                   failureDomainLabel:
                     type: string
+                  floatingMon:
+                    description: |-
+                      FloatingMon is the specification of the floating monitor for two-node clusters.
+                      The floating mon is backed by a synchronously replicated store (e.g. DRBD)
+                      and can be scheduled on either node. Template variables are supplied via a ConfigMap.
+                    minProperties: 2
+                    properties:
+                      configmapName:
+                        description: |-
+                          ConfigMapName is the name of the ConfigMap containing key-value pairs
+                          of template variables for the floating mon deployment.
+                        maxLength: 253
+                        minLength: 1
+                        type: string
+                      name:
+                        description: Name is the identifier for the floating monitor
+                          (recommended "c")
+                        maxLength: 1
+                        minLength: 1
+                        pattern: ^[a-z]$
+                        type: string
+                    required:
+                    - configmapName
+                    - name
+                    type: object
                   stretchCluster:
                     description: StretchCluster is the stretch cluster specification
                     properties:
@@ -4721,7 +4746,7 @@ spec:
                   WaitTimeoutForHealthyOSDInMinutes defines the time the operator would wait before an OSD can be stopped for upgrade or restart.
                   If the timeout exceeds and OSD is not ok to stop, then the operator would skip upgrade for the current OSD and proceed with the next one
                   if `continueUpgradeAfterChecksEvenIfNotHealthy` is `false`. If `continueUpgradeAfterChecksEvenIfNotHealthy` is `true`, then operator would
-                  continue with the upgrade of an OSD even if its not ok to stop after the timeout. This timeout won't be applied if `skipUpgradeChecks` is `true`.
+                  continue with the upgrade of an OSD even if it's not ok to stop after the timeout. This timeout won't be applied if `skipUpgradeChecks` is `true`.
                   The default wait timeout is 10 minutes.
                 format: int64
                 type: integer
@@ -5006,7 +5031,7 @@ spec:
                         type: string
                     type: object
                   osd:
-                    description: OSD shows the CephX key status of of OSDs
+                    description: OSD shows the CephX key status of OSDs
                     properties:
                       keyCephVersion:
                         description: |-
