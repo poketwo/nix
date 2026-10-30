@@ -66,7 +66,9 @@ in
     # ==========================
 
     resources."ceph.rook.io/v1".CephCluster.rook-ceph.spec = {
-      cephVersion.image = "quay.io/ceph/ceph:v19.2.5-20260709";
+      cephVersion.image = "quay.io/ceph/ceph:v19.2.7-20261009";
+      # CVE-2025-30156: rotate daemon CephX keys to AES256K (one-off, bump keyGeneration to rotate again)
+      security.cephx.daemon = { keyRotationPolicy = "KeyGeneration"; keyGeneration = 1; };
       dataDirHostPath = "/var/lib/rook";
       mon = { count = 3; allowMultiplePerNode = false; };
       mgr = { count = 2; allowMultiplePerNode = false; };
