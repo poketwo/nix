@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: rook-ceph
     app.kubernetes.io/part-of: rook-ceph-operator
-    app.kubernetes.io/version: v1.18.11
-    helm.sh/chart: rook-ceph-v1.18.11
+    app.kubernetes.io/version: v1.19.12
+    helm.sh/chart: rook-ceph-v1.19.12
     operator: rook
     storage-backend: ceph
   name: rook-ceph-operator
@@ -24,7 +24,7 @@ spec:
     metadata:
       labels:
         app: rook-ceph-operator
-        helm.sh/chart: rook-ceph-v1.18.11
+        helm.sh/chart: rook-ceph-v1.19.12
     spec:
       containers:
       - args:
@@ -51,7 +51,11 @@ spec:
           value: 60m
         - name: ROOK_HOSTPATH_REQUIRES_PRIVILEGED
           value: 'false'
-        image: docker.io/rook/ceph:v1.18.11
+        - name: ROOK_RECONCILE_CONCURRENT_CLUSTERS
+          value: '1'
+        - name: ROOK_UNREACHABLE_NODE_TOLERATION_SECONDS
+          value: '5'
+        image: docker.io/rook/ceph:v1.19.12
         imagePullPolicy: IfNotPresent
         name: rook-ceph-operator
         resources:
