@@ -15,6 +15,11 @@ spec:
     spec:
       containers:
       - env:
+        - name: BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: guiduck
         - name: DATABASE_HOST
           value: mongodb-0.mongodb-svc,mongodb-1.mongodb-svc,mongodb-2.mongodb-svc
         - name: DATABASE_NAME
