@@ -166,7 +166,7 @@ replacement decision independent of this.
   `/etc/kubernetes/kubeadm-upgrade.yaml` (nix#119) now carries
   `apply.skipPhases` and `node.skipPhases = [addon/kube-proxy]`; after any
   kubeadm run, check `kubectl -n kube-system get ds kube-proxy` is NotFound.
-- CoreDNS is not kubeadm's either: it is declared in `kubernetes/core/coredns.nix`
+- CoreDNS is not kubeadm's either: it is declared in `kubernetes/core/coredns.nix` (nix#120)
   (Argo app `poketwo-kube-system`) and `addon/coredns` is in the skipPhases, so a
   CoreDNS image bump is a PR there, not something kubeadm does. After a kubeadm
   run, `kubectl -n kube-system get deploy coredns -o jsonpath='{.spec.template.spec.containers[0].image}'`
