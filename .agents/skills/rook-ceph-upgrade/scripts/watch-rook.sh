@@ -5,7 +5,7 @@ export KUBECONFIG=/etc/kubernetes/admin.conf
 k() { sudo -E kubectl "$@"; }
 C="--conf=/var/lib/rook/rook-ceph/rook-ceph.config --keyring=/var/lib/rook/rook-ceph/client.admin.keyring"
 TARGET="$1"
-for i in $(seq 1 40)  # ~30 min; do
+for i in $(seq 1 40); do  # ~30 min
   REV=$(k -n argocd get app poketwo-rook-ceph -o jsonpath='{.status.sync.status}/{.status.operationState.phase}')
   OP=$(k -n rook-ceph get deploy rook-ceph-operator -o jsonpath='{.spec.template.spec.containers[0].image}' | sed 's|.*:||')
   VERS=$(k -n rook-ceph get deploy -l rook_cluster=rook-ceph -o jsonpath='{range .items[*]}{.metadata.labels.rook-version}{"\n"}{end}' | sort | uniq -c | tr -s ' \n' ' ')
