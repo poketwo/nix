@@ -6,8 +6,8 @@
       chart = transpire.fetchFromHelm {
         repo = "https://vmware-tanzu.github.io/helm-charts";
         name = "velero";
-        version = "6.7.0";
-        sha256 = "GPIh4HQHJRBS8BBJn+YmOjQebMwDzhVwThdrM9xMKUM=";
+        version = "11.4.0";
+        sha256 = "8PrcU3pX02Q/z6UeffM1sJckSSC13TBIE8gwvAs94Ss=";
       };
 
       values = {
@@ -16,13 +16,8 @@
 
         initContainers = [
           {
-            name = "velero-plugin-for-csi";
-            image = "velero/velero-plugin-for-csi:v0.7.0";
-            volumeMounts = [{ mountPath = "/target"; name = "plugins"; }];
-          }
-          {
             name = "velero-plugin-for-aws";
-            image = "velero/velero-plugin-for-aws:v1.9.0";
+            image = "velero/velero-plugin-for-aws:v1.13.2";
             volumeMounts = [{ mountPath = "/target"; name = "plugins"; }];
           }
         ];
@@ -35,11 +30,12 @@
           backupStorageLocation = [{
             name = "default";
             provider = "velero.io/aws";
-            bucket = "hfym-backups";
-            credential = { name = "backblaze-b2-credentials"; key = "aws-config"; };
+            bucket = "hfym-ds-backups";
+            credential = { name = "r2-credentials"; key = "aws-config"; };
             config = {
-              s3Url = "https://s3.us-west-000.backblazeb2.com";
-              region = "us-west-000";
+              s3Url = "https://ccff77448651723b79f4612a5200cbb8.r2.cloudflarestorage.com";
+              region = "auto";
+              checksumAlgorithm = "";
             };
           }];
 
@@ -77,7 +73,7 @@
       includeCRDs = true;
     };
 
-    resources.v1.Secret.backblaze-b2-credentials = {
+    resources.v1.Secret.r2-credentials = {
       type = "Opaque";
       stringData.aws-config = "";
     };
