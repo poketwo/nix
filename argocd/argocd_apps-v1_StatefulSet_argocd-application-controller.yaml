@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v2.14.11
-    helm.sh/chart: argo-cd-7.9.1
+    app.kubernetes.io/version: v3.0.12
+    helm.sh/chart: argo-cd-8.2.7
   name: argocd-application-controller
   namespace: argocd
 spec:
@@ -22,16 +22,16 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: dabf68ff4bb5c2e7090b9031bc7006787d9b36533932fd7f0a5c8264ab3232be
-        checksum/cmd-params: 4a91e374672c556664973add31ec6ea14e018f75dfddd297683cd05f8884e190
+        checksum/cm: e5ddd1ffbb16b9b8bb4afaf2edb2684328d2004d35f4da91659255d17d119e08
+        checksum/cmd-params: 58e044ba0cdc618fc3719bedb70bb835926cff974f55a2efc9474f882583150e
       labels:
         app.kubernetes.io/component: application-controller
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: argocd-application-controller
         app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/version: v2.14.11
-        helm.sh/chart: argo-cd-7.9.1
+        app.kubernetes.io/version: v3.0.12
+        helm.sh/chart: argo-cd-8.2.7
     spec:
       affinity:
         podAntiAffinity:
@@ -48,6 +48,12 @@ spec:
         - /usr/local/bin/argocd-application-controller
         - --metrics-port=8082
         env:
+        - name: ARGOCD_APPLICATION_CONTROLLER_COMMIT_SERVER
+          valueFrom:
+            configMapKeyRef:
+              key: commit.server
+              name: argocd-cmd-params-cm
+              optional: true
         - name: ARGOCD_APPLICATION_CONTROLLER_KUBECTL_PARALLELISM_LIMIT
           valueFrom:
             configMapKeyRef:
@@ -84,6 +90,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: otlp.address
+              name: argocd-cmd-params-cm
+              optional: true
+        - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_ATTRS
+          valueFrom:
+            configMapKeyRef:
+              key: otlp.attrs
               name: argocd-cmd-params-cm
               optional: true
         - name: ARGOCD_APPLICATION_CONTROLLER_OTLP_HEADERS
@@ -132,6 +144,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: controller.self.heal.backoff.cap.seconds
+              name: argocd-cmd-params-cm
+              optional: true
+        - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_COOLDOWN_SECONDS
+          valueFrom:
+            configMapKeyRef:
+              key: controller.self.heal.backoff.cooldown.seconds
               name: argocd-cmd-params-cm
               optional: true
         - name: ARGOCD_APPLICATION_CONTROLLER_SELF_HEAL_BACKOFF_FACTOR
@@ -238,6 +256,12 @@ spec:
               key: controller.k8sclient.retry.max
               name: argocd-cmd-params-cm
               optional: true
+        - name: ARGOCD_LOG_FORMAT_TIMESTAMP
+          valueFrom:
+            configMapKeyRef:
+              key: log.format.timestamp
+              name: argocd-cmd-params-cm
+              optional: true
         - name: ARGOCD_RECONCILIATION_JITTER
           valueFrom:
             configMapKeyRef:
@@ -298,9 +322,9 @@ spec:
           valueFrom:
             secretKeyRef:
               key: redis-username
-              name: argocd-redis-ha-haproxy
+              name: argocd-redis
               optional: true
-        image: quay.io/argoproj/argocd:v2.14.11
+        image: quay.io/argoproj/argocd:v3.0.12
         imagePullPolicy: IfNotPresent
         name: application-controller
         ports:

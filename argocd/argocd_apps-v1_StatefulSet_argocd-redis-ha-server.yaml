@@ -5,7 +5,7 @@ metadata:
   labels:
     app: redis-ha
     argocd-redis-ha: replica
-    chart: redis-ha-4.33.2
+    chart: redis-ha-4.33.7
     heritage: Helm
     release: argocd
   name: argocd-redis-ha-server
@@ -48,7 +48,7 @@ spec:
             secretKeyRef:
               key: auth
               name: argocd-redis
-        image: public.ecr.aws/docker/library/redis:7.2.8-alpine
+        image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
         imagePullPolicy: IfNotPresent
         lifecycle:
           preStop:
@@ -99,9 +99,9 @@ spec:
             - sh
             - -c
             - /health/redis_readiness.sh
-          failureThreshold: 3
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
           successThreshold: 1
           timeoutSeconds: 15
         volumeMounts:
@@ -122,7 +122,7 @@ spec:
             secretKeyRef:
               key: auth
               name: argocd-redis
-        image: public.ecr.aws/docker/library/redis:7.2.8-alpine
+        image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
         imagePullPolicy: IfNotPresent
         lifecycle: {}
         livenessProbe:
@@ -194,7 +194,7 @@ spec:
           value: 40000915ab58c3fa8fd888fb8b24711944e6cbb4
         - name: SENTINEL_ID_2
           value: 2bbec7894d954a8af3bb54d13eaec53cb024e2ca
-        image: public.ecr.aws/docker/library/redis:7.2.8-alpine
+        image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
         imagePullPolicy: IfNotPresent
         name: split-brain-fix
         resources: {}
@@ -231,7 +231,7 @@ spec:
           value: 40000915ab58c3fa8fd888fb8b24711944e6cbb4
         - name: SENTINEL_ID_2
           value: 2bbec7894d954a8af3bb54d13eaec53cb024e2ca
-        image: public.ecr.aws/docker/library/redis:7.2.8-alpine
+        image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
         imagePullPolicy: IfNotPresent
         name: config-init
         resources: {}

@@ -66,7 +66,7 @@ kind: ConfigMap
 metadata:
   labels:
     app: argocd-redis-ha
-    chart: redis-ha-4.33.2
+    chart: redis-ha-4.33.7
     heritage: Helm
     release: argocd
   name: argocd-redis-ha-health-configmap
