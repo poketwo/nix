@@ -762,7 +762,6 @@ data:
     port 6379
     rename-command FLUSHDB ""
     rename-command FLUSHALL ""
-    appendonly no
     client-output-buffer-limit replica 16gb 16gb 0
     maxmemory 0
     maxmemory-policy noeviction
@@ -771,7 +770,6 @@ data:
     rdbchecksum yes
     rdbcompression yes
     repl-backlog-size 1gb
-    repl-diskless-load on-empty-db
     repl-diskless-sync yes
     save ""
     requirepass replace-default-auth

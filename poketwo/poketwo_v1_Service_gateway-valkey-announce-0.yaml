@@ -18,10 +18,6 @@ spec:
     port: 26379
     protocol: TCP
     targetPort: sentinel
-  - name: http-exporter
-    port: 9121
-    protocol: TCP
-    targetPort: exporter-port
   publishNotReadyAddresses: true
   selector:
     app: redis-ha

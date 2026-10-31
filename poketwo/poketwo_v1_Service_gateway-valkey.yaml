@@ -4,7 +4,6 @@ metadata:
   labels:
     app: redis-ha
     chart: redis-ha-4.39.0
-    exporter: enabled
     heritage: Helm
     release: gateway-valkey
   name: gateway-valkey
@@ -20,10 +19,6 @@ spec:
     port: 26379
     protocol: TCP
     targetPort: sentinel
-  - name: http-exporter-port
-    port: 9121
-    protocol: TCP
-    targetPort: exporter-port
   selector:
     app: redis-ha
     release: gateway-valkey

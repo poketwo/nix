@@ -21,10 +21,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/init-config: 0a1d6260ad42ba505fb2a3b63d5875ed78b692090ada5e0690683590420ecbe2
-        prometheus.io/path: /metrics
-        prometheus.io/port: '9121'
-        prometheus.io/scrape: 'true'
+        checksum/init-config: baecd06dbaa46e6266956fd3f01b611e66467baf6bf5694792c249fc7eb74e52
       labels:
         app: redis-ha
         gateway-valkey: replica
@@ -119,45 +116,6 @@ spec:
           name: data
         - mountPath: /health
           name: health
-      - env:
-        - name: REDIS_ADDR
-          value: redis://localhost:6379
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              key: redis-password
-              name: gateway-cache
-        image: quay.io/oliver006/redis_exporter:v1.86.0
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          httpGet:
-            path: /metrics
-            port: 9121
-          initialDelaySeconds: 15
-          periodSeconds: 15
-          timeoutSeconds: 3
-        name: redis-exporter
-        ports:
-        - containerPort: 9121
-          name: exporter-port
-        readinessProbe:
-          httpGet:
-            path: /metrics
-            port: 9121
-          initialDelaySeconds: 15
-          periodSeconds: 15
-          successThreshold: 2
-          timeoutSeconds: 3
-        resources: {}
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          runAsNonRoot: true
-          runAsUser: 1000
-          seccompProfile:
-            type: RuntimeDefault
       - args:
         - /data/conf/sentinel.conf
         command:
