@@ -25,8 +25,8 @@
         credentials.useSecret = false;
 
         metrics = {
-          serviceMonitor.enabled = true;
-          nodeAgentPodMonitor.enabled = true;
+          serviceMonitor = { enabled = true; autodetect = false; };
+          nodeAgentPodMonitor = { enabled = true; autodetect = false; };
         };
 
         configuration = {
@@ -43,6 +43,8 @@
               checksumAlgorithm = "";
             };
           }];
+
+          volumeSnapshotLocation = [ ];
         };
 
         schedules = {
