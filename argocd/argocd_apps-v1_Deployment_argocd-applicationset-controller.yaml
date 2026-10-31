@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: argocd-applicationset-controller
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.6
+    app.kubernetes.io/version: v3.2.6
+    helm.sh/chart: argo-cd-9.3.7
   name: argocd-applicationset-controller
   namespace: argocd
 spec:
@@ -21,15 +21,15 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cmd-params: 40fab8f30065691ca801b63d89910439f95b0a62ad0183c450a6818a7dfa2c9b
+        checksum/cmd-params: 736007f15749c381a2a3c56d1468b5fbb1722c651d59043880b9486c1a2a1bb1
       labels:
         app.kubernetes.io/component: applicationset-controller
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: argocd-applicationset-controller
         app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/version: v3.1.9
-        helm.sh/chart: argo-cd-9.0.6
+        app.kubernetes.io/version: v3.2.6
+        helm.sh/chart: argo-cd-9.3.7
     spec:
       affinity:
         podAntiAffinity:
@@ -214,7 +214,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: quay.io/argoproj/argocd:v3.1.9
+        image: quay.io/argoproj/argocd:v3.2.6
         imagePullPolicy: IfNotPresent
         name: applicationset-controller
         ports:
@@ -248,6 +248,8 @@ spec:
           name: gpg-keyring
         - mountPath: /app/config/reposerver/tls
           name: argocd-repo-server-tls
+        - mountPath: /home/argocd/params
+          name: argocd-cmd-params-cm
         - mountPath: /tmp
           name: tmp
       dnsPolicy: ClusterFirst
@@ -256,6 +258,13 @@ spec:
       serviceAccountName: argocd-applicationset-controller
       terminationGracePeriodSeconds: 30
       volumes:
+      - configMap:
+          items:
+          - key: applicationsetcontroller.profile.enabled
+            path: profiler.enabled
+          name: argocd-cmd-params-cm
+          optional: true
+        name: argocd-cmd-params-cm
       - name: argocd-repo-server-tls
         secret:
           items:

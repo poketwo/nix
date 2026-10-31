@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.6
+    app.kubernetes.io/version: v3.2.6
+    helm.sh/chart: argo-cd-9.3.7
   name: argocd-repo-server
   namespace: argocd
 spec:
@@ -21,16 +21,16 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: ffbe7a12236857c2c07ee24923e342b818ef07b154bcce3d530283458432c914
-        checksum/cmd-params: 40fab8f30065691ca801b63d89910439f95b0a62ad0183c450a6818a7dfa2c9b
+        checksum/cm: 55a6556e36deb01fa11337597541417e71f3d679cce224f6fad5a4de5567ad55
+        checksum/cmd-params: 736007f15749c381a2a3c56d1468b5fbb1722c651d59043880b9486c1a2a1bb1
       labels:
         app.kubernetes.io/component: repo-server
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: argocd-repo-server
         app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/version: v3.1.9
-        helm.sh/chart: argo-cd-9.0.6
+        app.kubernetes.io/version: v3.2.6
+        helm.sh/chart: argo-cd-9.3.7
     spec:
       affinity:
         podAntiAffinity:
@@ -70,6 +70,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: reposerver.git.request.timeout
+              name: argocd-cmd-params-cm
+              optional: true
+        - name: ARGOCD_GRPC_MAX_SIZE_MB
+          valueFrom:
+            configMapKeyRef:
+              key: reposerver.grpc.max.size
               name: argocd-cmd-params-cm
               optional: true
         - name: ARGOCD_LOG_FORMAT_TIMESTAMP
@@ -112,6 +118,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: reposerver.disable.tls
+              name: argocd-cmd-params-cm
+              optional: true
+        - name: ARGOCD_REPO_SERVER_ENABLE_BUILTIN_GIT_CONFIG
+          valueFrom:
+            configMapKeyRef:
+              key: reposerver.enable.builtin.git.config
               name: argocd-cmd-params-cm
               optional: true
         - name: ARGOCD_REPO_SERVER_HELM_MANIFEST_MAX_EXTRACTED_SIZE
@@ -296,7 +308,7 @@ spec:
               key: redis-username
               name: argocd-redis
               optional: true
-        image: quay.io/argoproj/argocd:v3.1.9
+        image: quay.io/argoproj/argocd:v3.2.6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
@@ -355,10 +367,10 @@ spec:
       initContainers:
       - command:
         - /bin/cp
-        - -n
+        - --update=none
         - /usr/local/bin/argocd
         - /var/run/argocd/argocd-cmp-server
-        image: quay.io/argoproj/argocd:v3.1.9
+        image: quay.io/argoproj/argocd:v3.2.6
         imagePullPolicy: IfNotPresent
         name: copyutil
         resources: {}
