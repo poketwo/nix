@@ -38,8 +38,12 @@ happened here.
 ## Order per hop
 
 1. Control plane first, turtwig: run the new kubeadm from the nix store
-   (`kubeadm upgrade plan`, `kubeadm upgrade apply vX.Y.Z`), then chimchar and
-   piplup (`kubeadm upgrade node`). `upgrade apply` also renews the control-plane
+   (`kubeadm upgrade plan`, then
+   `kubeadm upgrade apply vX.Y.Z --config /etc/kubernetes/kubeadm-upgrade.yaml`),
+   then chimchar and piplup
+   (`kubeadm upgrade node --config /etc/kubernetes/kubeadm-upgrade.yaml`).
+   The `--config` is not optional: without it kubeadm reinstalls the kube-proxy
+   addon (see the 1.32 lessons). `upgrade apply` also renews the control-plane
    certs (expire 2027-03-25).
 2. Deploy the hosts with the new kubelet/CRI-O. **Build on the dev box, never on
    a control plane**: turtwig/chimchar/piplup are 4 GB / 2 CPU Linodes and just
@@ -145,3 +149,18 @@ replacement decision independent of this.
 - After a broken in-place switch, reboot the node anyway once CRI-O is back
   (cordon, drain, reboot): flareon was Ready again 70 s after the reboot and
   that is the state the generation was actually tested in.
+- `kubeadm upgrade apply v1.32.3` without `--config` reinstalled the
+  kube-proxy addon: `InitConfiguration.skipPhases` only applies to `init`,
+  upgrades take their skip list from an `UpgradeConfiguration`. The new
+  DaemonSet started on all 8 nodes at 08:40 UTC next to Cilium's kube-proxy
+  replacement, rewrote iptables/conntrack sysctls, and within 15 s the gateway
+  on sylveon lost 185 shard reconnects (165 re-identified), with bot
+  image-server fetches timing out for 25 min. Fix was `kubectl -n kube-system
+  delete ds/kube-proxy cm/kube-proxy sa/kube-proxy role/kube-proxy
+  rolebinding/kube-proxy` + `clusterrolebinding/kubeadm:node-proxier`, then
+  `sudo kube-proxy --cleanup` on every node (it exits with "error tearing down
+  rules" but removes the jumps; delete the empty `KUBE-PROXY-CANARY` and
+  `KUBE-MARK-MASQ` chains with `iptables -X`/`ip6tables -X` afterwards).
+  `/etc/kubernetes/kubeadm-upgrade.yaml` (nix#119) now carries
+  `apply.skipPhases` and `node.skipPhases = [addon/kube-proxy]`; after any
+  kubeadm run, check `kubectl -n kube-system get ds kube-proxy` is NotFound.
