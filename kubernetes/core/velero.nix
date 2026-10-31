@@ -24,11 +24,6 @@
         deployNodeAgent = true;
         credentials.useSecret = false;
 
-        metrics = {
-          serviceMonitor = { enabled = true; autodetect = false; };
-          nodeAgentPodMonitor = { enabled = true; autodetect = false; };
-        };
-
         configuration = {
           features = "EnableCSI";
 
