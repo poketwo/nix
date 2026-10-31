@@ -35,7 +35,7 @@
 
     # Replacement for the single Valkey above: 3 pods with Sentinel and HAProxy in
     # front, so a drain fails over to a replica instead of emptying the cache.
-    helmReleases.gateway-cache-ha = {
+    helmReleases.gateway-valkey = {
       chart = transpire.fetchFromHelm {
         repo = "https://dandydeveloper.github.io/charts";
         name = "redis-ha";
@@ -44,7 +44,7 @@
       };
 
       values = {
-        fullnameOverride = "gateway-cache-ha";
+        fullnameOverride = "gateway-valkey";
         image = {
           repository = "docker.io/valkey/valkey";
           tag = "9.1.2";
