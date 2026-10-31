@@ -135,8 +135,13 @@ replacement decision independent of this.
   so MetalLB kept announcing the LB IP from the dead node and every ingress
   host returned 521 for ~40 min. Fix:
   `kubectl delete pod --force --grace-period=0` the stuck pods (stateless
-  ones only: bot shards, ingress-nginx, Deployments); the LB moved to another
-  node 10 s after the ingress pod was gone.
+  ones only: bot shards, ingress-nginx, Deployments), but only after
+  confirming on the host that their containers are really gone
+  (`sudo crictl ps` empty, no `conmon` processes). A forced delete only
+  removes the API object; if CRI-O still ran the shard, the StatefulSet
+  would start a second copy fighting over the same Discord session. On
+  flareon CRI-O had already removed every sandbox, so this was safe; the LB
+  moved to another node 10 s after the ingress pod was gone.
 - After a broken in-place switch, reboot the node anyway once CRI-O is back
   (cordon, drain, reboot): flareon was Ready again 70 s after the reboot and
   that is the state the generation was actually tested in.
