@@ -55,13 +55,25 @@
           };
         };
 
-        nodeAgent.resources = {
-          requests = { cpu = "500m"; memory = "1Gi"; };
-          limits = { cpu = "2"; memory = "8Gi"; };
+        nodeAgent = {
+          extraArgs = [ "--node-agent-configmap=velero-node-agent" ];
+          resources = {
+            requests = { cpu = "500m"; memory = "1Gi"; };
+            limits = { cpu = "2"; memory = "8Gi"; };
+          };
         };
       };
 
       includeCRDs = true;
+    };
+
+    # A ReadOnlyMany PVC from a CephFS snapshot is snapshot-backed (ceph-csi mounts
+    # the .snap dir, no clone); a ReadWriteOnce one makes the Ceph mgr copy every file.
+    resources.v1.ConfigMap.velero-node-agent.data.config = builtins.toJSON {
+      backupPVC = {
+        cephfs-nvme.readOnly = true;
+        cephfs-nvme-retain.readOnly = true;
+      };
     };
 
     resources.v1.Secret.r2-credentials = {
