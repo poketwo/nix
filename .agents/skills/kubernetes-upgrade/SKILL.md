@@ -14,9 +14,21 @@ happened here.
 ## Where the version lives
 
 - `flake.nix` input `nixpkgs-k8s` pins the nixpkgs commit that provides
-  kubernetes and cri-o (they move together). Candidate commits found:
-  1.32.3 `550b72055340`, 1.33.1 `b7a478c8eda2`, 1.35.2 `4aba42448195`; the 1.34.x
-  commit still needs locating (nixpkgs commit history of `pkgs/applications/networking/cluster/kubernetes`).
+  kubernetes and cri-o. They do not always move together, so pick commits where
+  both match (verified 2026-10-31 by reading `version =` at each commit;
+  kubernetes moved to `pkgs/by-name/ku/kubernetes/package.nix` in 2025-07, cri-o
+  stayed at `pkgs/applications/virtualization/cri-o/default.nix` until 2026-05):
+
+  | Hop | nixpkgs commit | kubernetes | cri-o |
+  |---|---|---|---|
+  | current | `882842d2a908700540d206baa79efb922ac1c33d` | 1.31.2 | 1.31.2 |
+  | 1.32 | `550b72055340` | 1.32.3 | 1.32.0 |
+  | 1.33 | `4acc7f1d238d` | 1.33.4 | 1.33.3 |
+  | 1.34 | `e9258e24d7ba` | 1.34.3 | 1.34.3 |
+  | 1.35 | `4aba42448195` (or `917a7562e399` for 1.35.4) | 1.35.2 | 1.35.0 |
+
+  `gh api 'repos/NixOS/nixpkgs/commits?path=<file>&per_page=60'` lists the bump
+  commits per path if these need refreshing.
 - `modules/poketwo/kubernetes.nix`: kubeadm config (still `kubeadm.k8s.io/v1beta3`;
   move to `v1beta4`, where extraArgs become `[{name, value}]` lists), kubelet
   config, CRI-O, firewall ports.
