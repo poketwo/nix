@@ -25,6 +25,16 @@ let
     networking.serviceSubnet = "2606:c2c0:5:1:2::/112";
   };
 
+  # `kubeadm upgrade apply/node` ignore InitConfiguration.skipPhases and
+  # reinstall the kube-proxy addon, which Cilium replaces. Run upgrades with
+  # `--config /etc/kubernetes/kubeadm-upgrade.yaml`.
+  upgradeConfiguration = yaml.generate "kubeadm-upgrade.yaml" {
+    apiVersion = "kubeadm.k8s.io/v1beta4";
+    kind = "UpgradeConfiguration";
+    apply.skipPhases = [ "addon/kube-proxy" ];
+    node.skipPhases = [ "addon/kube-proxy" ];
+  };
+
   kubeletConfiguration = yaml.generate "kubeadm-kubelet.yaml" {
     apiVersion = "kubeadm.k8s.io/v1beta1";
     kind = "KubeletConfiguration";
@@ -68,6 +78,7 @@ in
     environment = {
       systemPackages = with pkgs; [ kubernetes conntrack-tools ethtool iptables socat ];
       etc."kubernetes/kubeadm.yaml".source = kubeadmYaml;
+      etc."kubernetes/kubeadm-upgrade.yaml".source = upgradeConfiguration;
     };
 
     virtualisation.cri-o.enable = true;
