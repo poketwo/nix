@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/instance: velero
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
-    helm.sh/chart: velero-6.7.0
+    helm.sh/chart: velero-11.4.0
   name: node-agent
   namespace: velero
 spec:
@@ -23,9 +23,11 @@ spec:
         app.kubernetes.io/instance: velero
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: velero
-        helm.sh/chart: velero-6.7.0
+        helm.sh/chart: velero-11.4.0
         name: node-agent
+        role: node-agent
     spec:
+      automountServiceAccountToken: true
       containers:
       - args:
         - node-agent
@@ -52,7 +54,7 @@ spec:
               fieldPath: metadata.namespace
         - name: VELERO_SCRATCH_DIR
           value: /scratch
-        image: velero/velero:v1.13.2
+        image: docker.io/velero/velero:v1.17.1
         imagePullPolicy: IfNotPresent
         name: node-agent
         ports:
@@ -71,6 +73,9 @@ spec:
         - mountPath: /host_pods
           mountPropagation: HostToContainer
           name: host-pods
+        - mountPath: /host_plugins
+          mountPropagation: HostToContainer
+          name: host-plugins
         - mountPath: /scratch
           name: scratch
       dnsPolicy: ClusterFirst
@@ -82,6 +87,9 @@ spec:
       - name: cloud-credentials
         secret:
           secretName: velero
+      - hostPath:
+          path: /var/lib/kubelet/plugins
+        name: host-plugins
       - hostPath:
           path: /var/lib/kubelet/pods
         name: host-pods
