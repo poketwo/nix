@@ -171,3 +171,10 @@ replacement decision independent of this.
   CoreDNS image bump is a PR there, not something kubeadm does. After a kubeadm
   run, `kubectl -n kube-system get deploy coredns -o jsonpath='{.spec.template.spec.containers[0].image}'`
   must still match coredns.nix.
+  Adopting a live object into Argo does not clean it: Argo's server-side apply
+  only owns the fields in the manifest, and kubeadm's old `Update` entries keep
+  theirs (affinity, memory limit, legacy Service labels, the metrics port). An
+  SSA with `--field-manager=kubeadm` does not clear them either. What worked:
+  render the dir from the `cluster` branch, `kubectl replace -f` the Deployment
+  (one rollout) and JSON-patch `remove` the Service leftovers, then
+  `kubectl diff -f <dir>` must print nothing and the Argo app goes back to Synced.
