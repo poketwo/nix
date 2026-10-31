@@ -80,6 +80,13 @@ in
               # Use the node's resolver for `forward`, not ourselves.
               dnsPolicy = "Default";
               tolerations = [{ key = "node-role.kubernetes.io/control-plane"; effect = "NoSchedule"; }];
+              # Never both replicas on one node, so a drain keeps DNS up.
+              topologySpreadConstraints = [{
+                maxSkew = 1;
+                topologyKey = "kubernetes.io/hostname";
+                whenUnsatisfiable = "DoNotSchedule";
+                labelSelector.matchLabels = labels;
+              }];
               containers = [{
                 name = "coredns";
                 image = "registry.k8s.io/coredns/coredns:v1.11.3";
@@ -92,6 +99,11 @@ in
                 resources.requests = { cpu = "100m"; memory = "70Mi"; };
                 livenessProbe.httpGet = { path = "/health"; port = 8080; };
                 readinessProbe.httpGet = { path = "/ready"; port = 8181; };
+                securityContext = {
+                  allowPrivilegeEscalation = false;
+                  readOnlyRootFilesystem = true;
+                  capabilities = { drop = [ "ALL" ]; add = [ "NET_BIND_SERVICE" ]; };
+                };
                 volumeMounts = [{ name = "config"; mountPath = "/etc/coredns"; readOnly = true; }];
               }];
               volumes = [{ name = "config"; configMap.name = "coredns"; }];
