@@ -28,5 +28,6 @@ spec:
   containers: [{name: t, image: busybox, command: ["sh","-c","echo ok > /d/f && cat /d/f"], volumeMounts: [{name: d, mountPath: /d}]}]
   volumes: [{name: d, persistentVolumeClaim: {claimName: csi-smoke}}]
 Y
-k -n rook-ceph wait --for=jsonpath='{.status.phase}'=Succeeded pod/csi-smoke --timeout=180s && k -n rook-ceph logs csi-smoke
+if k -n rook-ceph wait --for=jsonpath='{.status.phase}'=Succeeded pod/csi-smoke --timeout=180s && [ "$(k -n rook-ceph logs csi-smoke)" = ok ]; then RC=0; echo "SMOKE OK"; else RC=1; echo "SMOKE FAILED"; k -n rook-ceph describe pod csi-smoke | tail -15; fi
 k -n rook-ceph delete pod/csi-smoke pvc/csi-smoke --wait=false >/dev/null
+exit $RC
