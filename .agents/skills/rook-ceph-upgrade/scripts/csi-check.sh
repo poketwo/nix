@@ -29,5 +29,5 @@ spec:
   volumes: [{name: d, persistentVolumeClaim: {claimName: csi-smoke}}]
 Y
 if k -n rook-ceph wait --for=jsonpath='{.status.phase}'=Succeeded pod/csi-smoke --timeout=180s && [ "$(k -n rook-ceph logs csi-smoke)" = ok ]; then RC=0; echo "SMOKE OK"; else RC=1; echo "SMOKE FAILED"; k -n rook-ceph describe pod csi-smoke | tail -15; fi
-k -n rook-ceph delete pod/csi-smoke pvc/csi-smoke --wait=false >/dev/null
+k -n rook-ceph delete pod/csi-smoke pvc/csi-smoke --wait=false >/dev/null || RC=1
 exit $RC
