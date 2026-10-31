@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  config: '{"backupPVC":{"cephfs-nvme":{"readOnly":true},"cephfs-nvme-retain":{"readOnly":true}}}'
+kind: ConfigMap
+metadata:
+  name: velero-node-agent
+  namespace: velero
