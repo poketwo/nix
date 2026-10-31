@@ -7,7 +7,7 @@ let
   separator = pkgs.writeText "separator.yaml" "\n---\n";
 
   initConfiguration = yaml.generate "kubeadm-init.yaml" {
-    apiVersion = "kubeadm.k8s.io/v1beta3";
+    apiVersion = "kubeadm.k8s.io/v1beta4";
     kind = "InitConfiguration";
     localAPIEndpoint = {
       advertiseAddress = "::";
@@ -17,9 +17,9 @@ let
   };
 
   clusterConfiguration = yaml.generate "kubeadm-cluster.yaml" {
-    apiVersion = "kubeadm.k8s.io/v1beta3";
+    apiVersion = "kubeadm.k8s.io/v1beta4";
     kind = "ClusterConfiguration";
-    kubernetesVersion = "v1.31.2";
+    kubernetesVersion = "v1.32.3";
     clusterName = "hfym-ds";
     controlPlaneEndpoint = "ds.hfym.co";
     networking.serviceSubnet = "2606:c2c0:5:1:2::/112";
@@ -46,7 +46,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Pin kubernetes and cri-o packages to nixpkgs-k8s to keep k8s at 1.31.2
+    # Pin kubernetes and cri-o packages to nixpkgs-k8s to keep k8s at 1.32.3
     # while allowing the rest of the system to track nixos-unstable.
     nixpkgs.overlays = [
       (final: prev:
