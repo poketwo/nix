@@ -5,7 +5,7 @@ metadata:
   labels:
     app: redis-ha
     argocd-redis-ha: replica
-    chart: redis-ha-4.26.1
+    chart: redis-ha-4.27.6
     heritage: Helm
     release: argocd
   name: argocd-redis-ha-server
@@ -21,7 +21,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/init-config: 95b021d25eb48ccc0819501bce1d7d56fb3154f6a78a887f24216ecd39563232
+        checksum/init-config: 02472a61e8344829fa5069b7b8c3bc71452754be2bd4c69a6ebd95efea8ff4bf
       labels:
         app: redis-ha
         argocd-redis-ha: replica

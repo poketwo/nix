@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v2.11.3
-    helm.sh/chart: argo-cd-7.1.3
+    app.kubernetes.io/version: v2.12.6
+    helm.sh/chart: argo-cd-7.6.12
   name: argocd-application-controller
   namespace: argocd
 spec:
@@ -22,16 +22,16 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 70a9749cbd7d249efaf340ca685f20e62e7f157331e7ae69a9ff9cd74367ce1d
-        checksum/cmd-params: 177d1ad028350be60f25c95c44c438644d1bd2825b81149cc9e0e9f4ef0ffecd
+        checksum/cm: 87d1b6ded99da1c51ed9c0a052094b79ef53eabf6e17d1622ace245df29c3ccc
+        checksum/cmd-params: 02ab6741fb73e3ba3e672e6ded9e86181db680d60ed30a52a633c51ffc034d61
       labels:
         app.kubernetes.io/component: application-controller
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: argocd-application-controller
         app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/version: v2.11.3
-        helm.sh/chart: argo-cd-7.1.3
+        app.kubernetes.io/version: v2.12.6
+        helm.sh/chart: argo-cd-7.6.12
     spec:
       affinity:
         podAntiAffinity:
@@ -231,6 +231,18 @@ spec:
             secretKeyRef:
               key: auth
               name: argocd-redis
+        - name: REDIS_SENTINEL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-sentinel-password
+              name: argocd-redis-ha-haproxy
+              optional: true
+        - name: REDIS_SENTINEL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: redis-sentinel-username
+              name: argocd-redis-ha-haproxy
+              optional: true
         - name: REDIS_SERVER
           valueFrom:
             configMapKeyRef:
@@ -243,7 +255,7 @@ spec:
               key: redis-username
               name: argocd-redis
               optional: true
-        image: quay.io/argoproj/argocd:v2.11.3
+        image: quay.io/argoproj/argocd:v2.12.6
         imagePullPolicy: IfNotPresent
         name: application-controller
         ports:
