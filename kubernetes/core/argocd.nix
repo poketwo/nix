@@ -6,8 +6,8 @@
       chart = transpire.fetchFromHelm {
         repo = "https://argoproj.github.io/argo-helm";
         name = "argo-cd";
-        version = "9.3.7";
-        sha256 = "PC2Vg8JOA6RyMnAAoLvhE8rRw+J/fcoxthL1tIYiFGs=";
+        version = "9.5.11";
+        sha256 = "hTMNV8v3ahwZe2LYad9IHpZHT+SDPVZTZRmtV4Dxs8w=";
       };
 
       values = {
