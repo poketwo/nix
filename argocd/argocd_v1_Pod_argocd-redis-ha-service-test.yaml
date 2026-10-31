@@ -16,7 +16,7 @@ spec:
     - sh
     - -c
     - redis-cli -h argocd-redis-ha-haproxy -p 6379 info server
-    image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
+    image: ecr-public.aws.com/docker/library/redis:7.2.11-alpine
     name: argocd-service-test
     resources: {}
     securityContext:

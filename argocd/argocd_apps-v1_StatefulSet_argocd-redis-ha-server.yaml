@@ -48,7 +48,7 @@ spec:
             secretKeyRef:
               key: auth
               name: argocd-redis
-        image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
+        image: ecr-public.aws.com/docker/library/redis:7.2.11-alpine
         imagePullPolicy: IfNotPresent
         lifecycle:
           preStop:
@@ -122,7 +122,7 @@ spec:
             secretKeyRef:
               key: auth
               name: argocd-redis
-        image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
+        image: ecr-public.aws.com/docker/library/redis:7.2.11-alpine
         imagePullPolicy: IfNotPresent
         lifecycle: {}
         livenessProbe:
@@ -194,7 +194,7 @@ spec:
           value: 40000915ab58c3fa8fd888fb8b24711944e6cbb4
         - name: SENTINEL_ID_2
           value: 2bbec7894d954a8af3bb54d13eaec53cb024e2ca
-        image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
+        image: ecr-public.aws.com/docker/library/redis:7.2.11-alpine
         imagePullPolicy: IfNotPresent
         name: split-brain-fix
         resources: {}
@@ -231,7 +231,7 @@ spec:
           value: 40000915ab58c3fa8fd888fb8b24711944e6cbb4
         - name: SENTINEL_ID_2
           value: 2bbec7894d954a8af3bb54d13eaec53cb024e2ca
-        image: ecr-public.aws.com/docker/library/redis:7.2.8-alpine
+        image: ecr-public.aws.com/docker/library/redis:7.2.11-alpine
         imagePullPolicy: IfNotPresent
         name: config-init
         resources: {}
