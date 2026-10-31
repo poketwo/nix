@@ -20,6 +20,10 @@ spec:
     type: Recreate
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: '8085'
+        prometheus.io/scrape: 'true'
       labels:
         app.kubernetes.io/instance: velero
         app.kubernetes.io/managed-by: Helm
