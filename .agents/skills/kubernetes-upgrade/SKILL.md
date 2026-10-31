@@ -48,7 +48,7 @@ happened here.
    ```bash
    # dev box (Determinate Nix: curl -sSfL https://install.determinate.systems/nix | sh -s -- install linux --no-confirm --init none)
    OUT=$(nix build --no-link --print-out-paths .#nixosConfigurations.<host>.config.system.build.toplevel)   # ~1 min from cache
-   nix copy --to ssh://devin@<host>.hfym.co "$OUT"
+   nix copy -s --to "ssh://devin@<host>.hfym.co?remote-program=sudo nix-store" "$OUT"
    ssh devin@<host>.hfym.co "sudo $OUT/bin/switch-to-configuration switch && sudo nix-env -p /nix/var/nix/profiles/system --set $OUT"
    ```
    Activate first, set the system profile only after `switch` succeeded: a
@@ -107,3 +107,25 @@ cert-manager 1.19 (<= 1.31) -> 1.20 after 1.32, Velero 1.18 (1.33-1.35 tested),
 Argo CD 3.5, MetalLB 0.14, CNPG 0.21 (old; upgrade separately). Cilium 1.20
 is needed before any 1.36. ingress-nginx is archived upstream and needs a
 replacement decision independent of this.
+
+## Lessons from the 1.31 -> 1.32 hop (2026-10-31)
+
+- `nix copy --to ssh://devin@host` dies with `error: unexpected end-of-file`
+  mid-transfer: the devin user is not a trusted Nix user, so the remote
+  `nix-store --serve --write` refuses unsigned (locally built) paths. Fix is
+  `?remote-program=sudo nix-store` in the store URL; `-s` lets the host
+  substitute the cached paths itself and only the handful of locally built
+  ones go over SSH.
+- `kubeadm upgrade apply` took 3 min on turtwig (4 GB RAM is enough; the
+  kubeadm binary from the copied `kubernetes-1.32.3` store path is run as
+  `sudo <store>/bin/kubeadm`). `kubeadm upgrade node` 3 min each on
+  chimchar/piplup. Control-plane reboot deploys: ~3.5 min to Ready, API
+  endpoints back ~1 min later.
+- Do NOT `switch` a worker across a CRI-O minor. On flareon the new CRI-O
+  did not adopt the running pods: on start it removed every old pod sandbox
+  (113), and each CNI teardown waited ~43 s for the Cilium agent, which was
+  itself one of the killed pods, so the node was NotReady for ~1.5 h with its
+  OSDs down (Ceph 31% degraded, still serving). Use the AGENTS.md worker
+  path instead: cordon, drain, `switch-to-configuration boot`, reboot,
+  uncordon. For sylveon that costs one gateway re-identify, which is still
+  cheaper than this.
