@@ -55,11 +55,8 @@
         redis = {
           config = {
             save = ''""'';
-            appendonly = "no";
             maxmemory-policy = "noeviction";
             min-replicas-to-write = 0;
-            repl-backlog-size = "1gb";
-            repl-diskless-load = "on-empty-db";
             client-output-buffer-limit = "replica 16gb 16gb 0";
           };
           resources = {
@@ -69,13 +66,7 @@
         };
         persistentVolume.enabled = false;
         podDisruptionBudget.maxUnavailable = 1;
-        haproxy = {
-          enabled = true;
-          # the default of 1 failed check would cut the gateway off on a fork stall
-          checkFall = 3;
-          podDisruptionBudget.maxUnavailable = 1;
-        };
-        exporter.enabled = true;
+        haproxy.enabled = true;
       };
     };
 
