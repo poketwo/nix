@@ -34,6 +34,7 @@ spec:
         - node-agent
         - server
         - --features=EnableCSI
+        - --data-mover-prepare-timeout=2h
         command:
         - /velero
         env:
