@@ -64,7 +64,7 @@ in
         };
 
         compactor = {
-          persistentVolume.size = "500Mi";
+          persistentVolume.size = "20Gi";
           resources = {
             limits = { memory = "2.1Gi"; };
             requests = { cpu = "50m"; memory = "50Mi"; };
@@ -81,7 +81,7 @@ in
 
         ingester = {
           replicas = 3;
-          persistentVolume.size = "2Gi";
+          persistentVolume.size = "50Gi";
           resources = {
             limits = { memory = "12Gi"; };
             requests = { cpu = "200m"; memory = "300Mi"; };
