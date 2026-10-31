@@ -129,3 +129,14 @@ replacement decision independent of this.
   path instead: cordon, drain, `switch-to-configuration boot`, reboot,
   uncordon. For sylveon that costs one gateway re-identify, which is still
   cheaper than this.
+- When a worker's kubelet is down, its pods sit in Terminating and nothing
+  recreates StatefulSet pods (the bot shards) until the kubelet confirms the
+  deletion. A Terminating ingress-nginx pod also stays in the EndpointSlice,
+  so MetalLB kept announcing the LB IP from the dead node and every ingress
+  host returned 521 for ~40 min. Fix:
+  `kubectl delete pod --force --grace-period=0` the stuck pods (stateless
+  ones only: bot shards, ingress-nginx, Deployments); the LB moved to another
+  node 10 s after the ingress pod was gone.
+- After a broken in-place switch, reboot the node anyway once CRI-O is back
+  (cordon, drain, reboot): flareon was Ready again 70 s after the reboot and
+  that is the state the generation was actually tested in.
