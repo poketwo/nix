@@ -53,9 +53,16 @@ happened here.
    ```
    Activate first, set the system profile only after `switch` succeeded: a
    refused switch (kernel/dbus change) must not leave an untested generation as
-   the boot default. For a reboot deploy use `switch-to-configuration boot`
-   instead of `switch` and then `nix-env --set`, confirm with `bootctl list`,
-   reboot.
+   the boot default. For a reboot deploy do it the other way round, like
+   `nixos-rebuild boot`: `nix-env --set` first, then
+   `switch-to-configuration boot` (the bootloader installer reads the profile),
+   verify the default entry (`bootctl list` on the systemd-boot workers,
+   `grep -m1 menuentry /boot/grub/grub.cfg` on the GRUB control planes), reboot.
+   After a control-plane reboot, if the node stays NotReady for >2 min with
+   `lookup ds.hfym.co: Temporary failure in name resolution` in the kubelet log
+   and no IPv6 reachability from inet0, `sudo networkctl reconfigure inet0`
+   brought piplup back immediately (2026-10-31; chimchar and turtwig did not
+   need it).
    `switch` restarts kubelet and CRI-O and both keep containers running, so a
    hop should need no drain. Try it on one worker first; if the CRI-O restart
    misbehaves, fall back to the cordon/drain/reboot procedure in AGENTS.md
