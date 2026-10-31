@@ -43,7 +43,9 @@ happened here.
    then chimchar and piplup
    (`kubeadm upgrade node --config /etc/kubernetes/kubeadm-upgrade.yaml`).
    The `--config` is not optional: without it kubeadm reinstalls the kube-proxy
-   addon (see the 1.32 lessons). `upgrade apply` also renews the control-plane
+   addon (see the 1.32 lessons). The file comes from the nix#119 generation, so
+   the control planes must run a generation at or after it (check
+   `test -f /etc/kubernetes/kubeadm-upgrade.yaml` on each) before the hop. `upgrade apply` also renews the control-plane
    certs (expire 2027-03-25).
 2. Deploy the hosts with the new kubelet/CRI-O. **Build on the dev box, never on
    a control plane**: turtwig/chimchar/piplup are 4 GB / 2 CPU Linodes and just
