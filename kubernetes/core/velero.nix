@@ -40,6 +40,8 @@
           }];
 
           volumeSnapshotLocation = [ ];
+          # CephFS clones copy the whole volume; a 64 GiB one exceeded the 30m default
+          dataMoverPrepareTimeout = "2h";
         };
 
         schedules = {
