@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.4.6
-    helm.sh/chart: argo-cd-10.2.2
+    app.kubernetes.io/version: v3.5.6
+    helm.sh/chart: argo-cd-10.11.6
   name: argocd-repo-server
   namespace: argocd
 spec:
@@ -21,16 +21,16 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 359c939ce3830b9be7810fb9f17cfa3a6c110a3ea01fc9fed83ff56aff213fd0
-        checksum/cmd-params: 62237a0c6b6472b595da756615e1c65205cae3f2d7ebefbce6b3523c649468dc
+        checksum/cm: 9631ff83773d8fe87f1c8ac7ce4fda0ff352fc2eae01e1ee9266e163aeda173b
+        checksum/cmd-params: 8b864ee1f12641c48ab1b1a7dbb11da89da6aae79e8a8490fc724911d4ef09be
       labels:
         app.kubernetes.io/component: repo-server
         app.kubernetes.io/instance: argocd
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: argocd-repo-server
         app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/version: v3.4.6
-        helm.sh/chart: argo-cd-10.2.2
+        app.kubernetes.io/version: v3.5.6
+        helm.sh/chart: argo-cd-10.11.6
     spec:
       affinity:
         podAntiAffinity:
@@ -260,6 +260,12 @@ spec:
               key: reposerver.tls.minversion
               name: argocd-cmd-params-cm
               optional: true
+        - name: GRPC_ENABLE_TXT_SERVICE_CONFIG
+          valueFrom:
+            configMapKeyRef:
+              key: reposerver.grpc.enable.txt.service.config
+              name: argocd-cmd-params-cm
+              optional: true
         - name: HELM_CACHE_HOME
           value: /helm-working-dir
         - name: HELM_CONFIG_HOME
@@ -308,7 +314,7 @@ spec:
               key: redis-username
               name: argocd-redis
               optional: true
-        image: quay.io/argoproj/argocd:v3.4.6
+        image: quay.io/argoproj/argocd:v3.5.6
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
@@ -371,7 +377,7 @@ spec:
         command:
         - sh
         - -c
-        image: quay.io/argoproj/argocd:v3.4.6
+        image: quay.io/argoproj/argocd:v3.5.6
         imagePullPolicy: IfNotPresent
         name: copyutil
         resources: {}
@@ -417,6 +423,7 @@ spec:
         name: ssh-known-hosts
       - configMap:
           name: argocd-tls-certs-cm
+          optional: true
         name: tls-certs
       - emptyDir: {}
         name: tmp
