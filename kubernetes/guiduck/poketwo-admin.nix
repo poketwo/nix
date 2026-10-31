@@ -21,6 +21,7 @@
               DATABASE_URI.value = "mongodb://$(DATABASE_USERNAME):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/?authSource=admin&tls=true&tlsAllowInvalidCertificates=true";
 
               MESSAGE_LOG_KEY.valueFrom.secretKeyRef = { name = "guiduck"; key = "message-log-key"; };
+              BOT_TOKEN.valueFrom.secretKeyRef = { name = "guiduck"; key = "token"; };
               SECRET_KEY.valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "secret-key"; };
               DISCORD_CLIENT_ID.valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "discord-client-id"; };
               DISCORD_CLIENT_SECRET.valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "discord-client-secret"; };
