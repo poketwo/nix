@@ -49,8 +49,13 @@ happened here.
    # dev box (Determinate Nix: curl -sSfL https://install.determinate.systems/nix | sh -s -- install linux --no-confirm --init none)
    OUT=$(nix build --no-link --print-out-paths .#nixosConfigurations.<host>.config.system.build.toplevel)   # ~1 min from cache
    nix copy --to ssh://devin@<host>.hfym.co "$OUT"
-   ssh devin@<host>.hfym.co "sudo nix-env -p /nix/var/nix/profiles/system --set $OUT && sudo $OUT/bin/switch-to-configuration switch"   # or boot + reboot
+   ssh devin@<host>.hfym.co "sudo $OUT/bin/switch-to-configuration switch && sudo nix-env -p /nix/var/nix/profiles/system --set $OUT"
    ```
+   Activate first, set the system profile only after `switch` succeeded: a
+   refused switch (kernel/dbus change) must not leave an untested generation as
+   the boot default. For a reboot deploy use `switch-to-configuration boot`
+   instead of `switch` and then `nix-env --set`, confirm with `bootctl list`,
+   reboot.
    `switch` restarts kubelet and CRI-O and both keep containers running, so a
    hop should need no drain. Try it on one worker first; if the CRI-O restart
    misbehaves, fall back to the cordon/drain/reboot procedure in AGENTS.md
@@ -59,9 +64,11 @@ happened here.
 3. Kubelets may lag the API server by up to 3 minors, so workers can skip hops:
    control plane 1.32 -> 1.33 -> 1.34 with workers on 1.31, roll workers to 1.34,
    then 1.35 everywhere. Simpler and safer is to deploy every node every hop.
-4. The control planes run a 6.6 kernel from a March generation and have never
-   had a reboot-deploy; the first hop is the moment to do it (`nixos-rebuild boot`
-   + reboot, one at a time, etcd quorum 2/3 meanwhile).
+4. All three control planes were reboot-deployed on 2026-10-31 (kernel 6.18,
+   ~3.5 min each, etcd at 2/3 meanwhile, all API endpoints back within a
+   minute of Ready). When a control plane needs a reboot deploy, use the same
+   local build + `nix copy` + `switch-to-configuration boot` from step 2; do
+   not run `nixos-rebuild --build-host <control-plane>` on them.
 5. Verify: `kubectl get nodes` versions, `kubectl -n kube-system get pods`,
    Cilium `cilium status` on a node, Ceph baseline, Argo apps Synced, a PVC smoke
    test (rook-ceph-upgrade `csi-check.sh`).
