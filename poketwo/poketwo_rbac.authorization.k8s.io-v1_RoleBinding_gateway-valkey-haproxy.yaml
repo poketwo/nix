@@ -1,0 +1,18 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app: redis-ha
+    chart: redis-ha-4.39.0
+    component: haproxy
+    heritage: Helm
+    release: gateway-valkey
+  name: gateway-valkey-haproxy
+  namespace: poketwo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gateway-valkey-haproxy
+subjects:
+- kind: ServiceAccount
+  name: gateway-valkey-haproxy

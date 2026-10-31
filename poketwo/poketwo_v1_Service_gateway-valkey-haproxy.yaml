@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: redis-ha
+    chart: redis-ha-4.39.0
+    component: haproxy
+    heritage: Helm
+    release: gateway-valkey
+  name: gateway-valkey-haproxy
+  namespace: poketwo
+spec:
+  ports:
+  - name: tcp-haproxy
+    port: 6379
+    protocol: TCP
+    targetPort: redis
+  selector:
+    app: redis-ha-haproxy
+    release: gateway-valkey
+  type: ClusterIP

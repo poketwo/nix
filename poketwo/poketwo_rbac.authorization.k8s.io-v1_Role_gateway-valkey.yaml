@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: redis-ha
+    chart: redis-ha-4.39.0
+    heritage: Helm
+    release: gateway-valkey
+  name: gateway-valkey
+  namespace: poketwo
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - endpoints
+  verbs:
+  - get
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get

@@ -1,0 +1,335 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  annotations: {}
+  labels:
+    app: redis-ha
+    chart: redis-ha-4.39.0
+    gateway-valkey: replica
+    heritage: Helm
+    release: gateway-valkey
+  name: gateway-valkey-server
+  namespace: poketwo
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis-ha
+      release: gateway-valkey
+  serviceName: gateway-valkey
+  template:
+    metadata:
+      annotations:
+        checksum/init-config: 0a1d6260ad42ba505fb2a3b63d5875ed78b692090ada5e0690683590420ecbe2
+        prometheus.io/path: /metrics
+        prometheus.io/port: '9121'
+        prometheus.io/scrape: 'true'
+      labels:
+        app: redis-ha
+        gateway-valkey: replica
+        release: gateway-valkey
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: redis-ha
+                gateway-valkey: replica
+                release: gateway-valkey
+            topologyKey: kubernetes.io/hostname
+      automountServiceAccountToken: false
+      containers:
+      - args:
+        - /data/conf/redis.conf
+        command:
+        - redis-server
+        env:
+        - name: AUTH
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: gateway-cache
+        image: docker.io/valkey/valkey:9.1.2
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - /readonly-config/trigger-failover-if-master.sh
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - /health/redis_liveness.sh
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
+        name: redis
+        ports:
+        - containerPort: 6379
+          name: redis
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - /health/redis_readiness.sh
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 128Gi
+          requests:
+            memory: 48Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        startupProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - /health/redis_readiness.sh
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
+        volumeMounts:
+        - mountPath: /readonly-config
+          name: config
+          readOnly: true
+        - mountPath: /data
+          name: data
+        - mountPath: /health
+          name: health
+      - env:
+        - name: REDIS_ADDR
+          value: redis://localhost:6379
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: gateway-cache
+        image: quay.io/oliver006/redis_exporter:v1.86.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 9121
+          initialDelaySeconds: 15
+          periodSeconds: 15
+          timeoutSeconds: 3
+        name: redis-exporter
+        ports:
+        - containerPort: 9121
+          name: exporter-port
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 9121
+          initialDelaySeconds: 15
+          periodSeconds: 15
+          successThreshold: 2
+          timeoutSeconds: 3
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+      - args:
+        - /data/conf/sentinel.conf
+        command:
+        - redis-sentinel
+        env:
+        - name: AUTH
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: gateway-cache
+        image: docker.io/valkey/valkey:9.1.2
+        imagePullPolicy: IfNotPresent
+        lifecycle: {}
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - /health/sentinel_liveness.sh
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
+        name: sentinel
+        ports:
+        - containerPort: 26379
+          name: sentinel
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - /health/sentinel_liveness.sh
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 3
+          timeoutSeconds: 15
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        startupProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - /health/sentinel_liveness.sh
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 15
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /health
+          name: health
+      - args:
+        - /readonly-config/fix-split-brain.sh
+        command:
+        - sh
+        env:
+        - name: AUTH
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: gateway-cache
+        - name: SENTINEL_ID_0
+          value: ec5b9408bcaf2d7e3d86bd588bd0afc29903702f
+        - name: SENTINEL_ID_1
+          value: 7dab315d6a58fb8947c9ebb81eadb1b4cb68c652
+        - name: SENTINEL_ID_2
+          value: 7b8a238b503dea8e6bcfd3a480f479fb012b198d
+        image: docker.io/valkey/valkey:9.1.2
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - cat
+            - /readonly-config/redis.conf
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
+        name: split-brain-fix
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - test -d /proc/1
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /readonly-config
+          name: config
+          readOnly: true
+        - mountPath: /data
+          name: data
+      initContainers:
+      - args:
+        - /readonly-config/init.sh
+        command:
+        - sh
+        env:
+        - name: AUTH
+          valueFrom:
+            secretKeyRef:
+              key: redis-password
+              name: gateway-cache
+        - name: SENTINEL_ID_0
+          value: ec5b9408bcaf2d7e3d86bd588bd0afc29903702f
+        - name: SENTINEL_ID_1
+          value: 7dab315d6a58fb8947c9ebb81eadb1b4cb68c652
+        - name: SENTINEL_ID_2
+          value: 7b8a238b503dea8e6bcfd3a480f479fb012b198d
+        image: docker.io/valkey/valkey:9.1.2
+        imagePullPolicy: IfNotPresent
+        name: config-init
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /readonly-config
+          name: config
+          readOnly: true
+        - mountPath: /data
+          name: data
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      serviceAccountName: gateway-valkey
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - configMap:
+          name: gateway-valkey-configmap
+        name: config
+      - emptyDir: {}
+        name: data
+      - configMap:
+          defaultMode: 493
+          name: gateway-valkey-health-configmap
+        name: health
+  updateStrategy:
+    type: RollingUpdate

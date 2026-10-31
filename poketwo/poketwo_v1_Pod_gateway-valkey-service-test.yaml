@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    helm.sh/hook: test-success
+  labels:
+    app: redis-ha
+    chart: redis-ha-4.39.0
+    heritage: Helm
+    release: gateway-valkey
+  name: gateway-valkey-service-test
+  namespace: poketwo
+spec:
+  containers:
+  - command:
+    - sh
+    - -c
+    - redis-cli -h gateway-valkey-haproxy -p 6379 info server
+    image: docker.io/valkey/valkey:9.1.2
+    name: gateway-valkey-service-test
+    resources: {}
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      runAsNonRoot: true
+      runAsUser: 1000
+      seccompProfile:
+        type: RuntimeDefault
+  nodeSelector: {}
+  restartPolicy: Never
+  tolerations: []

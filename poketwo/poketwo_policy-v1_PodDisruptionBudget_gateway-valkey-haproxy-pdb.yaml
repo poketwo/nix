@@ -1,0 +1,17 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app: redis-ha
+    chart: redis-ha-4.39.0
+    heritage: Helm
+    release: gateway-valkey
+  name: gateway-valkey-haproxy-pdb
+  namespace: poketwo
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: redis-ha-haproxy
+      component: haproxy
+      release: gateway-valkey
