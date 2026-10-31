@@ -6,23 +6,28 @@
       chart = transpire.fetchFromHelm {
         repo = "https://vmware-tanzu.github.io/helm-charts";
         name = "velero";
-        version = "11.4.0";
-        sha256 = "8PrcU3pX02Q/z6UeffM1sJckSSC13TBIE8gwvAs94Ss=";
+        version = "12.2.2";
+        sha256 = "ACcKsEe2foDG7gakvtvgYcZiYhzptJufMgIKIii2jiQ=";
       };
 
       values = {
-        kubectl.image.repository = "docker.io/bitnamilegacy/kubectl";
-        kubectl.image.tag = "1.33.4";
+        image.tag = "v1.18.4";
 
         initContainers = [
           {
             name = "velero-plugin-for-aws";
-            image = "velero/velero-plugin-for-aws:v1.13.2";
+            image = "velero/velero-plugin-for-aws:v1.14.4";
             volumeMounts = [{ mountPath = "/target"; name = "plugins"; }];
           }
         ];
 
         deployNodeAgent = true;
+        credentials.useSecret = false;
+
+        metrics = {
+          serviceMonitor.enabled = true;
+          nodeAgentPodMonitor.enabled = true;
+        };
 
         configuration = {
           features = "EnableCSI";
@@ -38,11 +43,6 @@
               checksumAlgorithm = "";
             };
           }];
-
-          volumeSnapshotLocation = [{
-            name = "default";
-            provider = "csi";
-          }];
         };
 
         schedules = {
@@ -51,21 +51,13 @@
             template = {
               ttl = "168h";
               snapshotMoveData = true;
-              excludedNamespaces = [ "velero" ];
-            };
-          };
-          hourly = {
-            schedule = "0 * * * *";
-            template = {
-              ttl = "24h";
-              snapshotMoveData = true;
-              excludedNamespaces = [ "velero" ];
+              excludedNamespaces = [ "velero" "kube-system" "cilium" "rook-ceph" "argocd" "cert-manager" ];
             };
           };
         };
 
         nodeAgent.resources = {
-          requests = { cpu = "500m"; memory = "64Mi"; };
+          requests = { cpu = "500m"; memory = "1Gi"; };
           limits = { cpu = "2"; memory = "8Gi"; };
         };
       };

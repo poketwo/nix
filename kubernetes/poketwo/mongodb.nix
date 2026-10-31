@@ -24,11 +24,14 @@ let
     };
   };
 
-  datadirPvcSpec = pvName: {
-    storageClassName = "manual";
-    accessModes = [ "ReadWriteOnce" ];
-    resources.requests.storage = "2Ti";
-    volumeName = pvName;
+  datadirPvc = pvName: {
+    metadata.labels."velero.io/exclude-from-backup" = "true";
+    spec = {
+      storageClassName = "manual";
+      accessModes = [ "ReadWriteOnce" ];
+      resources.requests.storage = "2Ti";
+      volumeName = pvName;
+    };
   };
 in
 {
@@ -120,8 +123,8 @@ in
       v1.PersistentVolume.datadir-mongodb-0 = datadirPv "vaporeon";
       v1.PersistentVolume.datadir-mongodb-1 = datadirPv "jolteon";
 
-      v1.PersistentVolumeClaim.datadir-mongodb-0.spec = datadirPvcSpec "datadir-mongodb-0";
-      v1.PersistentVolumeClaim.datadir-mongodb-1.spec = datadirPvcSpec "datadir-mongodb-1";
+      v1.PersistentVolumeClaim.datadir-mongodb-0 = datadirPvc "datadir-mongodb-0";
+      v1.PersistentVolumeClaim.datadir-mongodb-1 = datadirPvc "datadir-mongodb-1";
 
       v1.Secret.mongodb.stringData = {
         mongodb-replica-set-key = "";
