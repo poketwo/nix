@@ -5,8 +5,8 @@ metadata:
     app: redis-ha
     chart: redis-ha-4.39.0
     heritage: Helm
-    release: gateway-valkey
-  name: gateway-valkey-announce-2
+    release: valkey
+  name: valkey-announce-0
   namespace: poketwo
 spec:
   ports:
@@ -21,6 +21,6 @@ spec:
   publishNotReadyAddresses: true
   selector:
     app: redis-ha
-    release: gateway-valkey
-    statefulset.kubernetes.io/pod-name: gateway-valkey-server-2
+    release: valkey
+    statefulset.kubernetes.io/pod-name: valkey-server-0
   type: ClusterIP

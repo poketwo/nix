@@ -5,8 +5,8 @@ metadata:
     app: redis-ha
     chart: redis-ha-4.39.0
     heritage: Helm
-    release: gateway-valkey
-  name: gateway-valkey
+    release: valkey
+  name: valkey
   namespace: poketwo
 rules:
 - apiGroups:

@@ -13,7 +13,7 @@ data:
     REDIS_TLS_PORT=
     SENTINEL_CONF=/data/conf/sentinel.conf
     SENTINEL_TLS_PORT=
-    SERVICE=gateway-valkey
+    SERVICE=valkey
     NAMESPACE="poketwo"
     SENTINEL_TLS_REPLICATION_ENABLED=false
     REDIS_TLS_REPLICATION_ENABLED=false
@@ -62,7 +62,7 @@ data:
 
     identify_master() {
         echo "Identifying redis master (get-master-addr-by-name).."
-        echo "  using sentinel (gateway-valkey), sentinel group name (mymaster)"
+        echo "  using sentinel (valkey), sentinel group name (mymaster)"
         MASTER="$(sentinel_get_master_retry 3)"
         if [ -n "${MASTER}" ]; then
             echo "  $(date) Found redis master (${MASTER})"
@@ -380,9 +380,9 @@ data:
       tcp-check send SENTINEL\ get-master-addr-by-name\ mymaster\r\n
       tcp-check expect string REPLACE_ANNOUNCE0
       tcp-check send QUIT\r\n
-      server R0 gateway-valkey-announce-0:26379 check inter 1s
-      server R1 gateway-valkey-announce-1:26379 check inter 1s
-      server R2 gateway-valkey-announce-2:26379 check inter 1s
+      server R0 valkey-announce-0:26379 check inter 1s
+      server R1 valkey-announce-1:26379 check inter 1s
+      server R2 valkey-announce-2:26379 check inter 1s
     # Check Sentinel and whether they are nominated master
     backend check_if_redis_is_master_1
       mode tcp
@@ -393,9 +393,9 @@ data:
       tcp-check send SENTINEL\ get-master-addr-by-name\ mymaster\r\n
       tcp-check expect string REPLACE_ANNOUNCE1
       tcp-check send QUIT\r\n
-      server R0 gateway-valkey-announce-0:26379 check inter 1s
-      server R1 gateway-valkey-announce-1:26379 check inter 1s
-      server R2 gateway-valkey-announce-2:26379 check inter 1s
+      server R0 valkey-announce-0:26379 check inter 1s
+      server R1 valkey-announce-1:26379 check inter 1s
+      server R2 valkey-announce-2:26379 check inter 1s
     # Check Sentinel and whether they are nominated master
     backend check_if_redis_is_master_2
       mode tcp
@@ -406,9 +406,9 @@ data:
       tcp-check send SENTINEL\ get-master-addr-by-name\ mymaster\r\n
       tcp-check expect string REPLACE_ANNOUNCE2
       tcp-check send QUIT\r\n
-      server R0 gateway-valkey-announce-0:26379 check inter 1s
-      server R1 gateway-valkey-announce-1:26379 check inter 1s
-      server R2 gateway-valkey-announce-2:26379 check inter 1s
+      server R0 valkey-announce-0:26379 check inter 1s
+      server R1 valkey-announce-1:26379 check inter 1s
+      server R2 valkey-announce-2:26379 check inter 1s
 
     # decide redis backend to use
     #master
@@ -429,41 +429,41 @@ data:
       tcp-check send QUIT\r\n
       tcp-check expect string +OK
       use-server R0 if { srv_is_up(R0) } { nbsrv(check_if_redis_is_master_0) ge 2 }
-      server R0 gateway-valkey-announce-0:6379 check inter 1s fall 3 rise 1
+      server R0 valkey-announce-0:6379 check inter 1s fall 3 rise 1
       use-server R1 if { srv_is_up(R1) } { nbsrv(check_if_redis_is_master_1) ge 2 }
-      server R1 gateway-valkey-announce-1:6379 check inter 1s fall 3 rise 1
+      server R1 valkey-announce-1:6379 check inter 1s fall 3 rise 1
       use-server R2 if { srv_is_up(R2) } { nbsrv(check_if_redis_is_master_2) ge 2 }
-      server R2 gateway-valkey-announce-2:6379 check inter 1s fall 3 rise 1
+      server R2 valkey-announce-2:6379 check inter 1s fall 3 rise 1
   haproxy_init.sh: |
     HAPROXY_CONF=/data/haproxy.cfg
     cp /readonly/haproxy.cfg "$HAPROXY_CONF"
     for loop in $(seq 1 10); do
-      getent hosts gateway-valkey-announce-0 && break
-      echo "Waiting for service gateway-valkey-announce-0 to be ready ($loop) ..." && sleep 1
+      getent hosts valkey-announce-0 && break
+      echo "Waiting for service valkey-announce-0 to be ready ($loop) ..." && sleep 1
     done
-    ANNOUNCE_IP0=$(getent hosts "gateway-valkey-announce-0" | awk '{ print $1 }')
+    ANNOUNCE_IP0=$(getent hosts "valkey-announce-0" | awk '{ print $1 }')
     if [ -z "$ANNOUNCE_IP0" ]; then
-      echo "Could not resolve the announce address for gateway-valkey-announce-0"
+      echo "Could not resolve the announce address for valkey-announce-0"
       exit 1
     fi
     sed -i "s/REPLACE_ANNOUNCE0/$ANNOUNCE_IP0/" "$HAPROXY_CONF"
     for loop in $(seq 1 10); do
-      getent hosts gateway-valkey-announce-1 && break
-      echo "Waiting for service gateway-valkey-announce-1 to be ready ($loop) ..." && sleep 1
+      getent hosts valkey-announce-1 && break
+      echo "Waiting for service valkey-announce-1 to be ready ($loop) ..." && sleep 1
     done
-    ANNOUNCE_IP1=$(getent hosts "gateway-valkey-announce-1" | awk '{ print $1 }')
+    ANNOUNCE_IP1=$(getent hosts "valkey-announce-1" | awk '{ print $1 }')
     if [ -z "$ANNOUNCE_IP1" ]; then
-      echo "Could not resolve the announce address for gateway-valkey-announce-1"
+      echo "Could not resolve the announce address for valkey-announce-1"
       exit 1
     fi
     sed -i "s/REPLACE_ANNOUNCE1/$ANNOUNCE_IP1/" "$HAPROXY_CONF"
     for loop in $(seq 1 10); do
-      getent hosts gateway-valkey-announce-2 && break
-      echo "Waiting for service gateway-valkey-announce-2 to be ready ($loop) ..." && sleep 1
+      getent hosts valkey-announce-2 && break
+      echo "Waiting for service valkey-announce-2 to be ready ($loop) ..." && sleep 1
     done
-    ANNOUNCE_IP2=$(getent hosts "gateway-valkey-announce-2" | awk '{ print $1 }')
+    ANNOUNCE_IP2=$(getent hosts "valkey-announce-2" | awk '{ print $1 }')
     if [ -z "$ANNOUNCE_IP2" ]; then
-      echo "Could not resolve the announce address for gateway-valkey-announce-2"
+      echo "Could not resolve the announce address for valkey-announce-2"
       exit 1
     fi
     sed -i "s/REPLACE_ANNOUNCE2/$ANNOUNCE_IP2/" "$HAPROXY_CONF"
@@ -481,7 +481,7 @@ data:
     REDIS_TLS_PORT=
     SENTINEL_CONF=/data/conf/sentinel.conf
     SENTINEL_TLS_PORT=
-    SERVICE=gateway-valkey
+    SERVICE=valkey
     NAMESPACE="poketwo"
     SENTINEL_TLS_REPLICATION_ENABLED=false
     REDIS_TLS_REPLICATION_ENABLED=false
@@ -527,7 +527,7 @@ data:
 
     identify_master() {
         echo "Identifying redis master (get-master-addr-by-name).."
-        echo "  using sentinel (gateway-valkey), sentinel group name (mymaster)"
+        echo "  using sentinel (valkey), sentinel group name (mymaster)"
         MASTER="$(sentinel_get_master_retry 3)"
         if [ -n "${MASTER}" ]; then
             echo "  $(date) Found redis master (${MASTER})"
@@ -816,9 +816,9 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    app: gateway-valkey
+    app: valkey
     chart: redis-ha-4.39.0
     heritage: Helm
-    release: gateway-valkey
-  name: gateway-valkey-configmap
+    release: valkey
+  name: valkey-configmap
   namespace: poketwo

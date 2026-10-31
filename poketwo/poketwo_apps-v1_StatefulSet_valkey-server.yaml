@@ -5,10 +5,10 @@ metadata:
   labels:
     app: redis-ha
     chart: redis-ha-4.39.0
-    gateway-valkey: replica
     heritage: Helm
-    release: gateway-valkey
-  name: gateway-valkey-server
+    release: valkey
+    valkey: replica
+  name: valkey-server
   namespace: poketwo
 spec:
   podManagementPolicy: OrderedReady
@@ -16,16 +16,16 @@ spec:
   selector:
     matchLabels:
       app: redis-ha
-      release: gateway-valkey
-  serviceName: gateway-valkey
+      release: valkey
+  serviceName: valkey
   template:
     metadata:
       annotations:
-        checksum/init-config: baecd06dbaa46e6266956fd3f01b611e66467baf6bf5694792c249fc7eb74e52
+        checksum/init-config: 5b7561196308a261a32230db34d8b4a69da0d68a536cd2166ada5aa41cc83a66
       labels:
         app: redis-ha
-        gateway-valkey: replica
-        release: gateway-valkey
+        release: valkey
+        valkey: replica
     spec:
       affinity:
         podAntiAffinity:
@@ -33,8 +33,8 @@ spec:
           - labelSelector:
               matchLabels:
                 app: redis-ha
-                gateway-valkey: replica
-                release: gateway-valkey
+                release: valkey
+                valkey: replica
             topologyKey: kubernetes.io/hostname
       automountServiceAccountToken: false
       containers:
@@ -192,11 +192,11 @@ spec:
               key: redis-password
               name: gateway-cache
         - name: SENTINEL_ID_0
-          value: ec5b9408bcaf2d7e3d86bd588bd0afc29903702f
+          value: 33f0c4dcdd1488be914f846cab4fb735cdf658fc
         - name: SENTINEL_ID_1
-          value: 7dab315d6a58fb8947c9ebb81eadb1b4cb68c652
+          value: 5d8c1cb42905b261822cd371f9d57fa880bf0875
         - name: SENTINEL_ID_2
-          value: 7b8a238b503dea8e6bcfd3a480f479fb012b198d
+          value: 019821f87ebef18705f24e916306ad94c6429197
         image: docker.io/valkey/valkey:9.1.2
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -249,11 +249,11 @@ spec:
               key: redis-password
               name: gateway-cache
         - name: SENTINEL_ID_0
-          value: ec5b9408bcaf2d7e3d86bd588bd0afc29903702f
+          value: 33f0c4dcdd1488be914f846cab4fb735cdf658fc
         - name: SENTINEL_ID_1
-          value: 7dab315d6a58fb8947c9ebb81eadb1b4cb68c652
+          value: 5d8c1cb42905b261822cd371f9d57fa880bf0875
         - name: SENTINEL_ID_2
-          value: 7b8a238b503dea8e6bcfd3a480f479fb012b198d
+          value: 019821f87ebef18705f24e916306ad94c6429197
         image: docker.io/valkey/valkey:9.1.2
         imagePullPolicy: IfNotPresent
         name: config-init
@@ -277,17 +277,17 @@ spec:
         fsGroup: 1000
         runAsNonRoot: true
         runAsUser: 1000
-      serviceAccountName: gateway-valkey
+      serviceAccountName: valkey
       terminationGracePeriodSeconds: 60
       volumes:
       - configMap:
-          name: gateway-valkey-configmap
+          name: valkey-configmap
         name: config
       - emptyDir: {}
         name: data
       - configMap:
           defaultMode: 493
-          name: gateway-valkey-health-configmap
+          name: valkey-health-configmap
         name: health
   updateStrategy:
     type: RollingUpdate

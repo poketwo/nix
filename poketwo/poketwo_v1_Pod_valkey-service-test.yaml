@@ -7,16 +7,17 @@ metadata:
     app: redis-ha
     chart: redis-ha-4.39.0
     heritage: Helm
-    release: gateway-valkey
-  name: gateway-valkey-configmap-test
+    release: valkey
+  name: valkey-service-test
   namespace: poketwo
 spec:
   containers:
-  - args:
-    - --shell=sh
-    - /readonly-config/init.sh
-    image: koalaman/shellcheck:v0.11.0
-    name: check-init
+  - command:
+    - sh
+    - -c
+    - redis-cli -h valkey-haproxy -p 6379 info server
+    image: docker.io/valkey/valkey:9.1.2
+    name: valkey-service-test
     resources: {}
     securityContext:
       allowPrivilegeEscalation: false
@@ -27,14 +28,6 @@ spec:
       runAsUser: 1000
       seccompProfile:
         type: RuntimeDefault
-    volumeMounts:
-    - mountPath: /readonly-config
-      name: config
-      readOnly: true
   nodeSelector: {}
   restartPolicy: Never
   tolerations: []
-  volumes:
-  - configMap:
-      name: gateway-valkey-configmap
-    name: config

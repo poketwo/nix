@@ -4,15 +4,14 @@ metadata:
   labels:
     app: redis-ha
     chart: redis-ha-4.39.0
-    component: haproxy
     heritage: Helm
-    release: gateway-valkey
-  name: gateway-valkey-haproxy
+    release: valkey
+  name: valkey
   namespace: poketwo
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: gateway-valkey-haproxy
+  name: valkey
 subjects:
 - kind: ServiceAccount
-  name: gateway-valkey-haproxy
+  name: valkey

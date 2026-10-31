@@ -65,9 +65,9 @@ data:
 kind: ConfigMap
 metadata:
   labels:
-    app: gateway-valkey
+    app: valkey
     chart: redis-ha-4.39.0
     heritage: Helm
-    release: gateway-valkey
-  name: gateway-valkey-health-configmap
+    release: valkey
+  name: valkey-health-configmap
   namespace: poketwo

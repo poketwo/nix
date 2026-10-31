@@ -5,12 +5,12 @@ metadata:
     app: redis-ha
     chart: redis-ha-4.39.0
     heritage: Helm
-    release: gateway-valkey
-  name: gateway-valkey-pdb
+    release: valkey
+  name: valkey-pdb
   namespace: poketwo
 spec:
   maxUnavailable: 1
   selector:
     matchLabels:
       app: redis-ha
-      release: gateway-valkey
+      release: valkey
