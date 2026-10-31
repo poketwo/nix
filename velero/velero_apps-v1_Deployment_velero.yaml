@@ -5,9 +5,9 @@ metadata:
     app.kubernetes.io/instance: velero
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
-    app.kubernetes.io/version: 1.17.1
+    app.kubernetes.io/version: 1.18.2
     component: velero
-    helm.sh/chart: velero-11.4.0
+    helm.sh/chart: velero-12.2.2
   name: velero
   namespace: velero
 spec:
@@ -20,17 +20,12 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        checksum/secret: b9754ca4d83dab2f2e3ce5d2f763c69ed92c2298dc2737084680716557250af3
-        prometheus.io/path: /metrics
-        prometheus.io/port: '8085'
-        prometheus.io/scrape: 'true'
       labels:
         app.kubernetes.io/instance: velero
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: velero
-        app.kubernetes.io/version: 1.17.1
-        helm.sh/chart: velero-11.4.0
+        app.kubernetes.io/version: 1.18.2
+        helm.sh/chart: velero-12.2.2
         name: velero
     spec:
       automountServiceAccountToken: true
@@ -43,14 +38,6 @@ spec:
         command:
         - /velero
         env:
-        - name: ALIBABA_CLOUD_CREDENTIALS_FILE
-          value: /credentials/cloud
-        - name: AWS_SHARED_CREDENTIALS_FILE
-          value: /credentials/cloud
-        - name: AZURE_CREDENTIALS_FILE
-          value: /credentials/cloud
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /credentials/cloud
         - name: LD_LIBRARY_PATH
           value: /plugins
         - name: VELERO_NAMESPACE
@@ -60,7 +47,7 @@ spec:
               fieldPath: metadata.namespace
         - name: VELERO_SCRATCH_DIR
           value: /scratch
-        image: docker.io/velero/velero:v1.17.1
+        image: docker.io/velero/velero:v1.18.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 5
@@ -89,13 +76,11 @@ spec:
         volumeMounts:
         - mountPath: /plugins
           name: plugins
-        - mountPath: /credentials
-          name: cloud-credentials
         - mountPath: /scratch
           name: scratch
       dnsPolicy: ClusterFirst
       initContainers:
-      - image: velero/velero-plugin-for-aws:v1.13.2
+      - image: velero/velero-plugin-for-aws:v1.14.4
         name: velero-plugin-for-aws
         volumeMounts:
         - mountPath: /target
@@ -104,9 +89,6 @@ spec:
       serviceAccountName: velero-server
       terminationGracePeriodSeconds: 3600
       volumes:
-      - name: cloud-credentials
-        secret:
-          secretName: velero
       - emptyDir: {}
         name: plugins
       - emptyDir: {}

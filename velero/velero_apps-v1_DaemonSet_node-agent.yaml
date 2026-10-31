@@ -5,7 +5,8 @@ metadata:
     app.kubernetes.io/instance: velero
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
-    helm.sh/chart: velero-11.4.0
+    app.kubernetes.io/version: 1.18.2
+    helm.sh/chart: velero-12.2.2
   name: node-agent
   namespace: velero
 spec:
@@ -14,16 +15,12 @@ spec:
       name: node-agent
   template:
     metadata:
-      annotations:
-        checksum/secret: b9754ca4d83dab2f2e3ce5d2f763c69ed92c2298dc2737084680716557250af3
-        prometheus.io/path: /metrics
-        prometheus.io/port: '8085'
-        prometheus.io/scrape: 'true'
       labels:
         app.kubernetes.io/instance: velero
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: velero
-        helm.sh/chart: velero-11.4.0
+        app.kubernetes.io/version: 1.18.2
+        helm.sh/chart: velero-12.2.2
         name: node-agent
         role: node-agent
     spec:
@@ -36,14 +33,6 @@ spec:
         command:
         - /velero
         env:
-        - name: ALIBABA_CLOUD_CREDENTIALS_FILE
-          value: /credentials/cloud
-        - name: AWS_SHARED_CREDENTIALS_FILE
-          value: /credentials/cloud
-        - name: AZURE_CREDENTIALS_FILE
-          value: /credentials/cloud
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /credentials/cloud
         - name: NODE_NAME
           valueFrom:
             fieldRef:
@@ -54,7 +43,7 @@ spec:
               fieldPath: metadata.namespace
         - name: VELERO_SCRATCH_DIR
           value: /scratch
-        image: docker.io/velero/velero:v1.17.1
+        image: docker.io/velero/velero:v1.18.4
         imagePullPolicy: IfNotPresent
         name: node-agent
         ports:
@@ -66,10 +55,8 @@ spec:
             memory: 8Gi
           requests:
             cpu: 500m
-            memory: 64Mi
+            memory: 1Gi
         volumeMounts:
-        - mountPath: /credentials
-          name: cloud-credentials
         - mountPath: /host_pods
           mountPropagation: HostToContainer
           name: host-pods
@@ -84,9 +71,6 @@ spec:
       serviceAccountName: velero-server
       terminationGracePeriodSeconds: 3600
       volumes:
-      - name: cloud-credentials
-        secret:
-          secretName: velero
       - hostPath:
           path: /var/lib/kubelet/plugins
         name: host-plugins

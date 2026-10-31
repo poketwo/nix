@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/instance: velero
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
-    helm.sh/chart: velero-11.4.0
+    helm.sh/chart: velero-12.2.2
   name: velero-upgrade-crds
   namespace: velero
 rules:

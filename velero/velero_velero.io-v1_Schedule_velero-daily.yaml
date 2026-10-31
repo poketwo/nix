@@ -5,7 +5,8 @@ metadata:
     app.kubernetes.io/instance: velero
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
-    helm.sh/chart: velero-11.4.0
+    app.kubernetes.io/version: 1.18.2
+    helm.sh/chart: velero-12.2.2
   name: velero-daily
   namespace: velero
 spec:
@@ -13,5 +14,10 @@ spec:
   template:
     excludedNamespaces:
     - velero
+    - kube-system
+    - cilium
+    - rook-ceph
+    - argocd
+    - cert-manager
     snapshotMoveData: true
     ttl: 168h

@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: velero
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
-    helm.sh/chart: velero-11.4.0
+    helm.sh/chart: velero-12.2.2
   name: velero-upgrade-crds
   namespace: velero
 spec:
@@ -21,30 +21,13 @@ spec:
       automountServiceAccountToken: true
       containers:
       - args:
-        - -c
-        - /velero install --crds-only --dry-run -o yaml | /tmp/kubectl apply -f -
+        - install
+        - --crds-only
+        - --apply
         command:
-        - /tmp/sh
-        image: docker.io/velero/velero:v1.17.1
+        - /velero
+        image: docker.io/velero/velero:v1.18.4
         imagePullPolicy: IfNotPresent
         name: velero
-        volumeMounts:
-        - mountPath: /tmp
-          name: crds
-      initContainers:
-      - args:
-        - -c
-        - cp `which sh` /tmp && cp `which kubectl` /tmp
-        command:
-        - /bin/sh
-        image: docker.io/bitnamilegacy/kubectl:1.33.4
-        imagePullPolicy: IfNotPresent
-        name: kubectl
-        volumeMounts:
-        - mountPath: /tmp
-          name: crds
       restartPolicy: OnFailure
       serviceAccountName: velero-server-upgrade-crds
-      volumes:
-      - emptyDir: {}
-        name: crds
