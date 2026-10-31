@@ -36,7 +36,7 @@
           env = {
             BOT_TOKEN.valueFrom.secretKeyRef = { name = "poketwo"; key = "BOT_TOKEN"; };
             REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "gateway-cache"; key = "redis-password"; };
-            REDIS_URL.value = "redis://:$(REDIS_PASSWORD)@gateway-cache-valkey";
+            REDIS_URL.value = "redis://:$(REDIS_PASSWORD)@valkey-haproxy";
             SHARDS_TOTAL.value = "1600";
             SHARDS_PER_REPLICA.value = "1600";
             WORKERS.value = "1";
