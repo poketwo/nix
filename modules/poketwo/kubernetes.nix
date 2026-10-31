@@ -13,7 +13,7 @@ let
       advertiseAddress = "::";
       bindPort = 443;
     };
-    skipPhases = [ "addon/kube-proxy" ];
+    skipPhases = [ "addon/kube-proxy" "addon/coredns" ];
   };
 
   clusterConfiguration = yaml.generate "kubeadm-cluster.yaml" {
@@ -23,16 +23,18 @@ let
     clusterName = "hfym-ds";
     controlPlaneEndpoint = "ds.hfym.co";
     networking.serviceSubnet = "2606:c2c0:5:1:2::/112";
+    controllerManager.extraArgs = [{ name = "node-cidr-mask-size-ipv6"; value = "112"; }];
   };
 
   # `kubeadm upgrade apply/node` ignore InitConfiguration.skipPhases and
-  # reinstall the kube-proxy addon, which Cilium replaces. Run upgrades with
+  # reinstall the addons: kube-proxy (replaced by Cilium) and CoreDNS (managed
+  # in kubernetes/core/coredns.nix). Run upgrades with
   # `--config /etc/kubernetes/kubeadm-upgrade.yaml`.
   upgradeConfiguration = yaml.generate "kubeadm-upgrade.yaml" {
     apiVersion = "kubeadm.k8s.io/v1beta4";
     kind = "UpgradeConfiguration";
-    apply.skipPhases = [ "addon/kube-proxy" ];
-    node.skipPhases = [ "addon/kube-proxy" ];
+    apply.skipPhases = [ "addon/kube-proxy" "addon/coredns" ];
+    node.skipPhases = [ "addon/kube-proxy" "addon/coredns" ];
   };
 
   kubeletConfiguration = yaml.generate "kubeadm-kubelet.yaml" {
