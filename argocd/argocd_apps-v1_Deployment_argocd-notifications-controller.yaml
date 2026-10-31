@@ -7,8 +7,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: argocd-notifications-controller
     app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v2.13.4
-    helm.sh/chart: argo-cd-7.7.23
+    app.kubernetes.io/version: v2.14.11
+    helm.sh/chart: argo-cd-7.9.1
   name: argocd-notifications-controller
   namespace: argocd
 spec:
@@ -28,8 +28,8 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: argocd-notifications-controller
         app.kubernetes.io/part-of: argocd
-        app.kubernetes.io/version: v2.13.4
-        helm.sh/chart: argo-cd-7.7.23
+        app.kubernetes.io/version: v2.14.11
+        helm.sh/chart: argo-cd-7.9.1
     spec:
       affinity:
         podAntiAffinity:
@@ -45,8 +45,6 @@ spec:
       - args:
         - /usr/local/bin/argocd-notifications
         - --metrics-port=9001
-        - --loglevel=info
-        - --logformat=text
         - --namespace=argocd
         - --argocd-repo-server=argocd-repo-server:8081
         - --secret-name=argocd-notifications-secret
@@ -81,7 +79,7 @@ spec:
               key: notificationscontroller.selfservice.enabled
               name: argocd-cmd-params-cm
               optional: true
-        image: quay.io/argoproj/argocd:v2.13.4
+        image: quay.io/argoproj/argocd:v2.14.11
         imagePullPolicy: IfNotPresent
         name: notifications-controller
         ports:
@@ -105,6 +103,8 @@ spec:
           name: argocd-repo-server-tls
         workingDir: /app
       dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
       serviceAccountName: argocd-notifications-controller
       terminationGracePeriodSeconds: 30
       volumes:
