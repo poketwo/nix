@@ -1,7 +1,7 @@
 { ... }:
 
-# CoreDNS, taken over from the kubeadm addon (skipped via skipPhases in
-# modules/poketwo/kubernetes.nix) so the Corefile edits are declarative.
+# Cluster DNS. kubeadm's CoreDNS addon is skipped (modules/poketwo/kubernetes.nix)
+# so the Corefile lives here instead of in a hand-edited ConfigMap.
 let
   labels.k8s-app = "kube-dns";
 in
@@ -40,21 +40,26 @@ in
         .:53 {
             errors
             health {
-               lameduck 5s
+                lameduck 5s
             }
             ready
-            rewrite name regex (.+)\.(.+)\.svc\.ds\.hfym\.co {1}.{2}.svc.cluster.local answer auto
-            kubernetes cluster.local in-addr.arpa ip6.arpa {
-               pods insecure
-               fallthrough in-addr.arpa ip6.arpa
-               ttl 30
-            }
             prometheus :9153
+
+            # <svc>.<ns>.svc.ds.hfym.co is an alias for <svc>.<ns>.svc.cluster.local
+            rewrite name regex (.+)\.(.+)\.svc\.ds\.hfym\.co {1}.{2}.svc.cluster.local answer auto
+
+            kubernetes cluster.local ip6.arpa {
+                fallthrough ip6.arpa
+                ttl 30
+            }
+
+            # IPv6-only cluster: hide A records so clients use the dns64 AAAA.
             acl {
-               filter type A
+                filter type A
             }
             dns64
             forward . /etc/resolv.conf
+
             cache 30
             loop
             reload
@@ -67,25 +72,14 @@ in
         spec = {
           replicas = 2;
           selector.matchLabels = labels;
-          strategy.rollingUpdate.maxUnavailable = 1;
           template = {
             metadata.labels = labels;
             spec = {
               priorityClassName = "system-cluster-critical";
               serviceAccountName = "coredns";
+              # Use the node's resolver for `forward`, not ourselves.
               dnsPolicy = "Default";
-              nodeSelector."kubernetes.io/os" = "linux";
-              tolerations = [
-                { key = "CriticalAddonsOnly"; operator = "Exists"; }
-                { key = "node-role.kubernetes.io/control-plane"; effect = "NoSchedule"; }
-              ];
-              affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
-                weight = 100;
-                podAffinityTerm = {
-                  topologyKey = "kubernetes.io/hostname";
-                  labelSelector.matchExpressions = [{ key = "k8s-app"; operator = "In"; values = [ "kube-dns" ]; }];
-                };
-              }];
+              tolerations = [{ key = "node-role.kubernetes.io/control-plane"; effect = "NoSchedule"; }];
               containers = [{
                 name = "coredns";
                 image = "registry.k8s.io/coredns/coredns:v1.11.3";
@@ -93,56 +87,27 @@ in
                 ports = [
                   { name = "dns"; containerPort = 53; protocol = "UDP"; }
                   { name = "dns-tcp"; containerPort = 53; protocol = "TCP"; }
-                  { name = "metrics"; containerPort = 9153; protocol = "TCP"; }
+                  { name = "metrics"; containerPort = 9153; }
                 ];
-                resources = {
-                  requests = { cpu = "100m"; memory = "70Mi"; };
-                  limits.memory = "170Mi";
-                };
-                livenessProbe = {
-                  httpGet = { path = "/health"; port = 8080; };
-                  initialDelaySeconds = 60;
-                  timeoutSeconds = 5;
-                  failureThreshold = 5;
-                };
+                resources.requests = { cpu = "100m"; memory = "70Mi"; };
+                livenessProbe.httpGet = { path = "/health"; port = 8080; };
                 readinessProbe.httpGet = { path = "/ready"; port = 8181; };
-                securityContext = {
-                  allowPrivilegeEscalation = false;
-                  readOnlyRootFilesystem = true;
-                  capabilities = { add = [ "NET_BIND_SERVICE" ]; drop = [ "ALL" ]; };
-                };
-                volumeMounts = [{ name = "config-volume"; mountPath = "/etc/coredns"; readOnly = true; }];
+                volumeMounts = [{ name = "config"; mountPath = "/etc/coredns"; readOnly = true; }];
               }];
-              volumes = [{
-                name = "config-volume";
-                configMap = {
-                  name = "coredns";
-                  items = [{ key = "Corefile"; path = "Corefile"; }];
-                };
-              }];
+              volumes = [{ name = "config"; configMap.name = "coredns"; }];
             };
           };
         };
       };
 
       "v1".Service.kube-dns = {
-        metadata = {
-          labels = labels // {
-            "kubernetes.io/cluster-service" = "true";
-            "kubernetes.io/name" = "CoreDNS";
-          };
-          annotations = {
-            "prometheus.io/port" = "9153";
-            "prometheus.io/scrape" = "true";
-          };
-        };
+        metadata.labels = labels;
         spec = {
           clusterIP = "2606:c2c0:5:1:2::a";
           selector = labels;
           ports = [
             { name = "dns"; port = 53; protocol = "UDP"; }
             { name = "dns-tcp"; port = 53; protocol = "TCP"; }
-            { name = "metrics"; port = 9153; protocol = "TCP"; }
           ];
         };
       };
