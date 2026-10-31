@@ -43,7 +43,7 @@ spec:
         - name: WORKERS
           value: '1'
         - name: REDIS_URL
-          value: redis://:$(REDIS_PASSWORD)@gateway-cache-valkey
+          value: redis://:$(REDIS_PASSWORD)@valkey-haproxy
         image: ghcr.io/poketwo/poketwo-rs:production
         imagePullPolicy: Always
         livenessProbe:
