@@ -5,7 +5,7 @@ metadata:
   labels:
     app: redis-ha
     argocd-redis-ha: replica
-    chart: redis-ha-4.34.11
+    chart: redis-ha-4.38.0
     heritage: Helm
     release: argocd
   name: argocd-redis-ha-server
@@ -21,7 +21,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/init-config: 1f2490bcdf9edec5b7e7154644585898508cd93c242f0b4486f3504d231538c2
+        checksum/init-config: c9231078e3de2e9473bedd617561152a0a6ef998e1f18c37ea06994c52ca6382
       labels:
         app: redis-ha
         argocd-redis-ha: replica
@@ -196,7 +196,28 @@ spec:
           value: 2bbec7894d954a8af3bb54d13eaec53cb024e2ca
         image: ecr-public.aws.com/docker/library/redis:8.2.3-alpine
         imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - cat
+            - /readonly-config/redis.conf
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
         name: split-brain-fix
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - test -d /proc/1
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 15
         resources: {}
         securityContext:
           allowPrivilegeEscalation: false

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: redis-ha
-    chart: redis-ha-4.34.11
+    chart: redis-ha-4.38.0
     component: haproxy
     heritage: Helm
     release: argocd
@@ -22,7 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 9b2718a4ae78aa420c18bce3d7bb6e608f97f9c2c563455310edaed0da80fe31
+        checksum/config: badd9b10628631ccbe8df4d70d4dcc4ba25ab3e9d9815dff97f66e8a6a6a4c60
         prometheus.io/path: /metrics
         prometheus.io/port: '9101'
         prometheus.io/scrape: 'true'
@@ -50,7 +50,7 @@ spec:
             secretKeyRef:
               key: auth
               name: argocd-redis
-        image: ecr-public.aws.com/docker/library/haproxy:3.0.8-alpine
+        image: ecr-public.aws.com/docker/library/haproxy:3.3.10-alpine
         imagePullPolicy: IfNotPresent
         lifecycle: {}
         livenessProbe:
@@ -93,7 +93,7 @@ spec:
         - /readonly/haproxy_init.sh
         command:
         - sh
-        image: ecr-public.aws.com/docker/library/haproxy:3.0.8-alpine
+        image: ecr-public.aws.com/docker/library/haproxy:3.3.10-alpine
         imagePullPolicy: IfNotPresent
         name: config-init
         resources: {}

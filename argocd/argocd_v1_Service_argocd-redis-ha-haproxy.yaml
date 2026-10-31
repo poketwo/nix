@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     app: redis-ha
-    chart: redis-ha-4.34.11
+    chart: redis-ha-4.38.0
     component: haproxy
     heritage: Helm
     release: argocd
