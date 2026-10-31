@@ -177,4 +177,7 @@ replacement decision independent of this.
   SSA with `--field-manager=kubeadm` does not clear them either. What worked:
   render the dir from the `cluster` branch, `kubectl replace -f` the Deployment
   (one rollout) and JSON-patch `remove` the Service leftovers, then
-  `kubectl diff -f <dir>` must print nothing and the Argo app goes back to Synced.
+  `kubectl diff -f <dir>` must print nothing. The replace moves field ownership
+  to `kubectl-replace`, so Argo (no selfHeal here) reports the Deployment
+  OutOfSync until a one-off sync re-applies it; trigger it with the
+  `operation.sync` patch from hfym-cluster-access (copy the syncOptions).
