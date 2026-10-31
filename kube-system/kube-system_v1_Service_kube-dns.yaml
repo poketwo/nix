@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: kube-dns
+  name: kube-dns
+  namespace: kube-system
+spec:
+  clusterIP: 2606:c2c0:5:1:2::a
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+  selector:
+    k8s-app: kube-dns

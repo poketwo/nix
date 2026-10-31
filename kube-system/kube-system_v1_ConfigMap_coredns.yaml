@@ -1,0 +1,35 @@
+apiVersion: v1
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health {
+            lameduck 5s
+        }
+        ready
+        prometheus :9153
+
+        # <svc>.<ns>.svc.ds.hfym.co is an alias for <svc>.<ns>.svc.cluster.local
+        rewrite name regex (.+)\.(.+)\.svc\.ds\.hfym\.co {1}.{2}.svc.cluster.local answer auto
+
+        kubernetes cluster.local ip6.arpa {
+            fallthrough ip6.arpa
+            ttl 30
+        }
+
+        # IPv6-only cluster: hide A records so clients use the dns64 AAAA.
+        acl {
+            filter type A
+        }
+        dns64
+        forward . /etc/resolv.conf
+
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
