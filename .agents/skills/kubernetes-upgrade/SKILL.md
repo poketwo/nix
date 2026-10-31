@@ -41,12 +41,21 @@ happened here.
    (`kubeadm upgrade plan`, `kubeadm upgrade apply vX.Y.Z`), then chimchar and
    piplup (`kubeadm upgrade node`). `upgrade apply` also renews the control-plane
    certs (expire 2027-03-25).
-2. Deploy the hosts with the new kubelet/CRI-O (AGENTS.md "Deployment"):
-   `nixos-rebuild switch` restarts kubelet and CRI-O and both keep containers
-   running, so a hop should need no drain. Try it on one worker first; if the
-   CRI-O restart misbehaves, fall back to the cordon/drain/reboot procedure in
-   AGENTS.md "Rolling a worker" (one worker at a time; prod Mongo local volumes
-   and single-instance CNPG PDBs need the special handling described there).
+2. Deploy the hosts with the new kubelet/CRI-O. **Build on the dev box, never on
+   a control plane**: turtwig/chimchar/piplup are 4 GB / 2 CPU Linodes and just
+   evaluating the flake there hung turtwig for 35 min (kubelet NotReady, sshd
+   dead, etcd member down) on 2026-10-31. Instead:
+   ```bash
+   # dev box (Determinate Nix: curl -sSfL https://install.determinate.systems/nix | sh -s -- install linux --no-confirm --init none)
+   OUT=$(nix build --no-link --print-out-paths .#nixosConfigurations.<host>.config.system.build.toplevel)   # ~1 min from cache
+   nix copy --to ssh://devin@<host>.hfym.co "$OUT"
+   ssh devin@<host>.hfym.co "sudo nix-env -p /nix/var/nix/profiles/system --set $OUT && sudo $OUT/bin/switch-to-configuration switch"   # or boot + reboot
+   ```
+   `switch` restarts kubelet and CRI-O and both keep containers running, so a
+   hop should need no drain. Try it on one worker first; if the CRI-O restart
+   misbehaves, fall back to the cordon/drain/reboot procedure in AGENTS.md
+   "Rolling a worker" (one worker at a time; prod Mongo local volumes and
+   single-instance CNPG PDBs need the special handling described there).
 3. Kubelets may lag the API server by up to 3 minors, so workers can skip hops:
    control plane 1.32 -> 1.33 -> 1.34 with workers on 1.31, roll workers to 1.34,
    then 1.35 everywhere. Simpler and safer is to deploy every node every hop.
