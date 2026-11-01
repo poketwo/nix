@@ -25,6 +25,8 @@ spec:
               name: poketwo
         - name: BRIDGE_ADDR
           value: '[::]:7878'
+        - name: BRIDGE_REPLAY_CONCURRENCY
+          value: '32'
         - name: LOG_FORMAT
           value: json
         - name: METRICS_ADDR
