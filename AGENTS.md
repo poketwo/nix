@@ -229,6 +229,18 @@ Secrets are managed with [agenix](https://github.com/ryantm/agenix). Encrypted `
 
 Kubernetes secrets are managed via HashiCorp Vault + Vault Secrets Operator, not agenix.
 
+## Skills
+
+Procedures that worked on this cluster live in `.agents/skills/<name>/SKILL.md`
+(with helper scripts under `scripts/`). Read the matching one before touching a
+component:
+
+- `hfym-cluster-access`: kubectl/ceph over SSH, Argo CD no-prune rules, Vault writes
+- `helm-chart-upgrade`: the per-minor chart bump loop (local NAR hash, CI, merge, watch, cleanup)
+- `rook-ceph-upgrade`, `argocd-upgrade`, `cert-manager-upgrade`: component specifics and watch scripts
+- `velero-backups`: how PVC backups to R2 work, verifying/restoring, CephFS snapshot-backed PVCs
+- `kubernetes-upgrade`: the kubeadm/NixOS hop plan and per-minor gotchas
+
 ## Important Considerations
 
 - **IPv6 only.** Do not add IPv4-dependent configurations to Cilium or cluster networking.

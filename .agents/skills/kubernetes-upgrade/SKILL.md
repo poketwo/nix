@@ -1,0 +1,183 @@
+---
+name: kubernetes-upgrade
+description: Plan and constraints for upgrading Kubernetes itself on hfym-ds (kubeadm on NixOS, nixpkgs-k8s pin, control-plane then worker rounds, per-minor gotchas 1.32-1.35, component support matrix). Use when bumping kubernetesVersion / nixpkgs-k8s or planning a kube minor hop. Status: planned, not yet executed; update this file as hops land.
+---
+
+# Kubernetes upgrade (1.31.2 -> 1.35)
+
+Status 2026-10-31: all 8 nodes kubeadm/kubelet/CRI-O 1.31.2, etcd 3.5.15.
+Prerequisite component upgrades are done; Rook 1.21 and cert-manager 1.20 are
+waiting on Kubernetes 1.32. **No kube hop has been executed yet**; this is the
+researched plan. Ask Oliver before the first deploy and record what actually
+happened here.
+
+## Where the version lives
+
+- `flake.nix` input `nixpkgs-k8s` pins the nixpkgs commit that provides
+  kubernetes and cri-o. They do not always move together, so pick commits where
+  both match (verified 2026-10-31 by reading `version =` at each commit;
+  kubernetes moved to `pkgs/by-name/ku/kubernetes/package.nix` in 2025-07, cri-o
+  stayed at `pkgs/applications/virtualization/cri-o/default.nix` until 2026-05):
+
+  | Hop | nixpkgs commit | kubernetes | cri-o |
+  |---|---|---|---|
+  | current | `882842d2a908700540d206baa79efb922ac1c33d` | 1.31.2 | 1.31.2 |
+  | 1.32 | `550b72055340` | 1.32.3 | 1.32.0 |
+  | 1.33 | `4acc7f1d238d` | 1.33.4 | 1.33.3 |
+  | 1.34 | `e9258e24d7ba` | 1.34.3 | 1.34.3 |
+  | 1.35 | `4aba42448195` (or `917a7562e399` for 1.35.4) | 1.35.2 | 1.35.0 |
+
+  `gh api 'repos/NixOS/nixpkgs/commits?path=<file>&per_page=60'` lists the bump
+  commits per path if these need refreshing.
+- `modules/poketwo/kubernetes.nix`: kubeadm config (still `kubeadm.k8s.io/v1beta3`;
+  move to `v1beta4`, where extraArgs become `[{name, value}]` lists), kubelet
+  config, CRI-O, firewall ports.
+- One PR per minor: bump the pin (and `flake.lock`), `kubernetesVersion`, and
+  anything the minor requires below.
+
+## Order per hop
+
+1. Control plane first, turtwig: run the new kubeadm from the nix store
+   (`kubeadm upgrade plan`, then
+   `kubeadm upgrade apply vX.Y.Z --config /etc/kubernetes/kubeadm-upgrade.yaml`),
+   then chimchar and piplup
+   (`kubeadm upgrade node --config /etc/kubernetes/kubeadm-upgrade.yaml`).
+   The `--config` is not optional: without it kubeadm reinstalls the kube-proxy
+   addon (see the 1.32 lessons). The file comes from the nix#119 generation, so
+   the control planes must run a generation at or after it (check
+   `test -f /etc/kubernetes/kubeadm-upgrade.yaml` on each) before the hop. `upgrade apply` also renews the control-plane
+   certs (expire 2027-03-25).
+2. Deploy the hosts with the new kubelet/CRI-O. **Build on the dev box, never on
+   a control plane**: turtwig/chimchar/piplup are 4 GB / 2 CPU Linodes and just
+   evaluating the flake there hung turtwig for 35 min (kubelet NotReady, sshd
+   dead, etcd member down) on 2026-10-31. Instead:
+   ```bash
+   # dev box (Determinate Nix: curl -sSfL https://install.determinate.systems/nix | sh -s -- install linux --no-confirm --init none)
+   OUT=$(nix build --no-link --print-out-paths .#nixosConfigurations.<host>.config.system.build.toplevel)   # ~1 min from cache
+   nix copy -s --to "ssh://devin@<host>.hfym.co?remote-program=sudo nix-store" "$OUT"
+   ssh devin@<host>.hfym.co "sudo $OUT/bin/switch-to-configuration switch && sudo nix-env -p /nix/var/nix/profiles/system --set $OUT"
+   ```
+   Activate first, set the system profile only after `switch` succeeded: a
+   refused switch (kernel/dbus change) must not leave an untested generation as
+   the boot default. For a reboot deploy do it the other way round, like
+   `nixos-rebuild boot`: `nix-env --set` first, then
+   `switch-to-configuration boot` (the bootloader installer reads the profile),
+   verify the default entry (`bootctl list` on the systemd-boot workers,
+   `grep -m1 menuentry /boot/grub/grub.cfg` on the GRUB control planes), reboot.
+   After a control-plane reboot, if the node stays NotReady for >2 min with
+   `lookup ds.hfym.co: Temporary failure in name resolution` in the kubelet log
+   and no IPv6 reachability from inet0, `sudo networkctl reconfigure inet0`
+   brought piplup back immediately (2026-10-31; chimchar and turtwig did not
+   need it).
+   `switch` restarts kubelet and CRI-O and both keep containers running, so a
+   hop should need no drain. Try it on one worker first; if the CRI-O restart
+   misbehaves, fall back to the cordon/drain/reboot procedure in AGENTS.md
+   "Rolling a worker" (one worker at a time; prod Mongo local volumes and
+   single-instance CNPG PDBs need the special handling described there).
+3. Kubelets may lag the API server by up to 3 minors, so workers can skip hops:
+   control plane 1.32 -> 1.33 -> 1.34 with workers on 1.31, roll workers to 1.34,
+   then 1.35 everywhere. Simpler and safer is to deploy every node every hop.
+4. All three control planes were reboot-deployed on 2026-10-31 (kernel 6.18,
+   ~3.5 min each, etcd at 2/3 meanwhile, all API endpoints back within a
+   minute of Ready). When a control plane needs a reboot deploy, use the same
+   local build + `nix copy` + `switch-to-configuration boot` from step 2; do
+   not run `nixos-rebuild --build-host <control-plane>` on them.
+5. Verify: `kubectl get nodes` versions, `kubectl -n kube-system get pods`,
+   Cilium `cilium status` on a node, Ceph baseline, Argo apps Synced, a PVC smoke
+   test (rook-ceph-upgrade `csi-check.sh`).
+
+## Per-minor gotchas that apply here
+
+- **1.32**: `flowcontrol.apiserver.k8s.io/v1beta3` gone (only kubeadm-default
+  FlowSchemas exist). Kubelet systemd watchdog available.
+- **1.33**: `ReduceDefaultCrashLoopBackOffDecay` gate worth enabling for bot pods.
+- **1.34**: kubeadm moves etcd to 3.6, which requires every member on
+  >= 3.5.32 first (kubeadm 1.33 only brings 3.5.24): pin `etcd.local.imageTag`
+  to 3.5.32+ during the 1.33 hop, or run `etcdutl check v2store` before 1.34.
+  API-server metric labels change (`type` -> `group`/`resource`): Grafana
+  dashboards need edits. `cgroupDriver` can leave KubeletConfiguration.
+- **1.35**: kubelet flag `--pod-infra-container-image` is removed, and
+  `/var/lib/kubelet/kubeadm-flags.env` on every node still carries it (kubeadm
+  only writes that file on init/join). Delete it from the file on all 8 nodes
+  before the 1.35 kubelet starts or kubelet will not start. cgroup v1 refused
+  (nodes are cgroup2). `KubeletEnsureSecretPulledImages` on by default: pods
+  pulling private ghcr images with `IfNotPresent` now need the pull secret even
+  when cached.
+- Nothing else deprecated is in use: no kube-proxy (Cilium KPR), IPv6-only,
+  swap off, only `cilium.io/v2alpha1` on the deprecated-API list.
+
+## Component support for the target
+
+Cilium 1.19 (k8s 1.32-1.35), Rook 1.20 (1.31-1.36) -> 1.21 after 1.32,
+cert-manager 1.19 (<= 1.31) -> 1.20 after 1.32, Velero 1.18 (1.33-1.35 tested),
+Argo CD 3.5, MetalLB 0.14, CNPG 0.21 (old; upgrade separately). Cilium 1.20
+is needed before any 1.36. ingress-nginx is archived upstream and needs a
+replacement decision independent of this.
+
+## Lessons from the 1.31 -> 1.32 hop (2026-10-31)
+
+- `nix copy --to ssh://devin@host` dies with `error: unexpected end-of-file`
+  mid-transfer: the devin user is not a trusted Nix user, so the remote
+  `nix-store --serve --write` refuses unsigned (locally built) paths. Fix is
+  `?remote-program=sudo nix-store` in the store URL; `-s` lets the host
+  substitute the cached paths itself and only the handful of locally built
+  ones go over SSH.
+- `kubeadm upgrade apply` took 3 min on turtwig (4 GB RAM is enough; the
+  kubeadm binary from the copied `kubernetes-1.32.3` store path is run as
+  `sudo <store>/bin/kubeadm`). `kubeadm upgrade node` 3 min each on
+  chimchar/piplup. Control-plane reboot deploys: ~3.5 min to Ready, API
+  endpoints back ~1 min later.
+- Do NOT `switch` a worker across a CRI-O minor. On flareon the new CRI-O
+  did not adopt the running pods: on start it removed every old pod sandbox
+  (113), and each CNI teardown waited ~43 s for the Cilium agent, which was
+  itself one of the killed pods, so the node was NotReady for ~1.5 h with its
+  OSDs down (Ceph 31% degraded, still serving). Use the AGENTS.md worker
+  path instead: cordon, drain, `switch-to-configuration boot`, reboot,
+  uncordon. For sylveon that costs one gateway re-identify, which is still
+  cheaper than this.
+- When a worker's kubelet is down, its pods sit in Terminating and nothing
+  recreates StatefulSet pods (the bot shards) until the kubelet confirms the
+  deletion. A Terminating ingress-nginx pod also stays in the EndpointSlice,
+  so MetalLB kept announcing the LB IP from the dead node and every ingress
+  host returned 521 for ~40 min. Fix:
+  `kubectl delete pod --force --grace-period=0` the stuck pods (stateless
+  ones only: bot shards, ingress-nginx, Deployments), but only after
+  confirming on the host that their containers are really gone
+  (`sudo crictl ps` empty, no `conmon` processes). A forced delete only
+  removes the API object; if CRI-O still ran the shard, the StatefulSet
+  would start a second copy fighting over the same Discord session. On
+  flareon CRI-O had already removed every sandbox, so this was safe; the LB
+  moved to another node 10 s after the ingress pod was gone.
+- After a broken in-place switch, reboot the node anyway once CRI-O is back
+  (cordon, drain, reboot): flareon was Ready again 70 s after the reboot and
+  that is the state the generation was actually tested in.
+- `kubeadm upgrade apply v1.32.3` without `--config` reinstalled the
+  kube-proxy addon: `InitConfiguration.skipPhases` only applies to `init`,
+  upgrades take their skip list from an `UpgradeConfiguration`. The new
+  DaemonSet started on all 8 nodes at 08:40 UTC next to Cilium's kube-proxy
+  replacement, rewrote iptables/conntrack sysctls, and within 15 s the gateway
+  on sylveon lost 185 shard reconnects (165 re-identified), with bot
+  image-server fetches timing out for 25 min. Fix was `kubectl -n kube-system
+  delete ds/kube-proxy cm/kube-proxy sa/kube-proxy role/kube-proxy
+  rolebinding/kube-proxy` + `clusterrolebinding/kubeadm:node-proxier`, then
+  `sudo kube-proxy --cleanup` on every node (it exits with "error tearing down
+  rules" but removes the jumps; delete the empty `KUBE-PROXY-CANARY` and
+  `KUBE-MARK-MASQ` chains with `iptables -X`/`ip6tables -X` afterwards).
+  `/etc/kubernetes/kubeadm-upgrade.yaml` (nix#119) now carries
+  `apply.skipPhases` and `node.skipPhases = [addon/kube-proxy]`; after any
+  kubeadm run, check `kubectl -n kube-system get ds kube-proxy` is NotFound.
+- CoreDNS is not kubeadm's either: it is declared in `kubernetes/core/coredns.nix` (nix#120)
+  (Argo app `poketwo-kube-system`) and `addon/coredns` is in the skipPhases, so a
+  CoreDNS image bump is a PR there, not something kubeadm does. After a kubeadm
+  run, `kubectl -n kube-system get deploy coredns -o jsonpath='{.spec.template.spec.containers[0].image}'`
+  must still match coredns.nix.
+  Adopting a live object into Argo does not clean it: Argo's server-side apply
+  only owns the fields in the manifest, and kubeadm's old `Update` entries keep
+  theirs (affinity, memory limit, legacy Service labels, the metrics port). An
+  SSA with `--field-manager=kubeadm` does not clear them either. What worked:
+  render the dir from the `cluster` branch, `kubectl replace -f` the Deployment
+  (one rollout) and JSON-patch `remove` the Service leftovers, then
+  `kubectl diff -f <dir>` must print nothing. The replace moves field ownership
+  to `kubectl-replace`, so Argo (no selfHeal here) reports the Deployment
+  OutOfSync until a one-off sync re-applies it; trigger it with the
+  `operation.sync` patch from hfym-cluster-access (copy the syncOptions).
