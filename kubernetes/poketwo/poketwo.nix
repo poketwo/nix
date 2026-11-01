@@ -40,7 +40,7 @@
                 DATABASE_PASSWORD.valueFrom.secretKeyRef = { name = "mongodb"; key = "mongodb-root-password"; };
                 DATABASE_NAME.value = "pokemon";
                 REDIS_URI.value = "redis://valkey-haproxy";
-                REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "gateway-cache"; key = "redis-password"; };
+                REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "valkey"; key = "redis-password"; };
 
                 NUM_SHARDS.value = "1600";
                 NUM_CLUSTERS.value = "200";
