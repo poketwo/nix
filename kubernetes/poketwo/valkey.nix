@@ -44,5 +44,9 @@
         };
       };
     };
+
+    resources.v1.Secret.gateway-cache.stringData = {
+      redis-password = "";
+    };
   };
 }
