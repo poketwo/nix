@@ -19,7 +19,7 @@
           tag = "9.1.2";
         };
         auth = true;
-        existingSecret = "valkey";
+        existingSecret = "gateway-cache";
         authKey = "redis-password";
         redis = {
           config = {
@@ -45,7 +45,7 @@
       };
     };
 
-    resources.v1.Secret.valkey.stringData = {
+    resources.v1.Secret.gateway-cache.stringData = {
       redis-password = "";
     };
   };
