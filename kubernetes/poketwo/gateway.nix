@@ -42,7 +42,7 @@
             WORKERS.value = "1";
             METRICS_ADDR.value = "[::]:9000";
             BRIDGE_ADDR.value = "[::]:7878";
-            REPLAY_CONCURRENCY.value = "32";
+            BRIDGE_REPLAY_CONCURRENCY.value = "32";
             ACTIVITY.value = "@Pokétwo help";
             LOG_FORMAT.value = "json";
             RUST_LOG.value = "info";
