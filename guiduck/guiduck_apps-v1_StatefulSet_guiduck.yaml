@@ -60,10 +60,10 @@ spec:
         - name: POKETWO_REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              key: poketwo-redis-password
-              name: guiduck
+              key: redis-password
+              name: gateway-cache
         - name: POKETWO_REDIS_URI
-          value: redis://redis-master.poketwo
+          value: redis://valkey-haproxy.poketwo
         - name: PREFIX
           value: '? >'
         - name: REDIS_PASSWORD

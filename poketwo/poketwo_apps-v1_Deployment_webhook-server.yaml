@@ -30,9 +30,9 @@ spec:
           valueFrom:
             secretKeyRef:
               key: redis-password
-              name: redis
+              name: gateway-cache
         - name: REDIS_URI
-          value: redis://redis-master
+          value: redis://valkey-haproxy
         envFrom:
         - secretRef:
             name: webhook-server
