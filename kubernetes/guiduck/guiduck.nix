@@ -34,8 +34,8 @@
 
               REDIS_URI.value = "redis://redis-master";
               REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; };
-              POKETWO_REDIS_URI.value = "redis://redis-master.poketwo";
-              POKETWO_REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "guiduck"; key = "poketwo-redis-password"; };
+              POKETWO_REDIS_URI.value = "redis://valkey-haproxy.poketwo";
+              POKETWO_REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "gateway-cache"; key = "redis-password"; };
               OUTLINE_BASE_URL.value = "https://outline.poketwo.io";
               OUTLINE_API_TOKEN.valueFrom.secretKeyRef = { name = "guiduck"; key = "outline-api-token"; };
               MESSAGE_LOG_KEY.valueFrom.secretKeyRef = { name = "guiduck"; key = "message-log-key"; };
@@ -53,10 +53,17 @@
         poketwo-mongodb-password = "";
         token = "";
         redis-password = "";
-        poketwo-redis-password = "";
         outline-api-token = "";
         message-log-key = "";
       };
+    };
+
+    # The shared Pokétwo Valkey password, read from its Vault entry in the poketwo namespace.
+    resources."secrets.hashicorp.com/v1beta1".VaultStaticSecret.gateway-cache.spec = {
+      type = "kv-v2";
+      mount = "hfym-ds";
+      path = "poketwo/gateway-cache";
+      destination = { name = "gateway-cache"; create = true; type = "Opaque"; };
     };
   };
 }

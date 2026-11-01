@@ -25,8 +25,8 @@
               DATABASE_USERNAME.value = "root";
               DATABASE_PASSWORD.valueFrom.secretKeyRef = { name = "mongodb"; key = "mongodb-root-password"; };
               DATABASE_NAME.value = "pokemon";
-              REDIS_URI.value = "redis://redis-master";
-              REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "redis"; key = "redis-password"; };
+              REDIS_URI.value = "redis://valkey-haproxy";
+              REDIS_PASSWORD.valueFrom.secretKeyRef = { name = "gateway-cache"; key = "redis-password"; };
             };
             envFrom = [{ secretRef.name = "webhook-server"; }];
           };
