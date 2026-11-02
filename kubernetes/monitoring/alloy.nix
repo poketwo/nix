@@ -22,17 +22,17 @@ let
   google = "8.8.8.8";
 
   # Native from the host: v4 and v6 side by side, Cloudflare vs others, and
-  # the gateway router itself.
+  # the workers' router (from the Linode control planes this is a cross-site
+  # probe, not their own gateway). The pod runs with cluster DNS, which hides
+  # A records, so v4 HTTP targets must be IP literals.
   hostTargets = {
     cloudflare-icmp4 = { address = cloudflare; module = "icmp4"; };
     google-icmp4 = { address = google; module = "icmp4"; };
-    gateway-icmp4 = { address = "23.135.200.1"; module = "icmp4"; };
+    worker-router-icmp4 = { address = "23.135.200.1"; module = "icmp4"; };
     cloudflare-icmp6 = { address = "2606:4700:4700::1111"; module = "icmp6"; };
     google-icmp6 = { address = "2001:4860:4860::8888"; module = "icmp6"; };
-    gateway-icmp6 = { address = "2606:c2c0::1"; module = "icmp6"; };
-    discord-http4 = { address = "https://discord.com/api/v10/gateway"; module = "http4"; };
-    cloudflare-http4 = { address = "https://www.cloudflare.com/cdn-cgi/trace"; module = "http4"; };
-    github-http4 = { address = "https://github.com/"; module = "http4"; };
+    worker-router-icmp6 = { address = "2606:c2c0::1"; module = "icmp6"; };
+    cloudflare-http4 = { address = "https://1.1.1.1/cdn-cgi/trace"; module = "http4"; };
     cloudflare-http6 = { address = "https://www.cloudflare.com/cdn-cgi/trace"; module = "http6"; };
     google-http6 = { address = "https://www.google.com/generate_204"; module = "http6"; };
   };
@@ -73,6 +73,9 @@ let
     root = "/";
     journal = "/var/log/journal";
   };
+
+  # Survives restarts so loki.source.journal keeps its cursor.
+  hostStateDir = "/var/lib/alloy-host";
 in
 
 {
@@ -110,13 +113,16 @@ in
             hostPID = true;
             dnsPolicy = "ClusterFirstWithHostNet";
             tolerations = [{ key = "node-role.kubernetes.io/control-plane"; effect = "NoSchedule"; }];
-            volumes.extra = lib.mapAttrsToList (name: path: { inherit name; hostPath = { inherit path; }; }) hostMounts;
+            volumes.extra = lib.mapAttrsToList (name: path: { inherit name; hostPath = { inherit path; }; }) hostMounts
+              ++ [{ name = "state"; hostPath = { path = hostStateDir; type = "DirectoryOrCreate"; }; }];
           };
 
           alloy = {
             securityContext.capabilities.add = [ "NET_RAW" ];
             extraEnv = [{ name = "NODE_NAME"; valueFrom.fieldRef.fieldPath = "spec.nodeName"; }];
-            mounts.extra = lib.mapAttrsToList (name: _: { inherit name; mountPath = "/host/${name}"; readOnly = true; }) hostMounts;
+            storagePath = hostStateDir;
+            mounts.extra = lib.mapAttrsToList (name: _: { inherit name; mountPath = "/host/${name}"; readOnly = true; }) hostMounts
+              ++ [{ name = "state"; mountPath = hostStateDir; }];
             configMap.content = builtins.readFile ./alloy/host.alloy + "\n" + blackboxConfig "host" hostTargets false;
           };
 
