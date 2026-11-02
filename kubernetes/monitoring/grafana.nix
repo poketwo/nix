@@ -50,7 +50,6 @@
         dashboards.default.velero = {
           gnetId = 16829;
           revision = 5;
-          datasource = "Mimir";
         };
 
         "grafana.ini" = {
