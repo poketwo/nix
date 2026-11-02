@@ -8,8 +8,9 @@ let
   mimir = "PAE45454D0EDB9216";
   receiver = "Infra alerts";
 
-  # kube-state-metrics is scraped as a pod, so the object's namespace lands in
-  # exported_namespace. Only alert on namespaces we run.
+  # kube-state-metrics and cert-manager are scraped as pods, so the object's
+  # namespace/node land in exported_namespace/exported_node. Only alert on
+  # namespaces we run.
   ourNamespaces = lib.concatStringsSep "|" [
     "alloy"
     "argocd"
@@ -79,7 +80,7 @@ in
           uid = "infra-discord";
           type = "discord";
           settings = {
-            url = "$__env{DISCORD_ALERTS_WEBHOOK_URL}";
+            url = "$DISCORD_ALERTS_WEBHOOK_URL";
             use_discord_username = true;
           };
         }];
@@ -97,8 +98,8 @@ in
           (rule {
             uid = "infra-node-not-ready";
             title = "Node not ready";
-            expr = ''1 - max by (node) (kube_node_status_condition{condition="Ready",status="true"})'';
-            summary = "{{ $labels.node }} has been NotReady for 5m";
+            expr = ''1 - max by (exported_node) (kube_node_status_condition{condition="Ready",status="true"})'';
+            summary = "{{ $labels.exported_node }} has been NotReady for 5m";
             severity = "critical";
           })
           (rule {
@@ -146,7 +147,7 @@ in
             uid = "infra-cert-expiry";
             title = "Certificate expiring";
             # Already-expired certs (renewal given up on) are excluded, else they page forever.
-            expr = "min by (namespace, name) (certmanager_certificate_expiration_timestamp_seconds - time()) / 86400 > 0";
+            expr = "min by (exported_namespace, name) (certmanager_certificate_expiration_timestamp_seconds - time()) / 86400 > 0";
             op = "lt";
             threshold = 14;
             for = "1h";
