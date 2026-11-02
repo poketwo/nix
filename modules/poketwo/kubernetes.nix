@@ -111,6 +111,13 @@ in
 
       # NodePort services
       allowedTCPPortRanges = [{ from = 30000; to = 32767; }];
+
+      # hostNetwork exporters, scraped by Alloy from the cluster prefix only:
+      # node-exporter 9100, Alloy host probes 9115, cilium-agent 9962,
+      # cilium-operator 9963, hubble 9964, metallb frr 7473.
+      extraInputRules = ''
+        ip6 saddr 2606:c2c0:5::/48 tcp dport { 9100, 9115, 9962, 9963, 9964, 7473 } accept
+      '';
     };
 
     systemd.services.kubelet = {
