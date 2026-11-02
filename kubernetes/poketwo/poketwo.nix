@@ -4,8 +4,8 @@ let
   # Two colours of the same bot so a roll has no gap: scale the idle one up, wait for Ready,
   # scale the live one down. New pods stand by at the gateway's /handoff path and take each
   # shard over the moment the old pod's connection closes.
-  cluster = colour: replicas: {
-    inherit replicas;
+  # No `replicas`: rolls are `kubectl scale`, and leaving the field out keeps Argo's syncs off it.
+  cluster = colour: {
     selector.matchLabels = {
       app = "poketwo";
       inherit colour;
@@ -69,8 +69,8 @@ in
         clusterIP = "None";
       };
 
-      "apps/v1".StatefulSet.poketwo-a.spec = cluster "a" 200;
-      "apps/v1".StatefulSet.poketwo-b.spec = cluster "b" 0;
+      "apps/v1".StatefulSet.poketwo-a.spec = cluster "a";
+      "apps/v1".StatefulSet.poketwo-b.spec = cluster "b";
     };
   };
 }
