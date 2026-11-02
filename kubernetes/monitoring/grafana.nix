@@ -6,12 +6,12 @@
       chart = transpire.fetchFromHelm {
         repo = "https://grafana-community.github.io/helm-charts";
         name = "grafana";
-        version = "12.0.0";
-        sha256 = "eqSidrI/OWupasKaL9a9npgwjtB3jCocHBIVjL0SnlM=";
+        version = "14.3.0";
+        sha256 = "yO6Ot9YVhbpdp5e3DdQOlDmqFfEd28H4c/+IUlGpBKU=";
       };
 
       values = {
-        image.tag = "13.0.1";
+        testFramework.enabled = false;
 
         deploymentStrategy = {
           type = "Recreate";

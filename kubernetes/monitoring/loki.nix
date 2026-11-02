@@ -13,10 +13,10 @@ in
   namespaces.loki = {
     helmReleases.loki = {
       chart = transpire.fetchFromHelm {
-        repo = "https://grafana.github.io/helm-charts";
+        repo = "https://grafana-community.github.io/helm-charts";
         name = "loki";
-        version = "6.55.0";
-        sha256 = "5IgdiiPetXqJy4+sycIeauTEWq8TOg0XkQ1vGDhSXrY=";
+        version = "20.2.1";
+        sha256 = "SIvEH9nx7tBFfrbTbPp4+MtOEKTD4GH0Gaxj6fZdT0Y=";
       };
 
       values = {
@@ -102,7 +102,6 @@ in
           # };
         };
 
-        minio.enabled = false;
         singleBinary.replicas = 0;
         ingester.replicas = 0;
         querier.replicas = 0;
@@ -111,7 +110,6 @@ in
         distributor.replicas = 0;
         compactor.replicas = 0;
         indexGateway.replicas = 0;
-        bloomCompactor.replicas = 0;
         bloomGateway.replicas = 0;
       };
     };
