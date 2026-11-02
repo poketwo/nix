@@ -36,7 +36,7 @@ in
           # No Loki rules; the S3 default pointed at a bucket that never existed.
           rulerConfig.storage = {
             type = "local";
-            local.directory = "/var/loki/rules";
+            local.directory = "/rules"; # the chart's rules-sidecar emptyDir, always present
           };
           storage = {
             type = "s3";
