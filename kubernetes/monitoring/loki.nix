@@ -55,6 +55,7 @@ in
             volume_enabled = true;
             discover_log_levels = true;
             allow_structured_metadata = true;
+            retention_period = "2160h"; # 90d
           };
 
           analytics.reporting_enabled = false;
@@ -63,7 +64,7 @@ in
           common.ring.kvstore.store = "memberlist";
           compactor.compactor_ring.instance_enable_ipv6 = true;
           compactor.compactor_ring.kvstore.store = "memberlist";
-          # Deletes via /loki/api/v1/delete; no retention_period, so nothing ages out.
+          # Enforces limits_config.retention_period and /loki/api/v1/delete requests.
           compactor.retention_enabled = true;
           compactor.delete_request_store = "s3";
           distributor.ring.instance_enable_ipv6 = true;
