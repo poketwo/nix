@@ -20,6 +20,12 @@ in
       };
 
       values = {
+        # Loki mixin dashboards, picked up by the Grafana sidecar.
+        monitoring.dashboards = {
+          enabled = true;
+          annotations."k8s-sidecar-target-directory" = "/tmp/dashboards/Loki";
+        };
+
         loki = {
           schemaConfig = {
             configs = [{

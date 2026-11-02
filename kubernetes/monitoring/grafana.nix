@@ -37,6 +37,40 @@
           ];
         };
 
+        # Charts ship their dashboards as ConfigMaps labelled grafana_dashboard
+        # (cilium, mimir, loki); the annotation picks the folder.
+        sidecar.dashboards = {
+          enabled = true;
+          searchNamespace = "ALL";
+          resource = "configmap";
+          label = "grafana_dashboard";
+          labelValue = "1";
+          folderAnnotation = "k8s-sidecar-target-directory";
+          provider.foldersFromFilesStructure = true;
+        };
+
+        # The chart's ClusterRole would also grant cluster-wide secret reads.
+        rbac.useExistingClusterRole = "grafana-dashboard-reader";
+
+        dashboardProviders."dashboardproviders.yaml" = {
+          apiVersion = 1;
+          providers = [{
+            name = "infrastructure";
+            orgId = 1;
+            folder = "Infrastructure";
+            type = "file";
+            disableDeletion = true;
+            editable = false;
+            options.path = "/var/lib/grafana/dashboards/infrastructure";
+          }];
+        };
+
+        # Downloaded from grafana.com by the chart's init container.
+        dashboards.infrastructure = {
+          node-exporter-full = { gnetId = 1860; revision = 46; datasource = "Mimir"; };
+          ceph-cluster = { gnetId = 2842; revision = 18; datasource = "Mimir"; };
+        };
+
         "grafana.ini" = {
           server.root_url = "https://grafana.hfym.co";
           explore.enabled = true;
@@ -70,6 +104,12 @@
         };
       };
     };
+
+    resources."rbac.authorization.k8s.io/v1".ClusterRole.grafana-dashboard-reader.rules = [{
+      apiGroups = [ "" ];
+      resources = [ "configmaps" ];
+      verbs = [ "get" "watch" "list" ];
+    }];
 
     resources.v1.Secret.grafana-admin = {
       type = "Opaque";

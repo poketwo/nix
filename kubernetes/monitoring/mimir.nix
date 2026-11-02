@@ -25,6 +25,9 @@ in
       };
 
       values = {
+        # Mimir mixin dashboards, picked up by the Grafana sidecar.
+        metaMonitoring.dashboards.enabled = true;
+
         global.extraEnvFrom = [{
           secretRef.name = "backblaze-b2-credentials";
         }];
