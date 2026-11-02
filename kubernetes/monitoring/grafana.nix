@@ -54,10 +54,10 @@
           };
         };
 
-        envFromSecrets = [{
-          name = "grafana-oidc";
-          optional = false;
-        }];
+        envFromSecrets = [
+          { name = "grafana-oidc"; optional = false; }
+          { name = "grafana-alerts"; optional = false; }
+        ];
 
         ingress = {
           enabled = true;
@@ -83,6 +83,13 @@
       type = "Opaque";
       stringData = {
         GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET = "";
+      };
+    };
+
+    resources.v1.Secret.grafana-alerts = {
+      type = "Opaque";
+      stringData = {
+        DISCORD_ALERTS_WEBHOOK_URL = "";
       };
     };
   };
