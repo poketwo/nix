@@ -31,6 +31,9 @@ spec:
             secretKeyRef:
               key: token
               name: grafana-image-renderer
+        - name: BROWSER_OVERRIDE
+          value: /d-solo/p2-alerts/=--browser.min-width=600 --browser.max-width=600
+            --browser.min-height=450 --browser.max-height=450
         - name: HTTP_HOST
           value: 0.0.0.0
         - name: HTTP_PORT
