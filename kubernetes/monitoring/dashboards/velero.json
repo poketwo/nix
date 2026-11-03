@@ -35,7 +35,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "refId": "A",
-          "expr": "(time() - max by (schedule) (velero_backup_last_successful_timestamp{schedule!=\"\"})) / 3600",
+          "expr": "(time() - max by (schedule) (max_over_time(velero_backup_last_successful_timestamp{schedule!=\"\"}[30d]))) / 3600",
           "legendFormat": "{{schedule}}",
           "range": true,
           "instant": false
@@ -457,7 +457,7 @@
             "uid": "PAE45454D0EDB9216"
           },
           "refId": "A",
-          "expr": "(time() - max by (schedule) (velero_backup_last_successful_timestamp{schedule!=\"\"})) / 3600",
+          "expr": "(time() - max by (schedule) (max_over_time(velero_backup_last_successful_timestamp{schedule!=\"\"}[30d]))) / 3600",
           "legendFormat": "{{schedule}}",
           "range": true,
           "instant": false
