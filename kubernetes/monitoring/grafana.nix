@@ -57,6 +57,21 @@
           ];
         };
 
+        dashboardProviders."dashboardproviders.yaml" = {
+          apiVersion = 1;
+          providers = [{
+            name = "default";
+            orgId = 1;
+            type = "file";
+            options.path = "/var/lib/grafana/dashboards/default";
+          }];
+        };
+
+        dashboards.default.velero = {
+          gnetId = 16829;
+          revision = 5;
+        };
+
         "grafana.ini" = {
           server.root_url = "https://grafana.hfym.co";
           explore.enabled = true;
