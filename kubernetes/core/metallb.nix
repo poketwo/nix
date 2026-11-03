@@ -1,6 +1,9 @@
 { transpire, ... }:
 
 {
+  # The controller generates the webhook cert at runtime and writes it into this Secret.
+  vaultSecrets.exclude = [ "metallb/metallb-webhook-cert" ];
+
   namespaces.metallb = {
     helmReleases.metallb = {
       chart = transpire.fetchFromHelm {
