@@ -73,7 +73,7 @@ spec:
         - --ssh-known-hosts-file=/etc/git-known-hosts/known_hosts
         - --http-bind=:8080
         - --http-metrics
-        - --git-config=safe.directory:*
+        - --git-config=safe.directory:/git
         image: registry.k8s.io/git-sync/git-sync:v4.8.0
         name: git-sync
         ports:
