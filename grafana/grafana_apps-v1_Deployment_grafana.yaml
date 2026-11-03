@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: fe82ed1c445bd08ba7a0dce5be84d37c4fe2b895a6c0e8e79f925183d7ca5fa4
+        checksum/config: 2043960ff9e66168563e125adfac28e3d4938e0a4d0a58453ad1f0e527eb963f
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
         kubectl.kubernetes.io/default-container: grafana
       labels:
@@ -40,6 +40,11 @@ spec:
           value: /var/lib/grafana/plugins
         - name: GF_PATHS_PROVISIONING
           value: /etc/grafana/provisioning
+        - name: GF_PLUGINS_PREINSTALL_SYNC
+          valueFrom:
+            configMapKeyRef:
+              key: plugins
+              name: grafana
         - name: GF_SECURITY_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
