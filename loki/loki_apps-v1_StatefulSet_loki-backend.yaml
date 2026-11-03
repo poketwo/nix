@@ -26,7 +26,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 4b45706583d085313c86ef6a565f10231276ced8f437010be1f24effd2978328
+        checksum/config: 438d03f2f192b15569889ccdf42903dfa45a231d566010576754259ef0db5d54
         kubectl.kubernetes.io/default-container: loki
       labels:
         app.kubernetes.io/component: backend
