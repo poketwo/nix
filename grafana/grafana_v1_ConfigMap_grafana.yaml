@@ -1,5 +1,13 @@
 apiVersion: v1
 data:
+  dashboardproviders.yaml: |
+    apiVersion: 1
+    providers:
+    - name: default
+      options:
+        path: /var/lib/grafana/dashboards/default
+      orgId: 1
+      type: file
   datasources.yaml: |
     apiVersion: 1
     datasources:
@@ -9,6 +17,18 @@ data:
     - name: Loki
       type: loki
       url: http://loki-gateway.loki.svc.cluster.local
+  download_dashboards.sh: |
+    #!/usr/bin/env sh
+    set -euf
+    mkdir -p /var/lib/grafana/dashboards/default
+
+    curl -skf \
+    --connect-timeout 60 \
+    --max-time 60 \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json;charset=UTF-8" \
+      "https://grafana.com/api/dashboards/16829/revisions/5/download" \
+    > "/var/lib/grafana/dashboards/default/velero.json"
   grafana.ini: |
     [analytics]
     check_for_updates = true
