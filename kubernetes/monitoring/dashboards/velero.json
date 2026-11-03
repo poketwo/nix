@@ -20,7 +20,7 @@
       "title": "Last success",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 0,
@@ -32,7 +32,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "(time() - max by (schedule) (max_over_time(velero_backup_last_successful_timestamp{schedule!=\"\"}[30d]))) / 3600",
@@ -88,7 +88,7 @@
       "title": "Last backup",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 4,
@@ -100,7 +100,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "min by (schedule) (velero_backup_last_status{schedule!=\"\"})",
@@ -167,7 +167,7 @@
       "title": "Failures",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 8,
@@ -179,7 +179,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "round((sum(increase(velero_backup_failure_total{schedule!=\"\"}[$__range])) or vector(0)) + (sum(increase(velero_backup_partial_failure_total{schedule!=\"\"}[$__range])) or vector(0)) + (sum(increase(velero_backup_validation_failure_total{schedule!=\"\"}[$__range])) or vector(0)))",
@@ -234,7 +234,7 @@
       "title": "Duration",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 12,
@@ -246,7 +246,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "sum by (schedule) (increase(velero_backup_duration_seconds_sum{schedule!=\"\"}[$__interval])) / sum by (schedule) (increase(velero_backup_duration_seconds_count{schedule!=\"\"}[$__interval]))",
@@ -299,7 +299,7 @@
       "title": "Size",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 16,
@@ -311,7 +311,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "max by (schedule) (velero_backup_tarball_size_bytes{schedule!=\"\"})",
@@ -363,7 +363,7 @@
       "title": "Storage",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 20,
@@ -375,7 +375,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "min(velero_backup_location_status_gauge)",
@@ -442,7 +442,7 @@
       "title": "Hours since last success",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 0,
@@ -454,7 +454,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "(time() - max by (schedule) (max_over_time(velero_backup_last_successful_timestamp{schedule!=\"\"}[30d]))) / 3600",
@@ -521,7 +521,7 @@
       "title": "Backups",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 12,
@@ -533,7 +533,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "round(sum(increase(velero_backup_success_total{schedule!=\"\"}[$__interval]))) or vector(0)",
@@ -545,7 +545,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "B",
           "expr": "round(sum(increase(velero_backup_partial_failure_total{schedule!=\"\"}[$__interval]))) or vector(0)",
@@ -557,7 +557,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "C",
           "expr": "round((sum(increase(velero_backup_failure_total{schedule!=\"\"}[$__interval])) or vector(0)) + (sum(increase(velero_backup_validation_failure_total{schedule!=\"\"}[$__interval])) or vector(0)))",
@@ -667,7 +667,7 @@
       "title": "Duration",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 0,
@@ -679,7 +679,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "sum by (schedule) (increase(velero_backup_duration_seconds_sum{schedule!=\"\"}[$__interval])) / sum by (schedule) (increase(velero_backup_duration_seconds_count{schedule!=\"\"}[$__interval]))",
@@ -742,7 +742,7 @@
       "title": "Size",
       "datasource": {
         "type": "prometheus",
-        "uid": "PAE45454D0EDB9216"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "x": 12,
@@ -754,7 +754,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PAE45454D0EDB9216"
+            "uid": "${datasource}"
           },
           "refId": "A",
           "expr": "max by (schedule) (velero_backup_tarball_size_bytes{schedule!=\"\"})",
@@ -812,7 +812,20 @@
     }
   ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "name": "datasource",
+        "type": "datasource",
+        "query": "prometheus",
+        "current": {
+          "text": "Mimir",
+          "value": "Mimir"
+        },
+        "hide": 2,
+        "refresh": 1,
+        "options": []
+      }
+    ]
   },
   "annotations": {
     "list": []
