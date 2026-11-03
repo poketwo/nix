@@ -38,6 +38,8 @@ spec:
           value: https://server.poketwo.io
         - name: FLAGD_HOST
           value: flagd
+        - name: FLAGD_PORT
+          value: '8015'
         - name: IMGEN_URL
           value: http://imgen-rust
         - name: MALLOC_CONF
