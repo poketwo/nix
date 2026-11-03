@@ -51,6 +51,7 @@
                 EXT_SERVER_URL.value = "https://server.poketwo.io";
                 IMGEN_URL.value = "http://imgen-rust";
                 API_GATEWAY.value = "ws://gateway";
+                FLAGD_HOST.value = "flagd";
                 MALLOC_CONF.value = "background_thread:true";
               };
             };
