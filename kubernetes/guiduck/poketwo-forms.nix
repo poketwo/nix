@@ -35,7 +35,7 @@
               NODE_TLS_REJECT_UNAUTHORIZED.value = "0";
             };
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };

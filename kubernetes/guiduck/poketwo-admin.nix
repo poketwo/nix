@@ -27,7 +27,7 @@
               DISCORD_CLIENT_SECRET.valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "discord-client-secret"; };
             };
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };

@@ -30,7 +30,7 @@
           volumes.config = {
             configMap = { name = "gateway-proxy"; };
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };

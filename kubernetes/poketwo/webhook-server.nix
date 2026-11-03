@@ -30,7 +30,7 @@
             };
             envFrom = [{ secretRef.name = "webhook-server"; }];
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };

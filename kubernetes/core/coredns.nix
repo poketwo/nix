@@ -99,7 +99,7 @@
               volumeMounts = [{ name = "config"; mountPath = "/etc/coredns"; readOnly = true; }];
             };
 
-            volumes = [{ name = "config"; configMap.name = "coredns"; }];
+            volumes.config.configMap.name = "coredns";
           };
         };
       };

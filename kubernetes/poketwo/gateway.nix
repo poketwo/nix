@@ -51,7 +51,7 @@
             RUST_LOG.value = "info";
           };
         };
-        imagePullSecrets = [{ name = "ghcr-auth"; }];
+        imagePullSecrets.ghcr-auth = { };
         terminationGracePeriodSeconds = 30;
       };
     };
