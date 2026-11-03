@@ -22,7 +22,7 @@
                 periodSeconds = 5;
               };
             };
-            imagePullSecrets = [{ name = "ghcr-auth"; }];
+            imagePullSecrets.ghcr-auth = { };
             affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
               weight = 100;
               podAffinityTerm = {

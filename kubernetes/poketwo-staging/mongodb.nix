@@ -32,7 +32,7 @@
       };
     };
 
-    v1.Secret."mongodb-user" = {
+    v1.Secret.mongodb-user = {
       type = "Opaque";
       stringData.password = "";
     };

@@ -4,7 +4,7 @@
 # so the Corefile lives here instead of in a hand-edited ConfigMap.
 {
   namespaces.kube-system.resources = {
-    "v1".ServiceAccount.coredns = { };
+    v1.ServiceAccount.coredns = { };
 
     "rbac.authorization.k8s.io/v1".ClusterRole."system:coredns".rules = [
       {
@@ -24,7 +24,7 @@
       subjects = [{ kind = "ServiceAccount"; name = "coredns"; namespace = "kube-system"; }];
     };
 
-    "v1".ConfigMap.coredns.data.Corefile = ''
+    v1.ConfigMap.coredns.data.Corefile = ''
       .:53 {
           errors
           health {
@@ -99,13 +99,13 @@
               volumeMounts = [{ name = "config"; mountPath = "/etc/coredns"; readOnly = true; }];
             };
 
-            volumes = [{ name = "config"; configMap.name = "coredns"; }];
+            volumes.config.configMap.name = "coredns";
           };
         };
       };
     };
 
-    "v1".Service.kube-dns = {
+    v1.Service.kube-dns = {
       metadata.labels.k8s-app = "kube-dns";
       spec = {
         clusterIP = "2606:c2c0:5:1:2::a";

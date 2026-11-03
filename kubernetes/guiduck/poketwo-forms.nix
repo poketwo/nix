@@ -35,17 +35,14 @@
               NODE_TLS_REJECT_UNAUTHORIZED.value = "0";
             };
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };
 
     resources.v1.Service.poketwo-forms.spec = {
       selector.app = "poketwo-forms";
-      ports = [{
-        port = 80;
-        targetPort = 3000;
-      }];
+      ports = [{ port = 80; targetPort = 3000; }];
     };
 
     resources."networking.k8s.io/v1".Ingress.poketwo-forms-ingress = {
@@ -56,10 +53,7 @@
           http.paths = [{
             path = "/";
             pathType = "Prefix";
-            backend.service = {
-              name = "poketwo-forms";
-              port.number = 80;
-            };
+            backend.service = { name = "poketwo-forms"; port.number = 80; };
           }];
         }];
         tls = [{
