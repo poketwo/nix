@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flagd
+  namespace: poketwo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flagd
+  template:
+    metadata:
+      labels:
+        app: flagd
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: flagd
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - start
+        - --uri
+        - file:/git/flags/flags.yaml
+        - --log-format
+        - json
+        image: ghcr.io/open-feature/flagd:v0.18.2
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: metrics
+          periodSeconds: 10
+        name: flagd
+        ports:
+        - containerPort: 8013
+          name: flagd
+        - containerPort: 8014
+          name: metrics
+        - containerPort: 8015
+          name: sync
+        - containerPort: 8016
+          name: ofrep
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: metrics
+          periodSeconds: 5
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 32Mi
+        volumeMounts:
+        - mountPath: /git
+          name: flags
+          readOnly: true
+      initContainers:
+      - args:
+        - --repo=git@github.com:poketwo/flags.git
+        - --ref=main
+        - --root=/git
+        - --link=flags
+        - --period=5s
+        - --depth=1
+        - --max-failures=-1
+        - --ssh-key-file=/etc/git-secret/ssh
+        - --ssh-known-hosts-file=/etc/git-known-hosts/known_hosts
+        - --http-bind=:8080
+        - --http-metrics
+        image: registry.k8s.io/git-sync/git-sync:v4.8.0
+        name: git-sync
+        ports:
+        - containerPort: 8080
+          name: http-monitoring
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+        restartPolicy: Always
+        startupProbe:
+          failureThreshold: 60
+          httpGet:
+            path: /
+            port: http-monitoring
+          periodSeconds: 2
+        volumeMounts:
+        - mountPath: /git
+          name: flags
+        - mountPath: /etc/git-secret
+          name: git-secret
+          readOnly: true
+        - mountPath: /etc/git-known-hosts
+          name: git-known-hosts
+          readOnly: true
+      securityContext:
+        fsGroup: 65533
+      volumes:
+      - emptyDir: {}
+        name: flags
+      - configMap:
+          name: flagd-known-hosts
+        name: git-known-hosts
+      - name: git-secret
+        secret:
+          defaultMode: 288
+          secretName: flagd
