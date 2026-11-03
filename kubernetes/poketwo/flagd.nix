@@ -19,8 +19,7 @@ in
       template = {
         metadata.labels.app = "flagd";
         spec = {
-          initContainers = [{
-            name = "git-sync";
+          initContainers.git-sync = {
             image = "registry.k8s.io/git-sync/git-sync:v4.8.0";
             # native sidecar: flagd starts once the first sync has passed the startup probe
             restartPolicy = "Always";
@@ -52,7 +51,7 @@ in
               { name = "git-secret"; mountPath = "/etc/git-secret"; readOnly = true; }
               { name = "git-known-hosts"; mountPath = "/etc/git-known-hosts"; readOnly = true; }
             ];
-          }];
+          };
           containers.flagd = {
             image = "ghcr.io/open-feature/flagd:v0.18.2";
             args = [ "start" "--uri" "file:/git/flags/flags.yaml" "--log-format" "json" ];
@@ -76,11 +75,11 @@ in
             };
             volumeMounts = [{ name = "flags"; mountPath = "/git"; readOnly = true; }];
           };
-          volumes = [
-            { name = "flags"; emptyDir = { }; }
-            { name = "git-secret"; secret = { secretName = "flagd"; defaultMode = 288; }; } # 0440
-            { name = "git-known-hosts"; configMap.name = "flagd-known-hosts"; }
-          ];
+          volumes = {
+            flags.emptyDir = { };
+            git-secret.secret = { secretName = "flagd"; defaultMode = 288; }; # 0440
+            git-known-hosts.configMap.name = "flagd-known-hosts";
+          };
           # git-sync runs as 65533 and needs the deploy key and /git to be group-accessible
           securityContext.fsGroup = 65533;
           affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
