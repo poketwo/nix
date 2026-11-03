@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 2043960ff9e66168563e125adfac28e3d4938e0a4d0a58453ad1f0e527eb963f
+        checksum/config: 93b211216bce05047f977d07f97c01453ca354b7b865bcddd122600c2ba898a3
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
         kubectl.kubernetes.io/default-container: grafana
       labels:
@@ -45,6 +45,15 @@ spec:
             configMapKeyRef:
               key: plugins
               name: grafana
+        - name: GF_RENDERING_CALLBACK_URL
+          value: http://grafana.grafana:80/
+        - name: GF_RENDERING_RENDERER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: grafana-image-renderer
+        - name: GF_RENDERING_SERVER_URL
+          value: http://grafana-image-renderer.grafana:8081/render
         - name: GF_SECURITY_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:

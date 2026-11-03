@@ -35,6 +35,8 @@ data:
     [server]
     domain = grafana.hfym.co
     root_url = https://grafana.hfym.co
+    [unified_alerting.screenshots]
+    capture = true
     [unified_storage]
     index_path = /var/lib/grafana-search/bleve
   plugins: marcusolsson-dynamictext-panel@6.3.0
