@@ -21,6 +21,10 @@
             tag = "v5.12.10";
             pullPolicy = "IfNotPresent";
           };
+          envValueFrom.AUTH_TOKEN.secretKeyRef = {
+            name = "grafana-image-renderer";
+            key = "token";
+          };
         };
 
         deploymentStrategy = {
