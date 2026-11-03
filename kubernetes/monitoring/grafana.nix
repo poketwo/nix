@@ -25,6 +25,12 @@
             name = "grafana-image-renderer";
             key = "token";
           };
+          # Grafana always requests alert screenshots at 1000x500 @1x; Discord shows
+          # embed images in a ~400x300 box, so render alert-graph panels at 4:3.
+          # The renderer reads the first deviceScaleFactor query value, so one baked
+          # into the server URL wins over the 1x Grafana appends.
+          serverURL = "http://grafana-image-renderer.grafana:8081/render?deviceScaleFactor=2";
+          env.BROWSER_OVERRIDE = "/d-solo/p2-alerts/=--browser.min-width=600 --browser.max-width=600 --browser.min-height=450 --browser.max-height=450";
         };
 
         deploymentStrategy = {
