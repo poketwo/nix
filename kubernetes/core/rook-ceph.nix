@@ -2,15 +2,13 @@
 
 let
   # All three nodes happen to have drives in the same place. (right now)
-  commonDevices = [
-    { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:03:00.0-nvme-1"; }
-    { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:04:00.0-nvme-1"; }
-    { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:05:00.0-nvme-1-part3"; }
-  ];
-
   commonDevicesWithoutBootDrive = [
     { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:03:00.0-nvme-1"; }
     { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:04:00.0-nvme-1"; }
+  ];
+
+  commonDevices = commonDevicesWithoutBootDrive ++ [
+    { config.deviceClass = "nvme"; name = "/dev/disk/by-path/pci-0000:05:00.0-nvme-1-part3"; }
   ];
 
   defaultPool = {
@@ -19,7 +17,7 @@ let
     deviceClass = "nvme";
   };
 
-  commonStorageClassParamters = {
+  commonStorageClassParameters = {
     clusterID = "rook-ceph";
     "csi.storage.k8s.io/provisioner-secret-namespace" = "rook-ceph";
     "csi.storage.k8s.io/controller-expand-secret-namespace" = "rook-ceph";
@@ -143,10 +141,7 @@ in
           http.paths = [{
             path = "/";
             pathType = "Prefix";
-            backend.service = {
-              name = "rook-ceph-rgw-rgw-nvme";
-              port.number = 80;
-            };
+            backend.service = { name = "rook-ceph-rgw-rgw-nvme"; port.number = 80; };
           }];
         }];
         tls = [{
@@ -163,7 +158,7 @@ in
     resources."storage.k8s.io/v1".StorageClass = rec {
       rbd-nvme = {
         provisioner = "rook-ceph.rbd.csi.ceph.com";
-        parameters = commonStorageClassParamters // {
+        parameters = commonStorageClassParameters // {
           pool = "rbd-nvme";
           imageFormat = "2";
           "csi.storage.k8s.io/provisioner-secret-name" = "rook-csi-rbd-provisioner";
@@ -179,13 +174,12 @@ in
 
       rbd-nvme-retain = rbd-nvme // {
         metadata.annotations."storageclass.kubernetes.io/is-default-class" = "true";
-        allowVolumeExpansion = true;
         reclaimPolicy = "Retain";
       };
 
       cephfs-nvme = {
         provisioner = "rook-ceph.cephfs.csi.ceph.com";
-        parameters = commonStorageClassParamters // {
+        parameters = commonStorageClassParameters // {
           fsName = "cephfs-nvme";
           pool = "cephfs-nvme-nvme";
           "csi.storage.k8s.io/provisioner-secret-name" = "rook-csi-cephfs-provisioner";
@@ -196,10 +190,7 @@ in
         reclaimPolicy = "Delete";
       };
 
-      cephfs-nvme-retain = cephfs-nvme // {
-        allowVolumeExpansion = true;
-        reclaimPolicy = "Retain";
-      };
+      cephfs-nvme-retain = cephfs-nvme // { reclaimPolicy = "Retain"; };
 
       rgw-nvme = {
         provisioner = "rook-ceph.ceph.rook.io/bucket";

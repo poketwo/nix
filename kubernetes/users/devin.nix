@@ -1,7 +1,7 @@
 { ... }:
 
 let
-  devinRoleAndBinding = ns: {
+  devinRoleAndBinding = {
     "rbac.authorization.k8s.io/v1".Role.devin = {
       rules = [
         {
@@ -44,9 +44,9 @@ in
 {
   namespaces.poketwo.resources = {
     v1.ServiceAccount.devin = { };
-  } // devinRoleAndBinding "poketwo";
+  } // devinRoleAndBinding;
 
-  namespaces.poketwo-staging.resources = devinRoleAndBinding "poketwo-staging";
-  namespaces.poketwo-staging-private.resources = devinRoleAndBinding "poketwo-staging-private";
-  namespaces.guiduck.resources = devinRoleAndBinding "guiduck";
+  namespaces.poketwo-staging.resources = devinRoleAndBinding;
+  namespaces.poketwo-staging-private.resources = devinRoleAndBinding;
+  namespaces.guiduck.resources = devinRoleAndBinding;
 }

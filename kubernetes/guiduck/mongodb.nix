@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 
 let
   makeLoadBalancer = index: {
@@ -69,16 +69,13 @@ in
       ];
     };
 
-    resources.v1.Secret."mongodb-user" = {
+    resources.v1.Secret.mongodb-user = {
       type = "Opaque";
       stringData.password = "";
     };
 
-    resources.v1.Service = builtins.listToAttrs (map
-      (index: {
-        name = "mongodb-${index}-external";
-        value = makeLoadBalancer index;
-      }) [ "0" "1" "2" ]);
+    resources.v1.Service = lib.genAttrs' [ "0" "1" "2" ]
+      (index: lib.nameValuePair "mongodb-${index}-external" (makeLoadBalancer index));
 
     resources."cilium.io/v2".CiliumNetworkPolicy.allow-ingress-to-mongodb.spec = {
       endpointSelector.matchLabels.app = "mongodb-svc";

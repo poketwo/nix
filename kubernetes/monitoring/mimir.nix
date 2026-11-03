@@ -144,7 +144,7 @@ in
       };
     };
 
-    resources.v1.Secret."backblaze-b2-credentials" = {
+    resources.v1.Secret.backblaze-b2-credentials = {
       type = "Opaque";
       stringData = {
         BUCKET_ENDPOINT = "";
