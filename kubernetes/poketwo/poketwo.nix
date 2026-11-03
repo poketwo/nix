@@ -54,7 +54,7 @@
                 MALLOC_CONF.value = "background_thread:true";
               };
             };
-            imagePullSecrets = [{ name = "ghcr-auth"; }];
+            imagePullSecrets.ghcr-auth = { };
           };
         };
       };

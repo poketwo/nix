@@ -30,7 +30,7 @@
             };
             envFrom = [{ secretRef.name = "webhook-server"; }];
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };
@@ -40,13 +40,11 @@
       spec = {
         rules = [{
           host = "webhooks.poketwo.io";
-          http = {
-            paths = [{
-              path = "/";
-              pathType = "Prefix";
-              backend.service = { name = "webhook-server"; port.number = 80; };
-            }];
-          };
+          http.paths = [{
+            path = "/";
+            pathType = "Prefix";
+            backend.service = { name = "webhook-server"; port.number = 80; };
+          }];
         }];
         tls = [{
           hosts = [ "webhooks.poketwo.io" ];

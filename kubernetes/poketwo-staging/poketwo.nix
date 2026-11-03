@@ -33,7 +33,7 @@
               API_GATEWAY.value = "ws://gateway";
             };
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };
