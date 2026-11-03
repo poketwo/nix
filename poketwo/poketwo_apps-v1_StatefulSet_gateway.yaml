@@ -61,6 +61,7 @@ spec:
         - containerPort: 7878
           name: bridge
         readinessProbe:
+          failureThreshold: 15
           httpGet:
             path: /readyz
             port: metrics
