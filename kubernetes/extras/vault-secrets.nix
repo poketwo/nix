@@ -1,8 +1,9 @@
-{ ... }:
+{ lib, config, ... }:
 
 let
   useVaultSecrets = { apiVersion, kind, metadata, ... }@obj:
-    if apiVersion == "v1" && kind == "Secret" then
+    if apiVersion == "v1" && kind == "Secret"
+      && !(builtins.elem "${metadata.namespace}/${metadata.name}" config.vaultSecrets.exclude) then
       {
         inherit metadata;
         apiVersion = "secrets.hashicorp.com/v1beta1";
@@ -21,5 +22,11 @@ let
     else obj;
 in
 {
-  transforms = [ useVaultSecrets ];
+  options.vaultSecrets.exclude = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    description = "Secrets (as `namespace/name`) to render as-is instead of syncing from Vault.";
+    default = [ ];
+  };
+
+  config.transforms = [ useVaultSecrets ];
 }
