@@ -35,6 +35,8 @@ in
               "--ssh-known-hosts-file=/etc/git-known-hosts/known_hosts"
               "--http-bind=:8080"
               "--http-metrics"
+              # /git is the emptyDir root, owned by root rather than git-sync's 65533
+              "--git-config=safe.directory:*"
             ];
             ports = [{ name = "http-monitoring"; containerPort = 8080; }];
             startupProbe = {
