@@ -13,6 +13,8 @@
       values = {
         image.tag = "13.0.1";
 
+        plugins = [ "marcusolsson-dynamictext-panel@6.3.0" ];
+
         deploymentStrategy = {
           type = "Recreate";
           rollingUpdate = null;
