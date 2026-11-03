@@ -15,6 +15,18 @@
 
         plugins = [ "marcusolsson-dynamictext-panel@6.3.0" ];
 
+        imageRenderer = {
+          enabled = true;
+          image = {
+            tag = "v5.12.10";
+            pullPolicy = "IfNotPresent";
+          };
+          envValueFrom.AUTH_TOKEN.secretKeyRef = {
+            name = "grafana-image-renderer";
+            key = "token";
+          };
+        };
+
         deploymentStrategy = {
           type = "Recreate";
           rollingUpdate = null;
@@ -42,6 +54,7 @@
         "grafana.ini" = {
           server.root_url = "https://grafana.hfym.co";
           explore.enabled = true;
+          "unified_alerting.screenshots".capture = true;
           "auth.generic_oauth" = {
             enabled = true;
             name = "Pokétwo";
