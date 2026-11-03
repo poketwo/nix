@@ -120,14 +120,9 @@ data:
         kvstore:
           store: memberlist
       storage:
-        s3:
-          access_key_id: ${AWS_ACCESS_KEY_ID}
-          bucketnames: hfym-loki-ruler
-          endpoint: ${BUCKET_ENDPOINT}
-          insecure: false
-          s3forcepathstyle: false
-          secret_access_key: ${AWS_SECRET_ACCESS_KEY}
-        type: s3
+        local:
+          directory: /rules
+        type: local
       wal:
         dir: /var/loki/ruler-wal
     runtime_config:
