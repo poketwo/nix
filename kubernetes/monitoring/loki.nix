@@ -33,13 +33,14 @@ in
           ingester.chunk_encoding = "snappy";
           tracing.enabled = true;
           querier.max_concurrent = 4;
+          # No Loki rules; the S3 default pointed at a bucket that never existed.
+          rulerConfig.storage = {
+            type = "local";
+            local.directory = "/rules"; # the chart's rules-sidecar emptyDir, always present
+          };
           storage = {
             type = "s3";
-            bucketNames = {
-              chunks = "hfym-loki-chunks";
-              ruler = "hfym-loki-ruler";
-              admin = "hfym-loki-admin";
-            };
+            bucketNames.chunks = "hfym-loki-chunks";
             s3 = {
               endpoint = "\${BUCKET_ENDPOINT}";
               accessKeyId = "\${AWS_ACCESS_KEY_ID}";
@@ -63,6 +64,9 @@ in
           common.ring.kvstore.store = "memberlist";
           compactor.compactor_ring.instance_enable_ipv6 = true;
           compactor.compactor_ring.kvstore.store = "memberlist";
+          # Deletes via /loki/api/v1/delete; no retention_period, so nothing ages out.
+          compactor.retention_enabled = true;
+          compactor.delete_request_store = "s3";
           distributor.ring.instance_enable_ipv6 = true;
           distributor.ring.kvstore.store = "memberlist";
           index_gateway.ring.instance_enable_ipv6 = true;
@@ -101,6 +105,9 @@ in
           #   requests = { cpu = "100m"; memory = "128Mi"; };
           # };
         };
+
+        lokiCanary.enabled = false;
+        test.enabled = false;
 
         minio.enabled = false;
         singleBinary.replicas = 0;

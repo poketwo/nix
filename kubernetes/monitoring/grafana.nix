@@ -13,6 +13,26 @@
       values = {
         image.tag = "13.0.1";
 
+        plugins = [ "marcusolsson-dynamictext-panel@6.3.0" ];
+
+        imageRenderer = {
+          enabled = true;
+          image = {
+            tag = "v5.12.10";
+            pullPolicy = "IfNotPresent";
+          };
+          envValueFrom.AUTH_TOKEN.secretKeyRef = {
+            name = "grafana-image-renderer";
+            key = "token";
+          };
+          # Grafana always requests alert screenshots at 1000x500 @1x; Discord shows
+          # embed images in a ~400x300 box, so render alert-graph panels at 4:3.
+          # The renderer reads the first deviceScaleFactor query value, so one baked
+          # into the server URL wins over the 1x Grafana appends.
+          serverURL = "http://grafana-image-renderer.grafana:8081/render?deviceScaleFactor=2";
+          env.BROWSER_OVERRIDE = "/d-solo/p2-alerts/=--browser.min-width=600 --browser.max-width=600 --browser.min-height=450 --browser.max-height=450";
+        };
+
         deploymentStrategy = {
           type = "Recreate";
           rollingUpdate = null;
@@ -54,18 +74,31 @@
 
         dashboardProviders."dashboardproviders.yaml" = {
           apiVersion = 1;
-          providers = [{
-            name = "infrastructure";
-            orgId = 1;
-            folder = "Infrastructure";
-            type = "file";
-            disableDeletion = true;
-            editable = false;
-            options.path = "/var/lib/grafana/dashboards/infrastructure";
-          }];
+          providers = [
+            {
+              name = "default";
+              orgId = 1;
+              type = "file";
+              options.path = "/var/lib/grafana/dashboards/default";
+            }
+            {
+              name = "infrastructure";
+              orgId = 1;
+              folder = "Infrastructure";
+              type = "file";
+              disableDeletion = true;
+              editable = false;
+              options.path = "/var/lib/grafana/dashboards/infrastructure";
+            }
+          ];
         };
 
         # Downloaded from grafana.com by the chart's init container.
+        dashboards.default.velero = {
+          gnetId = 16829;
+          revision = 5;
+        };
+
         dashboards.infrastructure = {
           node-exporter-full = { gnetId = 1860; revision = 46; datasource = "Mimir"; };
           ceph-cluster = { gnetId = 2842; revision = 18; datasource = "Mimir"; };
@@ -74,6 +107,7 @@
         "grafana.ini" = {
           server.root_url = "https://grafana.hfym.co";
           explore.enabled = true;
+          "unified_alerting.screenshots".capture = true;
           "auth.generic_oauth" = {
             enabled = true;
             name = "Pokétwo";

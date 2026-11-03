@@ -28,6 +28,9 @@
           readinessProbe = {
             httpGet = { path = "/readyz"; port = "metrics"; };
             periodSeconds = 2;
+            # A shard that resumes counts as down for ~1.2s, and with 1600 shards one is
+            # resuming ~23% of the time and three failed probes in a row happen every few minutes.
+            failureThreshold = 15;
           };
           resources = {
             requests = { memory = "4Gi"; cpu = "500m"; };
