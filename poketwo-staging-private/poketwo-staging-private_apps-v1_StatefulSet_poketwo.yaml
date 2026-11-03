@@ -27,6 +27,8 @@ spec:
               name: mongodb-admin-poketwo
         - name: EXT_SERVER_URL
           value: https://server.poketwo.io
+        - name: FLAGD_HOST
+          value: flagd.poketwo
         - name: IMGEN_URL
           value: http://imgen-rust.poketwo
         - name: REDIS_PASSWORD

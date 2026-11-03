@@ -36,6 +36,8 @@ spec:
           value: root
         - name: EXT_SERVER_URL
           value: https://server.poketwo.io
+        - name: FLAGD_HOST
+          value: flagd
         - name: IMGEN_URL
           value: http://imgen-rust
         - name: MALLOC_CONF
