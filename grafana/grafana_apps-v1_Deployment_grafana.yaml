@@ -20,8 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 5f6dedcccf9ff7c6871750504b528048010c95663f01bf5883b144936de9e1fa
-        checksum/dashboards-json-config: eb93a921b95067c86ae4359cd31d839557462d8c07aa514ce53a27dcefccfc40
+        checksum/config: 93b211216bce05047f977d07f97c01453ca354b7b865bcddd122600c2ba898a3
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
         kubectl.kubernetes.io/default-container: grafana
       labels:
@@ -121,32 +120,8 @@ spec:
         - mountPath: /etc/grafana/provisioning/datasources/datasources.yaml
           name: config
           subPath: datasources.yaml
-        - mountPath: /etc/grafana/provisioning/dashboards/dashboardproviders.yaml
-          name: config
-          subPath: dashboardproviders.yaml
       enableServiceLinks: true
       initContainers:
-      - args:
-        - -c
-        - mkdir -p /var/lib/grafana/dashboards/default && /bin/sh -x /etc/grafana/download_dashboards.sh
-        command:
-        - /bin/sh
-        image: docker.io/curlimages/curl:8.19.0
-        imagePullPolicy: IfNotPresent
-        name: download-dashboards
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          seccompProfile:
-            type: RuntimeDefault
-        volumeMounts:
-        - mountPath: /etc/grafana/download_dashboards.sh
-          name: config
-          subPath: download_dashboards.sh
-        - mountPath: /var/lib/grafana
-          name: storage
       - command:
         - chown
         - -R
@@ -180,9 +155,6 @@ spec:
       - configMap:
           name: grafana
         name: config
-      - configMap:
-          name: grafana-dashboards-default
-        name: dashboards-default
       - emptyDir: {}
         name: search
       - name: storage

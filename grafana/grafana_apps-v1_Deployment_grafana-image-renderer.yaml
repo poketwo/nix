@@ -18,7 +18,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 73fcf1a62b1bac93a5cedb579db1fb94e6df7177b623fd262bd3fa53da8a658d
+        checksum/config: b0b209628a3449e4f5c8706879959a8ca418f1ef3bafa28cc1374bcab0106216
       labels:
         app.kubernetes.io/instance: grafana
         app.kubernetes.io/name: grafana-image-renderer
