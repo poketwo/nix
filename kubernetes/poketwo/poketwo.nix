@@ -51,6 +51,9 @@
                 EXT_SERVER_URL.value = "https://server.poketwo.io";
                 IMGEN_URL.value = "http://imgen-rust";
                 API_GATEWAY.value = "ws://gateway";
+                FLAGD_HOST.value = "flagd";
+                # explicit, or k8s service links set FLAGD_PORT=tcp://<ip>:8013 for the flagd Service
+                FLAGD_PORT.value = "8015";
                 MALLOC_CONF.value = "background_thread:true";
               };
             };

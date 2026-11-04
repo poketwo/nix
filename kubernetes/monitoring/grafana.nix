@@ -74,31 +74,18 @@
 
         dashboardProviders."dashboardproviders.yaml" = {
           apiVersion = 1;
-          providers = [
-            {
-              name = "default";
-              orgId = 1;
-              type = "file";
-              options.path = "/var/lib/grafana/dashboards/default";
-            }
-            {
-              name = "infrastructure";
-              orgId = 1;
-              folder = "Infrastructure";
-              type = "file";
-              disableDeletion = true;
-              editable = false;
-              options.path = "/var/lib/grafana/dashboards/infrastructure";
-            }
-          ];
+          providers = [{
+            name = "infrastructure";
+            orgId = 1;
+            folder = "Infrastructure";
+            type = "file";
+            disableDeletion = true;
+            editable = false;
+            options.path = "/var/lib/grafana/dashboards/infrastructure";
+          }];
         };
 
         # Downloaded from grafana.com by the chart's init container.
-        dashboards.default.velero = {
-          gnetId = 16829;
-          revision = 5;
-        };
-
         dashboards.infrastructure = {
           node-exporter-full = { gnetId = 1860; revision = 46; datasource = "Mimir"; };
           ceph-cluster = { gnetId = 2842; revision = 18; datasource = "Mimir"; };
