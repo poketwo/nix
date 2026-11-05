@@ -13,6 +13,8 @@
       values = {
         global.imageRegistry = "docker.io";
         global.security.allowInsecureImages = true;
+        # cert-manager issues and renews the topology operator's webhook cert and injects its CA.
+        useCertManager = true;
         rabbitmqImage.repository = "bitnamilegacy/rabbitmq";
         credentialUpdaterImage.repository = "bitnamilegacy/rmq-default-credential-updater";
         clusterOperator = {
