@@ -51,7 +51,14 @@
 
         # Observability things
         prometheus.enabled = true;
-        dashboards.enabled = true;
+        dashboards = {
+          enabled = true;
+          annotations."k8s-sidecar-target-directory" = "/tmp/dashboards/Cilium";
+        };
+        operator.dashboards = {
+          enabled = true;
+          annotations."k8s-sidecar-target-directory" = "/tmp/dashboards/Cilium";
+        };
         hubble = {
           tls.auto.method = "cronJob";
           relay.enabled = true;
