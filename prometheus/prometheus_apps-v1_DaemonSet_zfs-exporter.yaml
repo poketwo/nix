@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: zfs-exporter
+  namespace: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: zfs-exporter
+  template:
+    metadata:
+      labels:
+        app: zfs-exporter
+    spec:
+      containers:
+      - image: ghcr.io/pdf/zfs_exporter:v2.5.1
+        name: zfs-exporter
+        ports:
+        - containerPort: 9134
+          name: metrics
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /host
+          mountPropagation: HostToContainer
+          name: host-root
+          readOnly: true
+      volumes:
+      - hostPath:
+          path: /
+        name: host-root
