@@ -1,28 +1,134 @@
-{ transpire, ... }:
+{ lib, transpire, ... }:
+
+let
+  chart = transpire.fetchFromHelm {
+    repo = "https://grafana.github.io/helm-charts";
+    name = "alloy";
+    version = "0.3.2";
+    sha256 = "/H288hrHvRSWQz/aHacsPtBs0jVOYlpIC9RC3+nm1Ow=";
+  };
+
+  # Outbound reachability probes (blackbox exporter built into Alloy), so a
+  # "v4 to Cloudflare died on every worker" outage shows up as
+  # probe_success{job="integrations/blackbox/<host|pod>-<target>", node}.
+  blackboxModules = {
+    icmp4 = { prober = "icmp"; timeout = "5s"; icmp.preferred_ip_protocol = "ip4"; };
+    icmp6 = { prober = "icmp"; timeout = "5s"; icmp.preferred_ip_protocol = "ip6"; };
+    http4 = { prober = "http"; timeout = "5s"; http = { preferred_ip_protocol = "ip4"; ip_protocol_fallback = false; }; };
+    http6 = { prober = "http"; timeout = "5s"; http = { preferred_ip_protocol = "ip6"; ip_protocol_fallback = false; }; };
+  };
+
+  cloudflare = "162.159.133.234"; # gateway.discord.gg anycast
+  google = "8.8.8.8";
+
+  # Native from the host: v4 and v6 side by side, Cloudflare vs others, and
+  # the workers' router (from the Linode control planes this is a cross-site
+  # probe, not their own gateway). The pod runs with cluster DNS, which hides
+  # A records, so v4 HTTP targets must be IP literals.
+  hostTargets = {
+    cloudflare-icmp4 = { address = cloudflare; module = "icmp4"; };
+    google-icmp4 = { address = google; module = "icmp4"; };
+    worker-router-icmp4 = { address = "23.135.200.1"; module = "icmp4"; };
+    cloudflare-icmp6 = { address = "2606:4700:4700::1111"; module = "icmp6"; };
+    google-icmp6 = { address = "2001:4860:4860::8888"; module = "icmp6"; };
+    worker-router-icmp6 = { address = "2606:c2c0::1"; module = "icmp6"; };
+    cloudflare-http4 = { address = "https://1.1.1.1/cdn-cgi/trace"; module = "http4"; };
+    cloudflare-http6 = { address = "https://www.cloudflare.com/cdn-cgi/trace"; module = "http6"; };
+    google-http6 = { address = "https://www.google.com/generate_204"; module = "http6"; };
+  };
+
+  # From the pod network: v4-only hosts resolve through DNS64 and go via Jool;
+  # the 64:ff9b:: literals exercise Jool without DNS.
+  podTargets = {
+    cloudflare-nat64-icmp = { address = "64:ff9b::${cloudflare}"; module = "icmp6"; };
+    google-nat64-icmp = { address = "64:ff9b::${google}"; module = "icmp6"; };
+    cloudflare-icmp6 = { address = "2606:4700:4700::1111"; module = "icmp6"; };
+    discord-nat64-http = { address = "https://discord.com/api/v10/gateway"; module = "http6"; };
+    github-nat64-http = { address = "https://github.com/"; module = "http6"; };
+    cloudflare-http6 = { address = "https://www.cloudflare.com/cdn-cgi/trace"; module = "http6"; };
+  };
+
+  blackboxConfig = name: targets: clustering: ''
+    prometheus.exporter.blackbox "${name}" {
+      config = ${builtins.toJSON (builtins.toJSON { modules = blackboxModules; })}
+    ${lib.concatStrings (lib.mapAttrsToList (tname: t: ''
+        target {
+          name    = "${name}-${tname}"
+          address = "${t.address}"
+          module  = "${t.module}"
+        }
+    '') targets)}}
+
+    prometheus.scrape "blackbox_${name}" {
+      targets         = prometheus.exporter.blackbox.${name}.targets
+      scrape_interval = "15s"
+      forward_to      = [prometheus.remote_write.default.receiver]
+      clustering { enabled = ${lib.boolToString clustering} }
+    }
+  '';
+
+  hostMounts = {
+    proc = "/proc";
+    sys = "/sys";
+    root = "/";
+    journal = "/var/log/journal";
+  };
+
+  # Survives restarts so loki.source.journal keeps its cursor.
+  hostStateDir = "/var/lib/alloy-host";
+in
 
 {
   namespaces.alloy = {
-    helmReleases.alloy = {
-      chart = transpire.fetchFromHelm {
-        repo = "https://grafana.github.io/helm-charts";
-        name = "alloy";
-        version = "0.3.2";
-        sha256 = "/H288hrHvRSWQz/aHacsPtBs0jVOYlpIC9RC3+nm1Ow=";
-      };
+    helmReleases = {
+      # Cluster-wide collector: pod metrics/logs, k8s events, *Monitor CRs.
+      alloy = {
+        inherit chart;
 
-      values = {
-        controller = {
-          type = "statefulset";
-          replicas = 3;
+        values = {
+          controller = {
+            type = "statefulset";
+            replicas = 3;
+          };
+
+          alloy = {
+            clustering.enabled = true;
+            securityContext.capabilities.add = [ "NET_RAW" ];
+            configMap.content = builtins.readFile ./alloy/config.alloy + "\n" + blackboxConfig "pod" podTargets true;
+          };
         };
 
-        alloy = {
-          clustering.enabled = true;
-          configMap.content = builtins.readFile ./alloy/config.alloy;
-        };
+        includeCRDs = true;
       };
 
-      includeCRDs = true;
+      # One per node on the host network: node metrics, host journal and
+      # native probes. Pushes directly, so the host firewall can stay closed.
+      alloy-host = {
+        inherit chart;
+
+        values = {
+          controller = {
+            type = "daemonset";
+            hostNetwork = true;
+            hostPID = true;
+            dnsPolicy = "ClusterFirstWithHostNet";
+            tolerations = [{ key = "node-role.kubernetes.io/control-plane"; effect = "NoSchedule"; }];
+            volumes.extra = lib.mapAttrsToList (name: path: { inherit name; hostPath = { inherit path; }; }) hostMounts
+              ++ [{ name = "state"; hostPath = { path = hostStateDir; type = "DirectoryOrCreate"; }; }];
+          };
+
+          alloy = {
+            securityContext.capabilities.add = [ "NET_RAW" ];
+            extraEnv = [{ name = "NODE_NAME"; valueFrom.fieldRef.fieldPath = "spec.nodeName"; }];
+            storagePath = hostStateDir;
+            mounts.extra = lib.mapAttrsToList (name: _: { inherit name; mountPath = "/host/${name}"; readOnly = true; }) hostMounts
+              ++ [{ name = "state"; mountPath = hostStateDir; }];
+            configMap.content = builtins.readFile ./alloy/host.alloy + "\n" + blackboxConfig "host" hostTargets false;
+          };
+
+          rbac.create = false;
+        };
+      };
     };
   };
 }

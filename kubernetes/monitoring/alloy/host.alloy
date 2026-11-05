@@ -1,0 +1,43 @@
+// Runs once per node on the host network (see alloy.nix). Nothing scrapes it;
+// it pushes host metrics, the host journal and native reachability probes.
+
+prometheus.remote_write "default" {
+  endpoint { url = "http://mimir-gateway.mimir.svc.cluster.local/api/v1/push" }
+  external_labels = { node = env("NODE_NAME") }
+}
+
+loki.write "default" {
+  endpoint { url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push" }
+  external_labels = { node = env("NODE_NAME") }
+}
+
+prometheus.exporter.unix "host" {
+  rootfs_path = "/host/root"
+  procfs_path = "/host/proc"
+  sysfs_path  = "/host/sys"
+}
+
+prometheus.scrape "host" {
+  targets    = prometheus.exporter.unix.host.targets
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+loki.relabel "journal" {
+  forward_to = []
+  rule {
+    source_labels = ["__journal__systemd_unit"]
+    target_label  = "unit"
+  }
+  rule {
+    source_labels = ["__journal_syslog_identifier"]
+    target_label  = "identifier"
+  }
+}
+
+loki.source.journal "host" {
+  path          = "/host/journal"
+  max_age       = "12h"
+  labels        = { job = "systemd-journal" }
+  relabel_rules = loki.relabel.journal.rules
+  forward_to    = [loki.write.default.receiver]
+}
