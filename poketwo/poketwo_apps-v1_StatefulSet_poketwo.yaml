@@ -44,6 +44,8 @@ spec:
           value: http://imgen-rust
         - name: MALLOC_CONF
           value: background_thread:true
+        - name: METRICS_PORT
+          value: '9090'
         - name: NUM_CLUSTERS
           value: '200'
         - name: NUM_SHARDS
@@ -63,6 +65,9 @@ spec:
         image: ghcr.io/poketwo/poketwo:production
         imagePullPolicy: Always
         name: poketwo
+        ports:
+        - containerPort: 9090
+          name: metrics
         readinessProbe:
           exec:
             command:
