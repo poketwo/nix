@@ -30,6 +30,7 @@
               FORMIUM_TOKEN.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "formium-token"; };
               DISCORD_CLIENT_ID.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-id"; };
               DISCORD_CLIENT_SECRET.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-secret"; };
+              GUIDUCK_BOT_TOKEN.valueFrom.secretKeyRef = { name = "guiduck"; key = "token"; };
 
               # FIXME: Remove this when Formium fixes their site
               NODE_TLS_REJECT_UNAUTHORIZED.value = "0";
