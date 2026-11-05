@@ -41,6 +41,11 @@ spec:
             secretKeyRef:
               key: formium-token
               name: poketwo-forms
+        - name: GUIDUCK_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: guiduck
         - name: NEXT_PUBLIC_FORMIUM_PROJECT_ID
           valueFrom:
             secretKeyRef:
