@@ -14,7 +14,7 @@ in
   # Clients stream the flag set from the sync port (8015) and evaluate in-process.
   namespaces.poketwo = {
     resources."apps/v1".Deployment.flagd.spec = {
-      replicas = 2;
+      replicas = 3;
       selector.matchLabels.app = "flagd";
       template = {
         metadata.labels.app = "flagd";
@@ -84,12 +84,10 @@ in
           };
           # git-sync runs as 65533 and needs the deploy key and /git to be group-accessible
           securityContext.fsGroup = 65533;
-          affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution = [{
-            weight = 100;
-            podAffinityTerm = {
-              labelSelector.matchLabels.app = "flagd";
-              topologyKey = "kubernetes.io/hostname";
-            };
+          # one replica per node, so losing a node never takes out more than one
+          affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution = [{
+            labelSelector.matchLabels.app = "flagd";
+            topologyKey = "kubernetes.io/hostname";
           }];
         };
       };
