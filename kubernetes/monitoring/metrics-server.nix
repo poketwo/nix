@@ -7,8 +7,8 @@
         chart = transpire.fetchFromHelm {
           repo = "https://kubernetes-sigs.github.io/metrics-server/";
           name = "metrics-server";
-          version = "3.12.1";
-          sha256 = "I4A5zSvkif0E1Y7N9LlqHGSDt0PTGHeLB5nMMX2Ebr0=";
+          version = "3.14.0";
+          sha256 = "6MRrUlscZAn2c7SK9u+GtwgpWLAp5Lph49djpJwahdg=";
         };
 
         # values = {
