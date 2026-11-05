@@ -136,9 +136,10 @@ One worker at a time; wait for full recovery before the next.
    ```
    Kernel, `dbus`, `glibc` or systemd in the diff means a reboot deploy, not
    `switch`. Check `kubectl get nodes` (everything Ready, no other worker
-   degraded). If the host runs `gateway-proxy` (sylveon) or the Rust `gateway`
-   (glaceon), check the Discord session-start budget first: moving the proxy
-   re-identifies all 1600 shards.
+   degraded). If the host runs the Rust `gateway` (`kubectl -n poketwo get pod
+   gateway-0 -o wide`), note that it keeps its shard sessions in Redis and
+   resumes them after a move, so no identifies are spent unless Redis lost the
+   sessions; check the Discord session-start budget first anyway.
 2. Stage, don't activate: `nixos-rebuild boot` (or
    `<built>/bin/switch-to-configuration boot`), then confirm with
    `bootctl list` that the new generation is the default entry. Don't set the
@@ -147,8 +148,8 @@ One worker at a time; wait for full recovery before the next.
    `kubectl cordon <host>`, then
    `kubectl drain <host> --ignore-daemonsets --delete-emptydir-data --timeout=10m`
    and wait for the evicted pods to be Running elsewhere. Bot pods reconnect
-   through the proxy (no identifies). Make sure the other workers have the
-   memory headroom for what moves (`kubectl describe node | grep -A6 Allocated`).
+   through the gateway bridge (no identifies). Make sure the other workers have
+   the memory headroom for what moves (`kubectl describe node | grep -A6 Allocated`).
    Exception: the prod MongoDB members on vaporeon/jolteon use local volumes,
    so after eviction they stay Pending until the node is back and uncordoned —
    that is expected; the replica set keeps serving from the other members.
