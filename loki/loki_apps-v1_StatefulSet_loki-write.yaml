@@ -23,7 +23,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 5c8dfb57e0474110c29c3b6487e68a92f62a78152382c4b31ecbcdc2fbe67c35
+        checksum/config: 639c6239988ba7242c76b0be20c8eca43e07b37dea661fbb569346d856ac17cc
       labels:
         app.kubernetes.io/component: write
         app.kubernetes.io/instance: loki
