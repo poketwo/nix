@@ -54,6 +54,13 @@ in
         replicaSetHostnames = true;
         replicaCount = 2;
         enableIPv6 = true;
+        # 7.0's default throughputProbing shrank the primary to 9 read tickets, queueing cheap reads
+        # behind long scans; pin the pre-7.0 default of 128 each instead.
+        extraFlags = [
+          "--setParameter=storageEngineConcurrencyAdjustmentAlgorithm=fixedConcurrentTransactions"
+          "--setParameter=storageEngineConcurrentReadTransactions=128"
+          "--setParameter=storageEngineConcurrentWriteTransactions=128"
+        ];
 
         resources = {
           limits = { memory = "120Gi"; };
