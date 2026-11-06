@@ -1,4 +1,4 @@
-{ transpire, ... }:
+{ lib, transpire, ... }:
 
 {
   namespaces.prometheus = {
@@ -46,5 +46,9 @@
         };
       };
     };
+
+    # The chart listens on [$(HOST_IP)]:9100 with HOST_IP=0.0.0.0, which is
+    # IPv4-only; pods here only have an IPv6 address.
+    resources."apps/v1".DaemonSet.prometheus-node-exporter.spec.template.spec.containers.node-exporter.env.HOST_IP.value = lib.mkForce "::";
   };
 }
