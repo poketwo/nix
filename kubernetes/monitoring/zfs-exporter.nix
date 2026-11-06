@@ -14,6 +14,10 @@
           image = "ghcr.io/pdf/zfs_exporter:v2.5.1";
           ports = [{ name = "metrics"; containerPort = 9134; }];
 
+          # Per-snapshot used/referenced/written, so snapshot space shows up in
+          # Grafana without SSHing to vaporeon/jolteon.
+          args = [ "--collector.dataset-snapshot" ];
+
           # Runs the host's zfs/zpool chrooted into /host; needs /dev/zfs.
           securityContext.privileged = true;
 
