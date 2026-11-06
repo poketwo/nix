@@ -13,7 +13,9 @@ spec:
         app: zfs-exporter
     spec:
       containers:
-      - image: ghcr.io/pdf/zfs_exporter:v2.5.1
+      - args:
+        - --collector.dataset-snapshot
+        image: ghcr.io/pdf/zfs_exporter:v2.5.1
         name: zfs-exporter
         ports:
         - containerPort: 9134
