@@ -19,6 +19,22 @@
           version = "4.36.0";
           sha256 = "n63qKrSv7F+TDI2Sq8YjVu527veZl2asDyFREJd0Mak=";
         };
+
+        # On the pod network so Alloy can reach it like zfs-exporter: on the
+        # host network, port 9100 is firewalled on the hosts. /proc and /sys
+        # are still the host's (mounted at /host), so disk, ZFS, CPU, memory
+        # and filesystem metrics are node-wide. Network collectors would only
+        # see the pod's own netns, so they're off.
+        values = {
+          hostNetwork = false;
+          extraArgs = [
+            "--no-collector.arp"
+            "--no-collector.conntrack"
+            "--no-collector.netdev"
+            "--no-collector.netstat"
+            "--no-collector.sockstat"
+          ];
+        };
       };
 
       kube-state-metrics = {
