@@ -12,15 +12,15 @@ let
 
     echo "before:"
     zfs list -o name,used,avail,usedbysnapshots "$ds"
-    zfs list -t snapshot -o name,creation,used -s creation "$ds"
+    zfs list -d 1 -t snapshot -o name,creation,used -s creation "$ds"
 
-    mapfile -t hourlies < <(zfs list -H -t snapshot -o name -s creation "$ds" | grep '_hourly$' || true)
+    mapfile -t hourlies < <(zfs list -H -d 1 -t snapshot -o name -s creation "$ds" | grep '_hourly$' || true)
     extra=$(( ''${#hourlies[@]} - 12 ))
     for (( i = 0; i < extra; i++ )); do
       zfs destroy -v "''${hourlies[i]}"
     done
   '' + lib.optionalString (oldestDailyUpTo != null) ''
-    oldest=$(zfs list -H -t snapshot -o name -s creation "$ds" | grep '_daily$' | head -n 1 || true)
+    oldest=$(zfs list -H -d 1 -t snapshot -o name -s creation "$ds" | grep '_daily$' | head -n 1 || true)
     day=''${oldest#*@autosnap_}
     day=''${day:0:10}
     if [[ -n "$oldest" && ! "$day" > "${oldestDailyUpTo}" ]]; then
