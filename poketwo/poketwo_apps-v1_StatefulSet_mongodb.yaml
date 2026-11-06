@@ -126,6 +126,9 @@ spec:
           value: 'yes'
         - name: MONGODB_ENABLE_JOURNAL
           value: 'yes'
+        - name: MONGODB_EXTRA_FLAGS
+          value: --setParameter=storageEngineConcurrencyAdjustmentAlgorithm=fixedConcurrentTransactions
+            --setParameter=storageEngineConcurrentReadTransactions=128 --setParameter=storageEngineConcurrentWriteTransactions=128
         - name: MONGODB_PORT_NUMBER
           value: '27017'
         - name: MONGODB_REPLICA_SET_KEY
