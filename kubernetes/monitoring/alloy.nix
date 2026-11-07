@@ -6,8 +6,8 @@
       chart = transpire.fetchFromHelm {
         repo = "https://grafana.github.io/helm-charts";
         name = "alloy";
-        version = "0.3.2";
-        sha256 = "/H288hrHvRSWQz/aHacsPtBs0jVOYlpIC9RC3+nm1Ow=";
+        version = "1.15.0";
+        sha256 = "efDrZJdDGVGHGkuC5KOE74IHz+/GrUJJU8RZwpY8lgE=";
       };
 
       values = {
