@@ -24,7 +24,7 @@ spec:
     metadata:
       annotations:
         checksum/alertmanager-fallback-config: 4be806c331c651303b6f8942655d604d7bc1b86d878fdf4d6f646ece9165cf9e
-        checksum/config: 95c592bcf6dfdf7cffc29d0403d72a6b149c37ddb9e83a972a1e8c837bc7dcb6
+        checksum/config: b8770f12da6449113a49c50bb545633c784a5a1d6648da089ab23a43e058264a
       labels:
         app.kubernetes.io/component: alertmanager
         app.kubernetes.io/instance: mimir

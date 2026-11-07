@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 95c592bcf6dfdf7cffc29d0403d72a6b149c37ddb9e83a972a1e8c837bc7dcb6
+        checksum/config: b8770f12da6449113a49c50bb545633c784a5a1d6648da089ab23a43e058264a
       labels:
         app.kubernetes.io/component: compactor
         app.kubernetes.io/instance: mimir

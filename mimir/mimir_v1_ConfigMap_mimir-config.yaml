@@ -100,6 +100,7 @@ data:
         max_recv_msg_size: 104857600
         max_send_msg_size: 104857600
     limits:
+      ingestion_rate: 40000
       max_cache_freshness: 10m
       max_global_series_per_user: 2000000
       max_query_parallelism: 240
