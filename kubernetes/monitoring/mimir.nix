@@ -31,6 +31,8 @@ in
 
         mimir.structuredConfig = {
           usage_stats.enabled = false;
+          # Lets mimirtool backfill historical TSDB blocks via /api/v1/upload/block.
+          limits.compactor_block_upload_enabled = true;
           alertmanager.sharding_ring.instance_enable_ipv6 = true;
           compactor.sharding_ring.instance_enable_ipv6 = true;
           distributor.ring.instance_enable_ipv6 = true;
