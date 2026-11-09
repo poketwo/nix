@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ lib, config, pkgs, ... }:
 
 let
   cfg = config.poketwo.network;
@@ -27,6 +27,22 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # Host-side egress probes, scraped by Alloy on 9115 (firewall rule in
+    # kubernetes.nix): native IPv4/IPv6 and NAT64 through this host's Jool.
+    # See kubernetes/monitoring/alloy.nix for the targets.
+    services.prometheus.exporters.blackbox = {
+      enable = true;
+      listenAddress = "[::]";
+      configFile = pkgs.writeText "blackbox.yml" (builtins.toJSON {
+        modules = {
+          tcp4 = { prober = "tcp"; timeout = "5s"; tcp = { preferred_ip_protocol = "ip4"; ip_protocol_fallback = false; }; };
+          tcp6 = { prober = "tcp"; timeout = "5s"; tcp = { preferred_ip_protocol = "ip6"; ip_protocol_fallback = false; }; };
+          icmp4 = { prober = "icmp"; timeout = "5s"; icmp = { preferred_ip_protocol = "ip4"; ip_protocol_fallback = false; }; };
+          icmp6 = { prober = "icmp"; timeout = "5s"; icmp = { preferred_ip_protocol = "ip6"; ip_protocol_fallback = false; }; };
+        };
+      });
+    };
+
     networking = {
       useDHCP = false;
       useNetworkd = true;
