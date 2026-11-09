@@ -136,3 +136,58 @@ prometheus.operator.probes "default" {
 prometheus.remote_write "default" {
   endpoint { url = "http://mimir-gateway.mimir.svc.cluster.local/api/v1/push" }
 }
+
+// Egress probes from the pod network, i.e. the path gateway and bot pods take:
+// v4-only destinations go pod -> Cilium -> that node's Jool. Pairing NAT64
+// targets with native IPv6 ones tells a Jool/upstream-IPv4 outage apart from
+// the node losing the internet, and 8.8.8.8 tells a provider IPv4 fault apart
+// from a Cloudflare/Discord one. Not clustered: every replica probes every
+// target and labels the series with its own node.
+prometheus.exporter.blackbox "egress" {
+  config = `{"modules": {"tcp6": {"prober": "tcp", "timeout": "5s", "tcp": {"preferred_ip_protocol": "ip6", "ip_protocol_fallback": false}}}}`
+
+  target {
+    name    = "discord-gateway-nat64"
+    address = "gateway.discord.gg:443"
+    module  = "tcp6"
+    labels  = { probe = "discord-gateway", path = "nat64" }
+  }
+  target {
+    name    = "cloudflare-nat64"
+    address = "[64:ff9b::101:101]:443"
+    module  = "tcp6"
+    labels  = { probe = "cloudflare", path = "nat64" }
+  }
+  target {
+    name    = "cloudflare-ipv6"
+    address = "[2606:4700:4700::1111]:443"
+    module  = "tcp6"
+    labels  = { probe = "cloudflare", path = "ipv6" }
+  }
+  target {
+    name    = "google-nat64"
+    address = "[64:ff9b::808:808]:443"
+    module  = "tcp6"
+    labels  = { probe = "google", path = "nat64" }
+  }
+  target {
+    name    = "google-ipv6"
+    address = "[2001:4860:4860::8888]:443"
+    module  = "tcp6"
+    labels  = { probe = "google", path = "ipv6" }
+  }
+}
+
+discovery.relabel "egress" {
+  targets = prometheus.exporter.blackbox.egress.targets
+  rule {
+    target_label = "node"
+    replacement  = sys.env("K8S_NODE_NAME")
+  }
+}
+
+prometheus.scrape "egress" {
+  targets         = discovery.relabel.egress.output
+  scrape_interval = "15s"
+  forward_to      = [prometheus.remote_write.default.receiver]
+}
