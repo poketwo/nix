@@ -43,6 +43,27 @@ in
       });
     };
 
+    # The exporter probes whatever `target` a scraper asks for, so limit the
+    # unit's sockets to the probe targets (keep in sync with hostProbes in
+    # kubernetes/monitoring/alloy.nix) and to the pod prefix Alloy scrapes
+    # from. This keeps loopback and the host's own addresses unreachable.
+    systemd.services.prometheus-blackbox-exporter.serviceConfig = {
+      IPAddressDeny = "any";
+      IPAddressAllow = [
+        "2606:c2c0:5:1::/64" # pods (Alloy)
+        "162.159.133.234" # gateway.discord.gg
+        "1.1.1.1"
+        "8.8.8.8"
+        "2606:4700:4700::1111"
+        "2001:4860:4860::8888"
+        "64:ff9b::a29f:85ea"
+        "64:ff9b::101:101"
+        "64:ff9b::808:808"
+        "23.135.200.1" # router
+        "2606:c2c0::1"
+      ];
+    };
+
     networking = {
       useDHCP = false;
       useNetworkd = true;

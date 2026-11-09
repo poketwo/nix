@@ -5,10 +5,10 @@ let
   # the host network: native IPv4 and IPv6 side by side, plus NAT64 through
   # that host's own Jool (the host routes 64:ff9b::/96 into it). 8.8.8.8 tells
   # a provider IPv4 fault apart from a Cloudflare/Discord one, and the router
-  # tells the LAN apart from upstream. The host resolver returns A records, so
-  # gateway.discord.gg over tcp4 is plain IPv4.
+  # tells the LAN apart from upstream. Targets are literal IPs: the exporter
+  # unit may only reach these (IPAddressAllow in network.nix), not a resolver.
   hostProbes = [
-    { probe = "discord-gateway"; path = "ipv4"; module = "tcp4"; target = "gateway.discord.gg:443"; }
+    { probe = "discord-gateway"; path = "ipv4"; module = "tcp4"; target = "162.159.133.234:443"; } # gateway.discord.gg
     { probe = "discord-gateway"; path = "nat64"; module = "tcp6"; target = "[64:ff9b::a29f:85ea]:443"; } # 162.159.133.234
     { probe = "cloudflare"; path = "ipv4"; module = "tcp4"; target = "1.1.1.1:443"; }
     { probe = "cloudflare"; path = "nat64"; module = "tcp6"; target = "[64:ff9b::101:101]:443"; }
