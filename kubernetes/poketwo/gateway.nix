@@ -5,6 +5,9 @@
     v1.Service.gateway.spec = {
       selector.app = "gateway";
       ports = [{ port = 80; targetPort = "bridge"; }];
+      # Readiness only passes with every shard on Discord, so a flapping shard would stop new bot
+      # pods from attaching to the bridge, which serves the shards that are up.
+      publishNotReadyAddresses = true;
     };
 
     "apps/v1".StatefulSet.gateway.spec = {
