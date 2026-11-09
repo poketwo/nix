@@ -1,5 +1,6 @@
 // Runs once per node on the host network (see alloy.nix). Nothing scrapes it;
-// it pushes host metrics, the host journal and native reachability probes.
+// it pushes the host journal and reachability probes. Node metrics stay with
+// prometheus-node-exporter.
 
 prometheus.remote_write "default" {
   endpoint { url = "http://mimir-gateway.mimir.svc.cluster.local/api/v1/push" }
@@ -9,17 +10,6 @@ prometheus.remote_write "default" {
 loki.write "default" {
   endpoint { url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push" }
   external_labels = { node = sys.env("NODE_NAME") }
-}
-
-prometheus.exporter.unix "host" {
-  rootfs_path = "/host/root"
-  procfs_path = "/host/proc"
-  sysfs_path  = "/host/sys"
-}
-
-prometheus.scrape "host" {
-  targets    = prometheus.exporter.unix.host.targets
-  forward_to = [prometheus.remote_write.default.receiver]
 }
 
 loki.relabel "journal" {

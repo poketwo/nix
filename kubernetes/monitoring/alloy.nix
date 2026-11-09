@@ -68,9 +68,6 @@ let
   '';
 
   hostMounts = {
-    proc = "/proc";
-    sys = "/sys";
-    root = "/";
     journal = "/var/log/journal";
   };
 
@@ -101,8 +98,8 @@ in
         includeCRDs = true;
       };
 
-      # One per node on the host network: node metrics, host journal and
-      # native probes. Pushes directly, so the host firewall can stay closed.
+      # One per node on the host network: host journal and per-node probes
+      # (native v4/v6 and via that host's Jool). Pushes directly, so the host firewall can stay closed.
       alloy-host = {
         inherit chart;
 
@@ -110,7 +107,6 @@ in
           controller = {
             type = "daemonset";
             hostNetwork = true;
-            hostPID = true;
             dnsPolicy = "ClusterFirstWithHostNet";
             tolerations = [{ key = "node-role.kubernetes.io/control-plane"; effect = "NoSchedule"; }];
             volumes.extra = lib.mapAttrsToList (name: path: { inherit name; hostPath = { inherit path; }; }) hostMounts
