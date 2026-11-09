@@ -18,6 +18,7 @@
         enabled = true;
         kubernetes.role = "vault-secrets-operator";
       };
+      controller.kubeRbacProxy.image.repository = "quay.io/brancz/kube-rbac-proxy";
       tests.enabled = false;
     };
 
