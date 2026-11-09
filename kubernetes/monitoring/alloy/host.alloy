@@ -3,12 +3,12 @@
 
 prometheus.remote_write "default" {
   endpoint { url = "http://mimir-gateway.mimir.svc.cluster.local/api/v1/push" }
-  external_labels = { node = env("NODE_NAME") }
+  external_labels = { node = sys.env("NODE_NAME") }
 }
 
 loki.write "default" {
   endpoint { url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push" }
-  external_labels = { node = env("NODE_NAME") }
+  external_labels = { node = sys.env("NODE_NAME") }
 }
 
 prometheus.exporter.unix "host" {
