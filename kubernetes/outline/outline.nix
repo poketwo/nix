@@ -85,13 +85,11 @@ in
       spec = {
         rules = [{
           host = "outline.poketwo.io";
-          http = {
-            paths = [{
-              path = "/";
-              pathType = "Prefix";
-              backend.service = { name = "outline"; port.number = 80; };
-            }];
-          };
+          http.paths = [{
+            path = "/";
+            pathType = "Prefix";
+            backend.service = { name = "outline"; port.number = 80; };
+          }];
         }];
         tls = [{
           hosts = [ "outline.poketwo.io" ];
@@ -112,7 +110,7 @@ in
     };
 
     resources.v1.Service.outline.spec = {
-      selector = { app = "outline"; };
+      selector.app = "outline";
       ports = [{ port = 80; targetPort = 3000; }];
     };
 

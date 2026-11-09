@@ -27,17 +27,14 @@
               DISCORD_CLIENT_SECRET.valueFrom.secretKeyRef = { name = "poketwo-admin"; key = "discord-client-secret"; };
             };
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };
 
     resources.v1.Service.poketwo-admin.spec = {
       selector.app = "poketwo-admin";
-      ports = [{
-        port = 80;
-        targetPort = 3000;
-      }];
+      ports = [{ port = 80; targetPort = 3000; }];
     };
 
     resources."networking.k8s.io/v1".Ingress.poketwo-admin-ingress = {
@@ -48,10 +45,7 @@
           http.paths = [{
             path = "/";
             pathType = "Prefix";
-            backend.service = {
-              name = "poketwo-admin";
-              port.number = 80;
-            };
+            backend.service = { name = "poketwo-admin"; port.number = 80; };
           }];
         }];
         tls = [{

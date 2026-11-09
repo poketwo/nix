@@ -54,6 +54,13 @@ in
         replicaSetHostnames = true;
         replicaCount = 2;
         enableIPv6 = true;
+        # 7.0's default throughputProbing shrank the primary to 9 read tickets, queueing cheap reads
+        # behind long scans; pin the pre-7.0 default of 128 each instead.
+        extraFlags = [
+          "--setParameter=storageEngineConcurrencyAdjustmentAlgorithm=fixedConcurrentTransactions"
+          "--setParameter=storageEngineConcurrentReadTransactions=128"
+          "--setParameter=storageEngineConcurrentWriteTransactions=128"
+        ];
 
         resources = {
           limits = { memory = "120Gi"; };
@@ -133,23 +140,15 @@ in
     };
   };
 
-  transforms =
-    let
-      fixStupidThing = { apiVersion, kind, metadata, ... }@obj:
-        if apiVersion == "apps/v1" && kind == "StatefulSet" && metadata.name == "mongodb" && metadata.namespace == "poketwo" then
-          obj // {
-            spec = obj.spec // {
-              template = obj.spec.template // {
-                spec = obj.spec.template.spec // {
-                  initContainers =
-                    map
-                      (lib.filterAttrs (name: _: name != "automountServiceAccountToken"))
-                      obj.spec.template.spec.initContainers;
-                };
-              };
-            };
+  # The chart sets automountServiceAccountToken on init containers, which isn't a container field.
+  transforms = [
+    ({ apiVersion, kind, metadata, ... }@obj:
+      if apiVersion == "apps/v1" && kind == "StatefulSet" && metadata.name == "mongodb" && metadata.namespace == "poketwo" then
+        lib.recursiveUpdate obj
+          {
+            spec.template.spec.initContainers =
+              map (c: removeAttrs c [ "automountServiceAccountToken" ]) obj.spec.template.spec.initContainers;
           }
-        else obj;
-    in
-    [ fixStupidThing ];
+      else obj)
+  ];
 }

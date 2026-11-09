@@ -33,13 +33,14 @@ in
           ingester.chunk_encoding = "snappy";
           tracing.enabled = true;
           querier.max_concurrent = 4;
+          # No Loki rules; the S3 default pointed at a bucket that never existed.
+          rulerConfig.storage = {
+            type = "local";
+            local.directory = "/rules"; # the chart's rules-sidecar emptyDir, always present
+          };
           storage = {
             type = "s3";
-            bucketNames = {
-              chunks = "hfym-loki-chunks";
-              ruler = "hfym-loki-ruler";
-              admin = "hfym-loki-admin";
-            };
+            bucketNames.chunks = "hfym-loki-chunks";
             s3 = {
               endpoint = "\${BUCKET_ENDPOINT}";
               accessKeyId = "\${AWS_ACCESS_KEY_ID}";
@@ -102,6 +103,9 @@ in
           # };
         };
 
+        lokiCanary.enabled = false;
+        test.enabled = false;
+
         minio.enabled = false;
         singleBinary.replicas = 0;
         ingester.replicas = 0;
@@ -116,7 +120,7 @@ in
       };
     };
 
-    resources.v1.Secret."backblaze-b2-credentials" = {
+    resources.v1.Secret.backblaze-b2-credentials = {
       type = "Opaque";
       stringData = {
         BUCKET_ENDPOINT = "";

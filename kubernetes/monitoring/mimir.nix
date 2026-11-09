@@ -50,6 +50,7 @@ in
           };
 
           limits.max_global_series_per_user = 2000000;
+          limits.ingestion_rate = 40000;
           blocks_storage.s3.bucket_name = "hfym-mimir-blocks";
           alertmanager_storage.s3.bucket_name = "hfym-mimir-alertmanager";
           ruler_storage.s3.bucket_name = "hfym-mimir-ruler";
@@ -144,7 +145,7 @@ in
       };
     };
 
-    resources.v1.Secret."backblaze-b2-credentials" = {
+    resources.v1.Secret.backblaze-b2-credentials = {
       type = "Opaque";
       stringData = {
         BUCKET_ENDPOINT = "";

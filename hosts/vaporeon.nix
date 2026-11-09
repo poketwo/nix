@@ -31,7 +31,7 @@
     datasets."mongo/mongo" = {
       autosnap = true;
       autoprune = true;
-      hourly = 24;
+      hourly = 12;
       daily = 3;
       weekly = 0;
       monthly = 0;

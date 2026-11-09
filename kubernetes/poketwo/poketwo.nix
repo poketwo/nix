@@ -24,6 +24,8 @@
             containers.poketwo = {
               image = "ghcr.io/poketwo/poketwo:production";
               imagePullPolicy = "Always";
+              # Prometheus metrics (Mongo command latency), scraped by Alloy via the port name.
+              ports = [{ name = "metrics"; containerPort = 9090; }];
               resources = {
                 limits = { memory = "4Gi"; };
                 requests = { memory = "2Gi"; cpu = "100m"; };
@@ -51,10 +53,14 @@
                 EXT_SERVER_URL.value = "https://server.poketwo.io";
                 IMGEN_URL.value = "http://imgen-rust";
                 API_GATEWAY.value = "ws://gateway";
+                FLAGD_HOST.value = "flagd";
+                # explicit, or k8s service links set FLAGD_PORT=tcp://<ip>:8013 for the flagd Service
+                FLAGD_PORT.value = "8015";
                 MALLOC_CONF.value = "background_thread:true";
+                METRICS_PORT.value = "9090";
               };
             };
-            imagePullSecrets = [{ name = "ghcr-auth"; }];
+            imagePullSecrets.ghcr-auth = { };
           };
         };
       };

@@ -41,7 +41,7 @@
               MESSAGE_LOG_KEY.valueFrom.secretKeyRef = { name = "guiduck"; key = "message-log-key"; };
             };
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };

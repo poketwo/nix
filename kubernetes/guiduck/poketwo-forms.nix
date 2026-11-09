@@ -30,22 +30,20 @@
               FORMIUM_TOKEN.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "formium-token"; };
               DISCORD_CLIENT_ID.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-id"; };
               DISCORD_CLIENT_SECRET.valueFrom.secretKeyRef = { name = "poketwo-forms"; key = "discord-client-secret"; };
+              GUIDUCK_BOT_TOKEN.valueFrom.secretKeyRef = { name = "guiduck"; key = "token"; };
 
               # FIXME: Remove this when Formium fixes their site
               NODE_TLS_REJECT_UNAUTHORIZED.value = "0";
             };
           };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };
 
     resources.v1.Service.poketwo-forms.spec = {
       selector.app = "poketwo-forms";
-      ports = [{
-        port = 80;
-        targetPort = 3000;
-      }];
+      ports = [{ port = 80; targetPort = 3000; }];
     };
 
     resources."networking.k8s.io/v1".Ingress.poketwo-forms-ingress = {
@@ -56,10 +54,7 @@
           http.paths = [{
             path = "/";
             pathType = "Prefix";
-            backend.service = {
-              name = "poketwo-forms";
-              port.number = 80;
-            };
+            backend.service = { name = "poketwo-forms"; port.number = 80; };
           }];
         }];
         tls = [{

@@ -20,17 +20,12 @@
               initialDelaySeconds = 5;
               periodSeconds = 5;
             };
-            volumeMounts = [{
-              name = "config";
-              mountPath = "/config";
-            }];
+            volumeMounts = [{ name = "config"; mountPath = "/config"; }];
             env.CONFIG.value = "/config/config.json";
-            envFrom = [{ secretRef = { name = "poketwo"; }; }];
+            envFrom = [{ secretRef.name = "poketwo"; }];
           };
-          volumes.config = {
-            configMap = { name = "gateway-proxy"; };
-          };
-          imagePullSecrets = [{ name = "ghcr-auth"; }];
+          volumes.config.configMap.name = "gateway-proxy";
+          imagePullSecrets.ghcr-auth = { };
         };
       };
     };

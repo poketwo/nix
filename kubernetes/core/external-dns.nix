@@ -33,7 +33,7 @@
       };
     };
 
-    resources.v1.Secret."cloudflare-api-token" = {
+    resources.v1.Secret.cloudflare-api-token = {
       type = "Opaque";
       stringData.token = "";
     };
