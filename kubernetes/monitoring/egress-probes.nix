@@ -4,11 +4,13 @@ let
   # Every worker carries its pods' IPv4 traffic through its own Jool, so the
   # probes run per node from the pod network, like the gateway and bot pods.
   # Pairing NAT64 targets with native-IPv6 ones to the same networks tells a
-  # Jool/upstream-IPv4 outage apart from the node losing the internet.
+  # Jool/upstream-IPv4 outage apart from the node losing the internet, and
+  # non-Cloudflare targets tell a provider IPv4 fault from a Cloudflare one.
   targets = [
     { name = "discord-gateway"; path = "nat64"; target = "gateway.discord.gg:443"; }
     { name = "cloudflare"; path = "nat64"; target = "[64:ff9b::101:101]:443"; } # 1.1.1.1
     { name = "cloudflare"; path = "ipv6"; target = "[2606:4700:4700::1111]:443"; }
+    { name = "google"; path = "nat64"; target = "[64:ff9b::808:808]:443"; } # 8.8.8.8
     { name = "google"; path = "ipv6"; target = "[2001:4860:4860::8888]:443"; }
   ];
 in
