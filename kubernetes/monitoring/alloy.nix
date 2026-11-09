@@ -114,6 +114,11 @@ in
           };
 
           alloy = {
+            # Keep the unauthenticated HTTP API off the node's addresses. This
+            # also drops the chart's readiness probe, which would hit the node IP.
+            listenAddr = "127.0.0.1";
+            enableHttpServerPort = false;
+            livenessProbe.httpGet = { host = "127.0.0.1"; path = "/-/healthy"; port = 12345; };
             securityContext.capabilities.add = [ "NET_RAW" ];
             extraEnv = [{ name = "NODE_NAME"; valueFrom.fieldRef.fieldPath = "spec.nodeName"; }];
             storagePath = hostStateDir;
