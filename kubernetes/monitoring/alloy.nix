@@ -16,15 +16,18 @@ let
     icmp6 = { prober = "icmp"; timeout = "5s"; icmp.preferred_ip_protocol = "ip6"; };
     http4 = { prober = "http"; timeout = "5s"; http = { preferred_ip_protocol = "ip4"; ip_protocol_fallback = false; }; };
     http6 = { prober = "http"; timeout = "5s"; http = { preferred_ip_protocol = "ip6"; ip_protocol_fallback = false; }; };
+    tcp6 = { prober = "tcp"; timeout = "5s"; tcp = { preferred_ip_protocol = "ip6"; ip_protocol_fallback = false; }; };
   };
 
   cloudflare = "162.159.133.234"; # gateway.discord.gg anycast
   google = "8.8.8.8";
 
-  # Native from the host: v4 and v6 side by side, Cloudflare vs others, and
+  # From the host: native v4 and v6 side by side, Cloudflare vs others, and
   # the workers' router (from the Linode control planes this is a cross-site
-  # probe, not their own gateway). The pod runs with cluster DNS, which hides
-  # A records, so v4 HTTP targets must be IP literals.
+  # probe, not their own gateway). The host routes 64:ff9b::/96 into its own
+  # Jool, so the nat64 targets show per node whether that host's Jool and the
+  # v4 path behind it work. The pod runs with cluster DNS, which hides A
+  # records (and synthesizes 64:ff9b:: AAAA), so v4 targets must be IP literals.
   hostTargets = {
     cloudflare-icmp4 = { address = cloudflare; module = "icmp4"; };
     google-icmp4 = { address = google; module = "icmp4"; };
@@ -35,6 +38,10 @@ let
     cloudflare-http4 = { address = "https://1.1.1.1/cdn-cgi/trace"; module = "http4"; };
     cloudflare-http6 = { address = "https://www.cloudflare.com/cdn-cgi/trace"; module = "http6"; };
     google-http6 = { address = "https://www.google.com/generate_204"; module = "http6"; };
+    cloudflare-nat64-icmp = { address = "64:ff9b::${cloudflare}"; module = "icmp6"; };
+    google-nat64-icmp = { address = "64:ff9b::${google}"; module = "icmp6"; };
+    discord-gateway-nat64-tcp = { address = "gateway.discord.gg:443"; module = "tcp6"; };
+    google-nat64-tcp = { address = "[64:ff9b::${google}]:443"; module = "tcp6"; };
   };
 
   # From the pod network: v4-only hosts resolve through DNS64 and go via Jool;
