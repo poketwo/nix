@@ -147,7 +147,7 @@ data:
       forward_to = [prometheus.remote_write.default.receiver]
       rule {
         source_labels = ["__name__"]
-        regex = "kubelet_volume_stats_.*"
+        regex = "kubelet_volume_stats_.*|up"
         action = "keep"
       }
     }
