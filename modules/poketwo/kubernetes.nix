@@ -19,11 +19,17 @@ let
   clusterConfiguration = yaml.generate "kubeadm-cluster.yaml" {
     apiVersion = "kubeadm.k8s.io/v1beta4";
     kind = "ClusterConfiguration";
-    kubernetesVersion = "v1.32.3";
+    kubernetesVersion = "v1.33.4";
     clusterName = "hfym-ds";
     controlPlaneEndpoint = "ds.hfym.co";
     networking.serviceSubnet = "2606:c2c0:5:1:2::/112";
     controllerManager.extraArgs = [{ name = "node-cidr-mask-size-ipv6"; value = "112"; }];
+    # kubeadm 1.34 moves etcd to 3.6, which refuses to upgrade from members
+    # older than 3.5.32 (https://etcd.io/docs/v3.6/upgrades/upgrade_3_6/).
+    # kubeadm 1.33 defaults to 3.5.21, so pin a newer 3.5 for the 1.33 hop.
+    # Live clusters read this from the kube-system/kubeadm-config ConfigMap:
+    # keep that in sync by hand (`kubectl -n kube-system edit cm kubeadm-config`).
+    etcd.local.imageTag = "3.5.35-0";
   };
 
   # `kubeadm upgrade apply/node` ignore InitConfiguration.skipPhases and
@@ -58,7 +64,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Pin kubernetes and cri-o packages to nixpkgs-k8s to keep k8s at 1.32.3
+    # Pin kubernetes and cri-o packages to nixpkgs-k8s to keep k8s at 1.33.4
     # while allowing the rest of the system to track nixos-unstable.
     nixpkgs.overlays = [
       (final: prev:
