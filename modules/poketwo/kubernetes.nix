@@ -44,6 +44,16 @@ let
     maxPods = 4096;
   };
 
+  # Drop-in read by every kubelet at start (unlike kubeletConfiguration, which
+  # kubeadm only copies to /var/lib/kubelet/config.yaml at join). Floating tags
+  # like :production leave every superseded build in the CRI-O store, and the
+  # disk-usage GC alone waits until imagefs hits 85%.
+  kubeletImageGC = yaml.generate "kubelet-image-gc.conf" {
+    apiVersion = "kubelet.config.k8s.io/v1beta1";
+    kind = "KubeletConfiguration";
+    imageMaximumGCAge = "168h";
+  };
+
   kubeadmYaml = pkgs.concatText "kubeadm.yaml" [
     initConfiguration
     separator
@@ -81,6 +91,7 @@ in
       systemPackages = with pkgs; [ kubernetes conntrack-tools ethtool iptables socat ];
       etc."kubernetes/kubeadm.yaml".source = kubeadmYaml;
       etc."kubernetes/kubeadm-upgrade.yaml".source = upgradeConfiguration;
+      etc."kubernetes/kubelet.conf.d/50-image-gc.conf".source = kubeletImageGC;
     };
 
     virtualisation.cri-o.enable = true;
@@ -145,6 +156,7 @@ in
             --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf \
             --kubeconfig=/etc/kubernetes/kubelet.conf \
             --config=/var/lib/kubelet/config.yaml \
+            --config-dir=/etc/kubernetes/kubelet.conf.d \
             --node-ip=:: \
             $KUBELET_KUBEADM_ARGS
         '';
