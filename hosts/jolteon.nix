@@ -121,6 +121,12 @@
           (makePeer "kOvvHg3/2ab+0RdGVR/Av62nevFQRCz07YkHyc5OcVc=" [ "10.0.1.54/32" ]) # dario
           (makePeer "B5uS/5vMYUWEmBigfIcY45a3X7p+cc+mwsoyAIhXjT0=" [ "10.0.1.55/32" ]) # Moor
           (makePeer "Dfric/ik93KSePKXBK2gU9PJJpGHQHLnaRt+rSdBrQs=" [ "10.0.1.56/32" ]) # Golden
+          (makePeer "cL8LRvnxuWBpH/11LCmWMgaCvq3WiIQoODr/J5gy/zQ=" [ "10.0.1.57/32" ]) # Michelle
+          (makePeer "dRPJzTmlSvd5Q2gxPshtu6Rh0mM0ycuf2kLrs/B8HU0=" [ "10.0.1.58/32" ]) # Michelle
+          (makePeer "mgfogcYkNoULb23Xb8ix4RYSBqOIWhTlMmoUOsdezVM=" [ "10.0.1.59/32" ]) # Junehee
+          (makePeer "1WP+R1/INdUgTGSWGl+sJCdjYN31ZN4KyycbZ0hClwA=" [ "10.0.1.60/32" ]) # Junehee
+          (makePeer "k4hLqW3lxa9zGVGwU/61oqNQtEhveWENIxLNHuxkA2U=" [ "10.0.1.61/32" ]) # Silvia
+          (makePeer "v19Csn4kDspYFPBOFJFXJyEi/7phtTejgwoQJz0kZys=" [ "10.0.1.62/32" ]) # Silvia
         ];
     };
 
