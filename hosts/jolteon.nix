@@ -129,6 +129,7 @@
           (makePeer "v19Csn4kDspYFPBOFJFXJyEi/7phtTejgwoQJz0kZys=" [ "10.0.1.62/32" ]) # Silvia
           (makePeer "YAJROkAvXd+oYIMh8PMXSxMdT8gn66/itJShu1voB0M=" [ "10.0.1.63/32" ]) # Jonathan Cheng
           (makePeer "P06sFmn466lBTgsmikZu5F3fYUNtCZSF1/m9YFBboGc=" [ "10.0.1.64/32" ]) # Jonathan Cheng
+          (makePeer "sj4EnrIJhXOvqWtFFBBR4787ESUe0BQcCm4+CuvCjyw=" [ "10.0.1.65/32" ]) # Michelle (iPad)
         ];
     };
 
