@@ -76,8 +76,8 @@
           (makePeer "V2Ftux68Fm87u70wQ92V0rGNRprPKdqf56khMii/hHU=" [ "10.0.1.9/32" ]) # Sabine
           (makePeer "2lgbJAcNghipThAacQUX+GaKJ0F3zvZLXiIV7iZWWhM=" [ "10.0.1.10/32" ]) # Mary
           (makePeer "xdo0B3RLN2gPOb1LoDnzQofUkPzaNpifmGfoVPY8eks=" [ "10.0.1.11/32" ]) # Mary
-          (makePeer "Hn3lhneJQiv9KHPJp2KIY1O783EY0Nl0sNzu4YK4fSY=" [ "10.0.1.12/32" ]) # Jonathan
-          (makePeer "21QfQXFUXUcYFmwwXHF/Clg2+/8ohmh0ozYTQkNsNQc=" [ "10.0.1.13/32" ]) # Jonathan
+          (makePeer "Hn3lhneJQiv9KHPJp2KIY1O783EY0Nl0sNzu4YK4fSY=" [ "10.0.1.12/32" ]) # Jonathan Sy
+          (makePeer "21QfQXFUXUcYFmwwXHF/Clg2+/8ohmh0ozYTQkNsNQc=" [ "10.0.1.13/32" ]) # Jonathan Sy
           (makePeer "2SNBdiLynHBiz5S1J70aWp2bJeCBwR36Xw5yD386Gmc=" [ "10.0.1.14/32" ]) # Benji
           (makePeer "KKxE9JKRGJ+5Jj4Ym1NFgt+JO9kHeX9Bd0hWCakVMEA=" [ "10.0.1.15/32" ]) # Benji
           (makePeer "+EiEzK4On5BrNkcP1IcGNeToXudRpDhEl5lJm1stn2M=" [ "10.0.1.16/32" ]) # Ylann
@@ -127,6 +127,8 @@
           (makePeer "1WP+R1/INdUgTGSWGl+sJCdjYN31ZN4KyycbZ0hClwA=" [ "10.0.1.60/32" ]) # Junehee
           (makePeer "k4hLqW3lxa9zGVGwU/61oqNQtEhveWENIxLNHuxkA2U=" [ "10.0.1.61/32" ]) # Silvia
           (makePeer "v19Csn4kDspYFPBOFJFXJyEi/7phtTejgwoQJz0kZys=" [ "10.0.1.62/32" ]) # Silvia
+          (makePeer "YAJROkAvXd+oYIMh8PMXSxMdT8gn66/itJShu1voB0M=" [ "10.0.1.63/32" ]) # Jonathan Cheng
+          (makePeer "P06sFmn466lBTgsmikZu5F3fYUNtCZSF1/m9YFBboGc=" [ "10.0.1.64/32" ]) # Jonathan Cheng
         ];
     };
 
