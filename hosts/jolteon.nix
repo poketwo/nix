@@ -127,6 +127,8 @@
           (makePeer "1WP+R1/INdUgTGSWGl+sJCdjYN31ZN4KyycbZ0hClwA=" [ "10.0.1.60/32" ]) # Junehee
           (makePeer "k4hLqW3lxa9zGVGwU/61oqNQtEhveWENIxLNHuxkA2U=" [ "10.0.1.61/32" ]) # Silvia
           (makePeer "v19Csn4kDspYFPBOFJFXJyEi/7phtTejgwoQJz0kZys=" [ "10.0.1.62/32" ]) # Silvia
+          (makePeer "YAJROkAvXd+oYIMh8PMXSxMdT8gn66/itJShu1voB0M=" [ "10.0.1.63/32" ]) # Jonathan Cheng
+          (makePeer "P06sFmn466lBTgsmikZu5F3fYUNtCZSF1/m9YFBboGc=" [ "10.0.1.64/32" ]) # Jonathan Cheng
         ];
     };
 
