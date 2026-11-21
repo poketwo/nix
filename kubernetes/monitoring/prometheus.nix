@@ -7,8 +7,8 @@
         chart = transpire.fetchFromHelm {
           repo = "https://prometheus-community.github.io/helm-charts";
           name = "prometheus-operator-crds";
-          version = "12.0.0";
-          sha256 = "7fdZmV1imCea3iNugBEUpx24BxB+zTuq1jdo+JNyZl0=";
+          version = "32.0.2";
+          sha256 = "hFk7NME6TmXaJClR4m1PFLzDVxTl/vSJIRxcoOZ0VJs=";
         };
       };
 
@@ -25,8 +25,8 @@
         chart = transpire.fetchFromHelm {
           repo = "https://prometheus-community.github.io/helm-charts";
           name = "kube-state-metrics";
-          version = "5.20.0";
-          sha256 = "7wPQe1NRQIxADnks/ZnlFk+HAWfVqNlOaOQN93whL/8=";
+          version = "8.8.0";
+          sha256 = "38Xj9EJtTDwtvXNqDJLkFsg5+YkGjiT45KYVhh/MHpw=";
         };
       };
     };

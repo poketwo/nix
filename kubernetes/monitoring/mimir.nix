@@ -20,8 +20,8 @@ in
       chart = transpire.fetchFromHelm {
         repo = "https://grafana.github.io/helm-charts";
         name = "mimir-distributed";
-        version = "5.3.0";
-        sha256 = "REL6eOXlwHPROonlQ7/EfcM6mcvHXUDoM1O3eCsWu6o=";
+        version = "5.8.0";
+        sha256 = "mqYjMzSxk9uzf0rY+Rt7b2+4oAOQ4MfFMz0L13tLtpU=";
       };
 
       values = {
